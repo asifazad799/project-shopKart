@@ -503,13 +503,34 @@
             </div><!-- End .header-search-wrapper -->
           </form>
         </div><!-- End .header-search -->
-        <a href="/userLogin" ><i class="far fa-user-circle profileShortcut"></i></a>
-        <a href="wishlist.html" style="font-weight: bolder;" class="wishlist-link">
+          <div class="dropdown">
+            {{!-- <button class="dropbtn">Dropdown</button> --}}
+            <a href="/profileShorcut" ><i class="far fa-user-circle profileShortcut"></i></a>
+            <div class="dropdown-content">
+              {{#if currentUser}}
+              <a href="/profileShorcut" class="text-dark text-center">{{currentUser.email}}</a>
+              <a class="btn" href="/userLogout">Log Out</a>
+              {{else}}
+              <a class="btn" href="/userLogin">Log In</a>
+              <a class="btn" href="/userSignUp">Sign Up</a>
+              {{/if}}
+              {{!-- <a href="#">Link 2</a>
+              <a href="#">Link 3</a> --}}
+            </div>
+          </div>
+        
+        
+        <a href="/wishlist" style="font-weight: bolder;" class="wishlist-link">
           <i class="icon-heart-o wishlistIcon" ></i>
           <span class="wishlist-count">3</span>
         </a>
 
-        <div class="dropdown cart-dropdown">
+        <a href="/cart" style="font-weight: bolder;" class="wishlist-link">
+            <i class="fal fa-shopping-cart fa-sm cartAll"></i>
+          <span class="wishlist-count">5</span>
+        </a>
+
+        {{!-- <div class="dropdown cart-dropdown ">
           <a
             href="#"
             class="dropdown-toggle"
@@ -519,7 +540,7 @@
             aria-expanded="false"
             data-display="static"
           >
-            {{!-- <i class="icon-shopping-cart cart" style="font-weight: 100;"></i> --}}
+             <i class="icon-shopping-cart cart" style="font-weight: 100;"></i>
             <i class="fal fa-shopping-cart fa-sm cartAll"></i>
             <span class="cart-count">2</span>
             <span class="cart-txt">$ 164,00</span>
@@ -590,7 +611,7 @@
                 >Checkout</span><i class="icon-long-arrow-right"></i></a>
             </div><!-- End .dropdown-cart-total -->
           </div><!-- End .dropdown-menu -->
-        </div><!-- End .cart-dropdown -->
+        </div><!-- End .cart-dropdown --> --}}
       </div><!-- End .header-right -->
     </div><!-- End .container -->
   </div><!-- End .header-middle -->

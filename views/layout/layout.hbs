@@ -36,14 +36,23 @@
 </head>
 <body>
     <div class="page-wrapper">
+        {{#if adminLoginPage}}
+        
+            
+        
+        {{else}}
         {{#if admin}}
         {{>admin-header}}
         {{else}}
         {{>user-header}}
+
         {{/if}}
+        {{/if}}
+        
         {{{body}}}
+
         {{#if user}}
-        {{>user-footer}}
+            {{>user-footer}}
         {{/if}}
     </div>
     

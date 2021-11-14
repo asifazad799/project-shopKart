@@ -1,0 +1,214 @@
+<h1>add new product</h1>
+
+<div class="container" style="font-size: 14px;" >
+            <h1 class="text-center">Product Management</h1>
+
+            <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-10 pt-0 mt-4">
+            <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+                <form class="pt-0" enctype="multipart/form-data" id="" action="/admin/addNewProduct" method="POST">
+                
+                   <h3 class="text-center loginTitle">Add New Product</h3>
+                   {{#if pErr}}
+                   <p  class="text-danger text-center mt-1">{{pErr}}</p>
+                   {{/if}}
+                   <div class="row">
+                       <div class="col-6">
+
+                        <label class="form-label">Product name</label>
+                        <input type="text" class="form-control"  name="productName" >
+                        <div class="row">
+
+                        <div class="col-12">
+
+                        <label class="form-label">Select Category</label>
+                        
+                       <div class="input-group mb-3" >
+                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
+                            <select class="form-select" style="padding: 12px;" name="category" id="category" onchange='catChange()'>
+                                <option selected>Choose...</option>
+                                {{#each catData}}
+                                <option value="{{this.category}}">{{this.category}}</option>
+                                {{/each}}
+                                {{!-- <option value="2">Two</option>
+                                <option value="3">Three</option> --}}
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        
+                        <div class="col-3">
+
+                            <label class="form-label">Select Size</label>
+                            <div class="input-group mb-3" >
+                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
+                            <select class="form-select" style="padding: 12px;" name="sizes" id="Psizes">
+                                
+                                <option selected>Choose...size</option>
+                                
+                                
+                                
+                                
+                            </select>
+                            </div>
+
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label">Color</label>
+                            <input type="text" class="form-control"  name="color" >
+
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label">landing cost</label>
+                            <input type="text" class="form-control"  name="landingcost" >
+
+                        </div>
+
+                    </div>
+                    
+                       </div>
+                        <div class="col-6">
+
+                        <label class="form-label">Select Brand</label>
+                        
+                       <div class="input-group mb-3" >
+                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
+                            <select class="form-select" style="padding: 12px;" name="brand" id="inputGroupSelect01">
+                                <option selected>Choose...</option>
+                                {{#each brandData}}
+                                <option value="{{this.brandName}}">{{this.brandName}}</option>
+                                {{/each}}
+                                {{!-- <option value="2">Two</option>
+                                <option value="3">Three</option> --}}
+                            </select>
+                            </div>
+                        <div class="row">
+
+                            <div class="col-12  mt-3">
+                                <label class="form-label">Select sub Category</label>
+                        
+                       <div class="input-group mb-3" >
+                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
+                            <select class="form-select" style="padding: 12px;" name="subcategory" id="subcategory" onchange="sizeget()">
+                                <option selected>Choose...</option>
+                                
+                                <option value=""></option>
+                                
+                                {{!-- <option value="2">Two</option>
+                                <option value="3">Three</option> --}}
+                            </select>
+                            </div>
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                <label class="form-label">MRP</label>
+                                <input type="text" class="form-control"  name="mrp" >
+
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Quantity</label>
+                                <input type="text" class="form-control"  name="quantity" >
+
+                            </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                        
+                        
+                        
+                        {{!-- <div id="emailHelp" class="form-text">We'll never share your data with anyone else.</div> --}}
+                    </div>
+                    <div class="row col-12">
+                        <div class="col-12">
+                            <label class="form-label">Discription</label>
+                                <textarea class="form-control" rows="3"  name="discription" >
+                                    </textarea>
+
+                        </div>
+
+                    </div>
+                    
+                        <div class="row ms-1">
+
+                        
+
+                            <div class=" row col-6 ">
+                                <div class="col-6 ">
+
+                        <label  class="form-label">Image 1</label>
+                        <img src="" style="display:none;  height:200px; width:100%" id="imgView" alt="">
+                        <br>
+                        <input type="file" class="form-control p-3"  name="image1" style="width: 100px;"
+                        accept="image/*" onchange="viewSymbel(event)">
+                                </div>
+                                <div class="col-6">
+                                    <label  class="form-label">Image 2</label>
+                        <img src="" style="display:none;  height:200px; width:100%" id="imgView2" alt="">
+                        <br>
+                        <input type="file" class="form-control p-3"  name="image2" style="width: 100px;"
+                        accept="image/*" onchange="viewSymbel2(event)">
+
+                                </div>
+
+                            </div>
+
+                            <div class="row col-6">
+                                <div class="col-6">
+
+                                     <label  class="form-label">Image 3</label>
+                        <img src="" style="display:none;  height:200px; width:100%" id="imgView3" alt="">
+                        <br>
+                        <input type="file" class="form-control p-3"  name="image3" style="width: 100px;"
+                        accept="image/*" onchange="viewSymbel3(event)">
+
+                        
+                        </div>
+                                <div class="col-6">
+                                    <label  class="form-label">Image 4</label>
+                                        <img src="" style="display:none;  height:200px; width:100%" id="imgView4" alt="">
+                                        <br>
+                                        <input type="file" class="form-control p-3"  name="image4" style="width: 100px;"
+                                        accept="image/*" onchange="viewSymbel4(event)">
+                                        </div>
+                        </div>
+
+                    </div>
+
+                        
+                               
+
+
+                            
+
+                        
+                        
+                    
+
+                   
+
+                    
+                    
+                    
+                    <div class="cl-lg-4 text-center mb-0">
+                        <button type="submit" class="btn btn-primary loginFormButton">Add</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </section>
+
+    </div>
+    </div>
+    
+</main>

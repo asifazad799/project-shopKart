@@ -10,7 +10,8 @@ var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 var hbs=require('express-handlebars');
 var app = express();
-var session = require('express-session')
+var session = require('express-session');
+var fileUpload = require('express-fileupload');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret:"key",cookie:{maxAge:3200000}}))
+app.use(fileUpload());
 
 db.connect((err) => {
   if (err) console.log("Connection error " + err);

@@ -1,861 +1,332 @@
-<header class="header header-9">
-  <div class="header-middle sticky-header">
-    <div class="container-fluid">
-      <div class="header-left" style="margin-left: -4px;">
-        {{!-- <button class="mobile-menu-toggler">
-          <span class="sr-only">Toggle mobile menu</span>
-          <i class="icon-bars" style="color: black;"></i>
-        </button> --}}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
 
-        <a href="#" class="logo">
-          {{!-- <img
-            src="assets/images/demos/demo-12/logo.png"
-            alt="Molla Logo"
-            width="82"
-            height="25"
-          /> --}}
-          <h2 class="shopkartlogo">shopKart</h2>
-        </a>
-        {{!-- <nav class="main-nav">
-          <ul class="menu sf-arrows">
-            <li class="megamenu-container active">
-              <a href="#" class="homeshort">Home</a> --}}
-                {{!-- sf-with-ul --}}
-              {{!-- <div class="megamenu demo">
-                <div class="menu-col">
-                  <div class="menu-title">Choose your demo</div><!-- End .menu-title -->
 
-                  <div class="demo-list">
-                    <div class="demo-item">
-                      <a href="index-1.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/1.jpg);"
-                        ></span>
-                        <span class="demo-title">01 - furniture store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 
-                    <div class="demo-item">
-                      <a href="index-2.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/2.jpg);"
-                        ></span>
-                        <span class="demo-title">02 - furniture store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
 
-                    <div class="demo-item">
-                      <a href="index-3.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/3.jpg);"
-                        ></span>
-                        <span class="demo-title">03 - electronic store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
 
-                    <div class="demo-item">
-                      <a href="index-4.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/4.jpg);"
-                        ></span>
-                        <span class="demo-title">04 - electronic store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item">
-                      <a href="index-5.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/5.jpg);"
-                        ></span>
-                        <span class="demo-title">05 - fashion store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item">
-                      <a href="index-6.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/6.jpg);"
-                        ></span>
-                        <span class="demo-title">06 - fashion store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item">
-                      <a href="index-7.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/7.jpg);"
-                        ></span>
-                        <span class="demo-title">07 - fashion store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item">
-                      <a href="index-8.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/8.jpg);"
-                        ></span>
-                        <span class="demo-title">08 - fashion store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item">
-                      <a href="index-9.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/9.jpg);"
-                        ></span>
-                        <span class="demo-title">09 - fashion store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item">
-                      <a href="index-10.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/10.jpg);"
-                        ></span>
-                        <span class="demo-title">10 - shoes store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-11.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/11.jpg);"
-                        ></span>
-                        <span class="demo-title">11 - furniture simple store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-12.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/12.jpg);"
-                        ></span>
-                        <span class="demo-title">12 - fashion simple store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-13.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/13.jpg);"
-                        ></span>
-                        <span class="demo-title">13 - market</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-14.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/14.jpg);"
-                        ></span>
-                        <span class="demo-title">14 - market fullwidth</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-15.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/15.jpg);"
-                        ></span>
-                        <span class="demo-title">15 - lookbook 1</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-16.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/16.jpg);"
-                        ></span>
-                        <span class="demo-title">16 - lookbook 2</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-17.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/17.jpg);"
-                        ></span>
-                        <span class="demo-title">17 - fashion store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-18.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/18.jpg);"
-                        ></span>
-                        <span class="demo-title">18 - fashion store (with
-                          sidebar)</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-19.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/19.jpg);"
-                        ></span>
-                        <span class="demo-title">19 - games store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-20.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/20.jpg);"
-                        ></span>
-                        <span class="demo-title">20 - book store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-21.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/21.jpg);"
-                        ></span>
-                        <span class="demo-title">21 - sport store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-22.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/22.jpg);"
-                        ></span>
-                        <span class="demo-title">22 - tools store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-23.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/23.jpg);"
-                        ></span>
-                        <span class="demo-title">23 - fashion left navigation
-                          store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                    <div class="demo-item hidden">
-                      <a href="index-24.html">
-                        <span
-                          class="demo-bg"
-                          style="background-image: url(assets/images/menu/demos/24.jpg);"
-                        ></span>
-                        <span class="demo-title">24 - extreme sport store</span>
-                      </a>
-                    </div><!-- End .demo-item -->
-
-                  </div><!-- End .demo-list -->
-
-                  <div class="megamenu-action text-center">
-                    <a
-                      href="#"
-                      class="btn btn-outline-primary-2 view-all-demos"
-                    ><span>View All Demos</span><i
-                        class="icon-long-arrow-right"
-                      ></i></a>
-                  </div><!-- End .text-center -->
-                </div><!-- End .menu-col -->
-              </div><!-- End .megamenu --> --}}
-            {{!-- </li>
-            <li>
-              <a href="#" class="homeshort">Men</a> --}}
-
-              {{!-- <div class="megamenu megamenu-md">
-                <div class="row no-gutters">
-                  <div class="col-md-8">
-                    <div class="menu-col">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="menu-title">Shop with sidebar</div><!-- End .menu-title -->
-                          <ul>
-                            <li><a href="category-list.html">Shop List</a></li>
-                            <li><a href="category-2cols.html">Shop Grid 2
-                                Columns</a></li>
-                            <li><a href="category.html">Shop Grid 3 Columns</a></li>
-                            <li><a href="category-4cols.html">Shop Grid 4
-                                Columns</a></li>
-                            <li><a href="category-market.html"><span>Shop Market<span
-                                    class="tip tip-new"
-                                  >New</span></span></a></li>
-                          </ul>
-
-                          <div class="menu-title">Shop no sidebar</div><!-- End .menu-title -->
-                          <ul>
-                            <li><a href="category-boxed.html"><span>Shop Boxed
-                                  No Sidebar<span
-                                    class="tip tip-hot"
-                                  >Hot</span></span></a></li>
-                            <li><a href="category-fullwidth.html">Shop Fullwidth
-                                No Sidebar</a></li>
-                          </ul>
-                        </div><!-- End .col-md-6 -->
-
-                        <div class="col-md-6">
-                          <div class="menu-title">Product Category</div><!-- End .menu-title -->
-                          <ul>
-                            <li><a href="product-category-boxed.html">Product
-                                Category Boxed</a></li>
-                            <li><a href="product-category-fullwidth.html"><span
-                                >Product Category Fullwidth<span
-                                    class="tip tip-new"
-                                  >New</span></span></a></li>
-                          </ul>
-                          <div class="menu-title">Shop Pages</div><!-- End .menu-title -->
-                          <ul>
-                            <li><a href="cart.html">Cart</a></li>
-                            <li><a href="checkout.html">Checkout</a></li>
-                            <li><a href="wishlist.html">Wishlist</a></li>
-                            <li><a href="dashboard.html">My Account</a></li>
-                            <li><a href="#">Lookbook</a></li>
-                          </ul>
-                        </div><!-- End .col-md-6 -->
-                      </div><!-- End .row -->
-                    </div><!-- End .menu-col -->
-                  </div><!-- End .col-md-8 -->
-
-                  <div class="col-md-4">
-                    <div class="banner banner-overlay">
-                      <a href="category.html" class="banner banner-menu">
-                        <img
-                          src="assets/images/menu/banner-1.jpg"
-                          alt="Banner"
-                        />
-
-                        <div class="banner-content banner-content-top">
-                          <div class="banner-title text-white">Last
-                            <br />Chance<br /><span><strong
-                              >Sale</strong></span></div><!-- End .banner-title -->
-                        </div><!-- End .banner-content -->
-                      </a>
-                    </div><!-- End .banner banner-overlay -->
-                  </div><!-- End .col-md-4 -->
-                </div><!-- End .row -->
-              </div><!-- End .megamenu megamenu-md --> --}}
-            {{!-- </li>
-            <li>
-              <a href="#" class="homeshort">Women</a> --}}
-
-              {{!-- <div class="megamenu megamenu-sm">
-                <div class="row no-gutters">
-                  <div class="col-md-6">
-                    <div class="menu-col">
-                      <div class="menu-title">Product Details</div><!-- End .menu-title -->
-                      <ul>
-                        <li><a href="product.html">Default</a></li>
-                        <li><a href="product-centered.html">Centered</a></li>
-                        <li><a href="product-extended.html"><span>Extended Info<span
-                                class="tip tip-new"
-                              >New</span></span></a></li>
-                        <li><a href="product-gallery.html">Gallery</a></li>
-                        <li><a href="product-sticky.html">Sticky Info</a></li>
-                        <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
-                        <li><a href="product-fullwidth.html">Full Width</a></li>
-                        <li><a href="product-masonry.html">Masonry Sticky Info</a></li>
-                      </ul>
-                    </div><!-- End .menu-col -->
-                  </div><!-- End .col-md-6 -->
-
-                  <div class="col-md-6">
-                    <div class="banner banner-overlay">
-                      <a href="category.html">
-                        <img
-                          src="assets/images/menu/banner-2.jpg"
-                          alt="Banner"
-                        />
-
-                        <div class="banner-content banner-content-bottom">
-                          <div class="banner-title text-white">New Trends<br
-                            /><span><strong>spring 2019</strong></span></div><!-- End .banner-title -->
-                        </div><!-- End .banner-content -->
-                      </a>
-                    </div><!-- End .banner -->
-                  </div><!-- End .col-md-6 -->
-                </div><!-- End .row -->
-              </div><!-- End .megamenu megamenu-sm --> --}}
-            {{!-- </li>
-            <li>
-              <a href="#" class="homeshort">Kids</a> --}}
-
-              {{!-- <ul>
-                <li>
-                  <a href="about.html" class="sf-with-ul">About</a>
-
-                  <ul>
-                    <li><a href="about.html">About 01</a></li>
-                    <li><a href="about-2.html">About 02</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="contact.html" class="sf-with-ul">Contact</a>
-
-                  <ul>
-                    <li><a href="contact.html">Contact 01</a></li>
-                    <li><a href="contact-2.html">Contact 02</a></li>
-                  </ul>
-                </li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="faq.html">FAQs</a></li>
-                <li><a href="404.html">Error 404</a></li>
-                <li><a href="coming-soon.html">Coming Soon</a></li>
-              </ul> --}}
-            {{!-- </li> --}}
-            {{!-- <li>
-              <a href="blog.html" class="sf-with-ul">Blog</a>
-
-              <ul>
-                <li><a href="blog.html">Classic</a></li>
-                <li><a href="blog-listing.html">Listing</a></li>
-                <li>
-                  <a href="#">Grid</a>
-                  <ul>
-                    <li><a href="blog-grid-2cols.html">Grid 2 columns</a></li>
-                    <li><a href="blog-grid-3cols.html">Grid 3 columns</a></li>
-                    <li><a href="blog-grid-4cols.html">Grid 4 columns</a></li>
-                    <li><a href="blog-grid-sidebar.html">Grid sidebar</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="#">Masonry</a>
-                  <ul>
-                    <li><a href="blog-masonry-2cols.html">Masonry 2 columns</a></li>
-                    <li><a href="blog-masonry-3cols.html">Masonry 3 columns</a></li>
-                    <li><a href="blog-masonry-4cols.html">Masonry 4 columns</a></li>
-                    <li><a href="blog-masonry-sidebar.html">Masonry sidebar</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="#">Mask</a>
-                  <ul>
-                    <li><a href="blog-mask-grid.html">Blog mask grid</a></li>
-                    <li><a href="blog-mask-masonry.html">Blog mask masonry</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="#">Single Post</a>
-                  <ul>
-                    <li><a href="single.html">Default with sidebar</a></li>
-                    <li><a href="single-fullwidth.html">Fullwidth no sidebar</a></li>
-                    <li><a href="single-fullwidth-sidebar.html">Fullwidth with
-                        sidebar</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li> --}}
-            {{!-- <li>
-              <a href="elements-list.html" class="sf-with-ul">Elements</a>
-
-              <ul>
-                <li><a href="elements-products.html">Products</a></li>
-                <li><a href="elements-typography.html">Typography</a></li>
-                <li><a href="elements-titles.html">Titles</a></li>
-                <li><a href="elements-banners.html">Banners</a></li>
-                <li><a href="elements-product-category.html">Product Category</a></li>
-                <li><a href="elements-video-banners.html">Video Banners</a></li>
-                <li><a href="elements-buttons.html">Buttons</a></li>
-                <li><a href="elements-accordions.html">Accordions</a></li>
-                <li><a href="elements-tabs.html">Tabs</a></li>
-                <li><a href="elements-testimonials.html">Testimonials</a></li>
-                <li><a href="elements-blog-posts.html">Blog Posts</a></li>
-                <li><a href="elements-portfolio.html">Portfolio</a></li>
-                <li><a href="elements-cta.html">Call to Action</a></li>
-                <li><a href="elements-icon-boxes.html">Icon Boxes</a></li>
-              </ul>
-            </li> --}}
-          {{!-- </ul><!-- End .menu --> --}}
-        {{!-- </nav><!-- End .main-nav --> --}}
-      </div><!-- End .header-left -->
-
-      <div class="header-right" >
-        
-
-        {{!-- <div class="header-search" >
-          <a href="#" class="search-toggle" role="button" >
-            <i class="icon-search allSearch" ></i></a>
-          <form action="#" method="get">
-            <div class="header-search-wrapper">
-              <label for="q" class="sr-only">Search</label>
-              <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required style="background-color: rgb(206, 206, 206)
-              ; "/>
-            </div><!-- End .header-search-wrapper -->
-          </form>
-        </div><!-- End .header-search --> --}}
-          <div class="dropdown">
-            {{!-- <button class="dropbtn">Dropdown</button> --}}
-            <a href="/adminProfileShorcut" ><i class="far fa-user-circle profileShortcut"></i></a>
-            <div class="dropdown-content" style="margin-right: -100px;">
-                
-              {{#if currentAdmin}}
-              <a href="/adminProfileShorcut" class="text-dark text-center">{{currentAdmin.email}}</a>
-              <a class="btn" href="/admin/adminLogout">Log Out</a>
-              {{/if}}
-              {{!-- <a href="#">Link 2</a>
-              <a href="#">Link 3</a> --}}
+<div class="page-wrapper chiller-theme toggled" >
+  <a id="show-sidebar"  class="btn" href="#">
+    <i class="fas fa-bars"></i>
+  </a>
+  <nav id="sidebar" class="sidebar-wrapper" >
+    <div class="sidebar-content" >
+      <div class="sidebar-brand">
+        <a href="#"><h1 style="color: #03039c;">shopKart</h1></a>
+        <div id="close-sidebar">
+          <i class="fas fa-times"></i>
+        </div>
+      </div>
+      <div class="sidebar-header" >
+        <div class="user-pic">
+          <img class="img-responsive img-rounded" style="border-radius: 50%;" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
+            alt="User picture">
+        </div>
+        <div class="user-info">
+          <span class="user-name">Jhon
+            <strong>Smith</strong>
+          </span>
+          <span class="user-role">Administrator</span>
+          <span class="user-status">
+            <i class="fa fa-circle"></i>
+            <span>Online</span>
+          </span>
+        </div>
+      </div>
+      <!-- sidebar-header  -->
+      {{!-- <div class="sidebar-search">
+        <div>
+          <div class="input-group">
+            <input type="text" class="form-control search-menu" placeholder="Search...">
+            <div class="input-group-append">
+              <span class="input-group-text">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </span>
             </div>
           </div>
-        
-        
-        {{!-- <a href="/wishlist" style="font-weight: bolder;" class="wishlist-link">
-          <i class="icon-heart-o wishlistIcon" ></i>
-          <span class="wishlist-count">3</span>
-        </a>
-
-        <a href="/cart" style="font-weight: bolder;" class="wishlist-link">
-            <i class="fal fa-shopping-cart fa-sm cartAll"></i>
-          <span class="wishlist-count">5</span>
-        </a> --}}
-
-        {{!-- <div class="dropdown cart-dropdown ">
-          <a
-            href="#"
-            class="dropdown-toggle"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            data-display="static"
-          >
-             <i class="icon-shopping-cart cart" style="font-weight: 100;"></i>
-            <i class="fal fa-shopping-cart fa-sm cartAll"></i>
-            <span class="cart-count">2</span>
-            <span class="cart-txt">$ 164,00</span>
-          </a>
-
-          <div class="dropdown-menu dropdown-menu-right">
-            <div class="dropdown-cart-products">
-              <div class="product">
-                <div class="product-cart-details">
-                  <h4 class="product-title">
-                    <a href="product.html">Beige knitted elastic runner shoes</a>
-                  </h4>
-
-                  <span class="cart-product-info">
-                    <span class="cart-product-qty">1</span>
-                    x $84.00
-                  </span>
-                </div><!-- End .product-cart-details -->
-
-                <figure class="product-image-container">
-                  <a href="product.html" class="product-image">
-                    <img
-                      src="assets/images/products/cart/product-1.jpg"
-                      alt="product"
-                    />
-                  </a>
-                </figure>
-                <a href="#" class="btn-remove" title="Remove Product"><i
-                    class="icon-close"
-                  ></i></a>
-              </div><!-- End .product -->
-
-              <div class="product">
-                <div class="product-cart-details">
-                  <h4 class="product-title">
-                    <a href="product.html">Blue utility pinafore denim dress</a>
-                  </h4>
-
-                  <span class="cart-product-info">
-                    <span class="cart-product-qty">1</span>
-                    x $76.00
-                  </span>
-                </div><!-- End .product-cart-details -->
-
-                <figure class="product-image-container">
-                  <a href="product.html" class="product-image">
-                    <img
-                      src="assets/images/products/cart/product-2.jpg"
-                      alt="product"
-                    />
-                  </a>
-                </figure>
-                <a href="#" class="btn-remove" title="Remove Product"><i
-                    class="icon-close"
-                  ></i></a>
-              </div><!-- End .product -->
-            </div><!-- End .cart-product -->
-
-            <div class="dropdown-cart-total">
-              <span>Total</span>
-
-              <span class="cart-total-price">$160.00</span>
-            </div><!-- End .dropdown-cart-total -->
-
-            <div class="dropdown-cart-action">
-              <a href="cart.html" class="btn btn-primary">View Cart</a>
-              <a href="checkout.html" class="btn btn-outline-primary-2"><span
-                >Checkout</span><i class="icon-long-arrow-right"></i></a>
-            </div><!-- End .dropdown-cart-total -->
-          </div><!-- End .dropdown-menu -->
-        </div><!-- End .cart-dropdown --> --}}
-      </div><!-- End .header-right -->
-    </div><!-- End .container -->
-  </div><!-- End .header-middle -->
-</header><!-- End .header -->
-  <!-- Mobile Menu -->
-    {{!-- <div class="mobile-menu-overlay"></div>
-    <!-- End .mobil-menu-overlay -->
-
-    <div class="mobile-menu-container mobile-menu-light">
-      <div class="mobile-menu-wrapper">
-        <span class="mobile-menu-close"><i class="icon-close"></i></span>
-
-        <form action="#" method="get" class="mobile-search">
-          <label for="mobile-search" class="sr-only">Search</label>
-          <input
-            type="search"
-            class="form-control"
-            name="mobile-search"
-            id="mobile-search"
-            placeholder="Search in..."
-            required
-          />
-          <button class="btn btn-primary" type="submit">
-            <i class="icon-search"></i>
-          </button>
-        </form>
-
-        <nav class="mobile-nav">
-          <ul class="mobile-menu">
-            <li class="active">
-              <a href="index.html">Home</a>
-
-              <ul>
-                <li><a href="index-1.html">01 - furniture store</a></li>
-                <li><a href="index-2.html">02 - furniture store</a></li>
-                <li><a href="index-3.html">03 - electronic store</a></li>
-                <li><a href="index-4.html">04 - electronic store</a></li>
-                <li><a href="index-5.html">05 - fashion store</a></li>
-                <li><a href="index-6.html">06 - fashion store</a></li>
-                <li><a href="index-7.html">07 - fashion store</a></li>
-                <li><a href="index-8.html">08 - fashion store</a></li>
-                <li><a href="index-9.html">09 - fashion store</a></li>
-                <li><a href="index-10.html">10 - shoes store</a></li>
-                <li><a href="index-11.html">11 - furniture simple store</a></li>
-                <li><a href="index-12.html">12 - fashion simple store</a></li>
-                <li><a href="index-13.html">13 - market</a></li>
-                <li><a href="index-14.html">14 - market fullwidth</a></li>
-                <li><a href="index-15.html">15 - lookbook 1</a></li>
-                <li><a href="index-16.html">16 - lookbook 2</a></li>
-                <li><a href="index-17.html">17 - fashion store</a></li>
-                <li>
-                  <a href="index-18.html">18 - fashion store (with sidebar)</a>
-                </li>
-                <li><a href="index-19.html">19 - games store</a></li>
-                <li><a href="index-20.html">20 - book store</a></li>
-                <li><a href="index-21.html">21 - sport store</a></li>
-                <li><a href="index-22.html">22 - tools store</a></li>
-                <li>
-                  <a href="index-23.html">23 - fashion left navigation store</a>
-                </li>
-                <li><a href="index-24.html">24 - extreme sport store</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="category.html">Shop</a>
-              <ul>
-                <li><a href="category-list.html">Shop List</a></li>
-                <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
-                <li><a href="category.html">Shop Grid 3 Columns</a></li>
-                <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
-                <li>
-                  <a href="category-boxed.html"
-                    ><span
-                      >Shop Boxed No Sidebar<span class="tip tip-hot"
-                        >Hot</span
-                      ></span
-                    ></a
-                  >
-                </li>
-                <li>
-                  <a href="category-fullwidth.html"
-                    >Shop Fullwidth No Sidebar</a
-                  >
-                </li>
-                <li>
-                  <a href="product-category-boxed.html"
-                    >Product Category Boxed</a
-                  >
-                </li>
-                <li>
-                  <a href="product-category-fullwidth.html"
-                    ><span
-                      >Product Category Fullwidth<span class="tip tip-new"
-                        >New</span
-                      ></span
-                    ></a
-                  >
-                </li>
-                <li><a href="cart.html">Cart</a></li>
-                <li><a href="checkout.html">Checkout</a></li>
-                <li><a href="wishlist.html">Wishlist</a></li>
-                <li><a href="#">Lookbook</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="product.html" class="sf-with-ul">Product</a>
-              <ul>
-                <li><a href="product.html">Default</a></li>
-                <li><a href="product-centered.html">Centered</a></li>
-                <li>
-                  <a href="product-extended.html"
-                    ><span
-                      >Extended Info<span class="tip tip-new">New</span></span
-                    ></a
-                  >
-                </li>
-                <li><a href="product-gallery.html">Gallery</a></li>
-                <li><a href="product-sticky.html">Sticky Info</a></li>
-                <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
-                <li><a href="product-fullwidth.html">Full Width</a></li>
-                <li><a href="product-masonry.html">Masonry Sticky Info</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">Pages</a>
-              <ul>
-                <li>
-                  <a href="about.html">About</a>
-
-                  <ul>
-                    <li><a href="about.html">About 01</a></li>
-                    <li><a href="about-2.html">About 02</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="contact.html">Contact</a>
-
-                  <ul>
-                    <li><a href="contact.html">Contact 01</a></li>
-                    <li><a href="contact-2.html">Contact 02</a></li>
-                  </ul>
-                </li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="faq.html">FAQs</a></li>
-                <li><a href="404.html">Error 404</a></li>
-                <li><a href="coming-soon.html">Coming Soon</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="blog.html">Blog</a>
-
-              <ul>
-                <li><a href="blog.html">Classic</a></li>
-                <li><a href="blog-listing.html">Listing</a></li>
-                <li>
-                  <a href="#">Grid</a>
-                  <ul>
-                    <li><a href="blog-grid-2cols.html">Grid 2 columns</a></li>
-                    <li><a href="blog-grid-3cols.html">Grid 3 columns</a></li>
-                    <li><a href="blog-grid-4cols.html">Grid 4 columns</a></li>
-                    <li><a href="blog-grid-sidebar.html">Grid sidebar</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="#">Masonry</a>
-                  <ul>
-                    <li>
-                      <a href="blog-masonry-2cols.html">Masonry 2 columns</a>
-                    </li>
-                    <li>
-                      <a href="blog-masonry-3cols.html">Masonry 3 columns</a>
-                    </li>
-                    <li>
-                      <a href="blog-masonry-4cols.html">Masonry 4 columns</a>
-                    </li>
-                    <li>
-                      <a href="blog-masonry-sidebar.html">Masonry sidebar</a>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="#">Mask</a>
-                  <ul>
-                    <li><a href="blog-mask-grid.html">Blog mask grid</a></li>
-                    <li>
-                      <a href="blog-mask-masonry.html">Blog mask masonry</a>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="#">Single Post</a>
-                  <ul>
-                    <li><a href="single.html">Default with sidebar</a></li>
-                    <li>
-                      <a href="single-fullwidth.html">Fullwidth no sidebar</a>
-                    </li>
-                    <li>
-                      <a href="single-fullwidth-sidebar.html"
-                        >Fullwidth with sidebar</a
-                      >
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="elements-list.html">Elements</a>
-              <ul>
-                <li><a href="elements-products.html">Products</a></li>
-                <li><a href="elements-typography.html">Typography</a></li>
-                <li><a href="elements-titles.html">Titles</a></li>
-                <li><a href="elements-banners.html">Banners</a></li>
-                <li>
-                  <a href="elements-product-category.html">Product Category</a>
-                </li>
-                <li><a href="elements-video-banners.html">Video Banners</a></li>
-                <li><a href="elements-buttons.html">Buttons</a></li>
-                <li><a href="elements-accordions.html">Accordions</a></li>
-                <li><a href="elements-tabs.html">Tabs</a></li>
-                <li><a href="elements-testimonials.html">Testimonials</a></li>
-                <li><a href="elements-blog-posts.html">Blog Posts</a></li>
-                <li><a href="elements-portfolio.html">Portfolio</a></li>
-                <li><a href="elements-cta.html">Call to Action</a></li>
-                <li><a href="elements-icon-boxes.html">Icon Boxes</a></li>
-              </ul>
-            </li>
-          </ul>
-        </nav>
-        <!-- End .mobile-nav -->
-
-        <div class="social-icons">
-          <a href="#" class="social-icon" target="_blank" title="Facebook"
-            ><i class="icon-facebook-f"></i
-          ></a>
-          <a href="#" class="social-icon" target="_blank" title="Twitter"
-            ><i class="icon-twitter"></i
-          ></a>
-          <a href="#" class="social-icon" target="_blank" title="Instagram"
-            ><i class="icon-instagram"></i
-          ></a>
-          <a href="#" class="social-icon" target="_blank" title="Youtube"
-            ><i class="icon-youtube"></i
-          ></a>
         </div>
-        <!-- End .social-icons -->
+      </div> --}}
+      <!-- sidebar-search  -->
+      <div class="sidebar-menu">
+        <ul>
+          <li class="header-menu">
+            <span>General</span>
+          </li>
+          <li class="">
+            <a href="#">
+              <i class="fa fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+              {{!-- <span class="badge badge-pill badge-warning">New</span> --}}
+            </a>
+            {{!-- <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="#">Dashboard 1
+                    <span class="badge badge-pill badge-success">Pro</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#">Dashboard 2</a>
+                </li>
+                <li>
+                  <a href="#">Dashboard 3</a>
+                </li>
+              </ul>
+            </div> --}}
+          </li>
+          <li class="sidebar-dropdown">
+            <a href="#">
+              <i class="fa fa-shopping-cart"></i>
+              <span>Product Management</span>
+              {{!-- <span class="badge badge-pill badge-danger">3</span> --}}
+            </a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="/admin/viewproducts">View all Products
+
+                  </a>
+                </li>
+                <li>
+                  <a href="/admin/addNewProduct">Add Product</a>
+                </li>
+                <li>
+                  <a href="/admin/categoryManagement">Catagory Management</a>
+                </li>
+                <li>
+                  <a href="/admin/brandmanagement">Brand Management</a>
+                </li>
+                
+              </ul>
+            </div>
+          </li>
+          <li class="sidebar-dropdown">
+            <a href="#">
+              <i class="far fa-gem"></i>
+              <span>User Management</span>
+            </a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="#">View All Users</a>
+                </li>
+                <li>
+                  <a href="#">View Customers</a>
+                </li>
+                <li>
+                  <a href="#">View Blocked Users</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="sidebar-dropdown">
+            <a href="#">
+              <i class="fa fa-chart-line"></i>
+              <span>Offer Management</span>
+            </a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="#">Offer list</a>
+                </li>
+                <li>
+                  <a href="#">Add New offer</a>
+                </li>
+                <li>
+                  <a href="#">Coupons</a>
+                </li>
+                
+              </ul>
+            </div>
+          </li>
+          <li class="sidebar-dropdown">
+            <a href="#">
+              <i class="fa fa-globe"></i>
+              <span>Banner Management</span>
+            </a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="#">View Banner</a>
+                </li>
+                <li>
+                  <a href="#">Addn New Banner</a>
+                </li>
+                
+              </ul>
+            </div>
+          </li>
+          
+          
+          <li>
+            <a href="#">
+              <i class="fa fa-calendar"></i>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="fa fa-folder"></i>
+              <span>Reports</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/adminLogout">
+              <i class="fa fa-folder"></i>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
       </div>
-      <!-- End .mobile-menu-wrapper -->
+      <!-- sidebar-menu  -->
     </div>
-    <!-- End .mobile-menu-container -->  --}}
+    <!-- sidebar-content  -->
+    {{!-- <div class="sidebar-footer">
+      <a href="#">
+        <i class="fa fa-bell"></i>
+        <span class="badge badge-pill badge-warning notification">3</span>
+      </a>
+      <a href="#">
+        <i class="fa fa-envelope"></i>
+        <span class="badge badge-pill badge-success notification">7</span>
+      </a>
+      <a href="#">
+        <i class="fa fa-cog"></i>
+        <span class="badge-sonar"></span>
+      </a>
+      <a href="#">
+        <i class="fa fa-power-off"></i>
+      </a>
+    </div> --}}
+  </nav>
+  <!-- sidebar-wrapper  -->
+  <main class="page-content" >
+    <div class="container-fluid" >
+  {{!-- <main class="page-content">
+    <div class="container-fluid">
+      <h2>Pro Sidebar</h2>
+      <hr>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <p>This is a responsive sidebar template with dropdown menu based on bootstrap 4 framework.</p>
+          <p> You can find the complete code on <a href="https://github.com/azouaoui-med/pro-sidebar-template" target="_blank">
+              Github</a>, it contains more themes and background image option</p>
+        </div>
+        <div class="form-group col-md-12">
+          <iframe src="https://ghbtns.com/github-btn.html?user=azouaoui-med&repo=pro-sidebar-template&type=star&count=true&size=small" frameborder="0" scrolling="0" width="90px" height="30px"></iframe>
+          <iframe src="https://ghbtns.com/github-btn.html?user=azouaoui-med&repo=pro-sidebar-template&type=fork&count=true&size=small" frameborder="0" scrolling="0" width="90px" height="30px"></iframe>
+        </div>
+        <div class="form-group col-md-12">
+          <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">New !</h4>
+            <p>New react pro sidebar library is now available on <a href="https://www.npmjs.com/package/react-pro-sidebar" target="_blank">npm</a> <a href="https://github.com/azouaoui-med/react-pro-sidebar" target="_blank">
+                <img alt="GitHub stars" src="https://img.shields.io/github/stars/azouaoui-med/react-pro-sidebar?style=social" />
+              </a></p>
+            <a href="https://github.com/azouaoui-med/react-pro-sidebar" target="_blank" class="btn btn-sm btn-primary mr-2">
+              Github</a>
+            <a href="https://azouaoui-med.github.io/react-pro-sidebar" target="_blank" class="btn btn-sm btn-success">
+              Demo</a>
+
+          </div>
+
+        </div>
+      </div>
+      <h5>More templates</h5>
+      <hr>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+          <div class="card rounded-0 p-0 shadow-sm">
+            <img src="https://user-images.githubusercontent.com/25878302/58369568-a49b2480-7efc-11e9-9ca9-2be44afacda1.png" class="card-img-top rounded-0" alt="Angular pro sidebar">
+            <div class="card-body text-center">
+              <h6 class="card-title">Angular Pro Sidebar</h6>
+              <a href="https://github.com/azouaoui-med/angular-pro-sidebar" target="_blank" class="btn btn-primary btn-sm">Github</a>
+              <a href="https://azouaoui-med.github.io/angular-pro-sidebar/demo/" target="_blank" class="btn btn-success btn-sm">Preview</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+          <div class="card rounded-0 p-0 shadow-sm">
+            <img src="https://user-images.githubusercontent.com/25878302/58369258-33f20900-7ef8-11e9-8ff3-b277cb7ed7b4.PNG" class="card-img-top rounded-0" alt="Angular pro sidebar">
+            <div class="card-body text-center">
+              <h6 class="card-title">Angular Dashboard</h6>
+              <a href="https://github.com/azouaoui-med/lightning-admin-angular" target="_blank" class="btn btn-primary btn-sm">Github</a>
+              <a href="https://azouaoui-med.github.io/lightning-admin-angular/demo/" target="_blank" class="btn btn-success btn-sm">Preview</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+
+      <footer class="text-center">
+        <div class="mb-2">
+          <small>
+            © 2020 made with <i class="fa fa-heart" style="color:red"></i> by - <a target="_blank" rel="noopener noreferrer" href="https://azouaoui.netlify.com">
+              Mohamed Azouaoui
+            </a>
+          </small>
+        </div>
+        <div>
+          <a href="https://github.com/azouaoui-med" target="_blank">
+            <img alt="GitHub followers" src="https://img.shields.io/github/followers/azouaoui-med?label=github&style=social" />
+          </a>
+          <a href="https://twitter.com/azouaoui_med" target="_blank">
+            <img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/azouaoui_med?label=twitter&style=social" />
+          </a>
+        </div>
+      </footer>
+    </div>
+  </main> --}}
+  <!-- page-content" -->
+</div>
+<!-- page-wrapper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+        
+    
+<script>
+
+
+    jQuery(function ($) {
+
+    $(".sidebar-dropdown > a").click(function() {
+  $(".sidebar-submenu").slideUp(200);
+  if (
+    $(this)
+      .parent()
+      .hasClass("active")
+  ) {
+    $(".sidebar-dropdown").removeClass("active");
+    $(this)
+      .parent()
+      .removeClass("active");
+  } else {
+    $(".sidebar-dropdown").removeClass("active");
+    $(this)
+      .next(".sidebar-submenu")
+      .slideDown(200);
+    $(this)
+      .parent()
+      .addClass("active");
+  }
+});
+
+$("#close-sidebar").click(function() {
+  $(".page-wrapper").removeClass("toggled");
+});
+$("#show-sidebar").click(function() {
+  $(".page-wrapper").addClass("toggled");
+});
+
+
+   
+   
+});
+</script>

@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-let loginERR;
+let loginERR=false;
 
 router.get('/userLogin', function(req, res, next) {
 
@@ -36,9 +36,18 @@ router.get('/userLogin', function(req, res, next) {
     
   }
   
+  
 });
 
 
+router.post('/loginOtp',(req,res)=>{
+
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+
+  res.render('user/otppage')
+
+
+})
 
 
 router.post('/login', function(req, res, next) {
@@ -63,7 +72,7 @@ router.post('/login', function(req, res, next) {
   
 });
 
-let signUpErr;
+let signUpErr=false;
 
 router.get('/userSignUp', function(req, res, next) {
 
@@ -149,7 +158,7 @@ router.get('/userLogout',(req,res)=>{
 
   delete req.session.user;
 
-  req.session.userLoggedIn=false
+  req.session.userLoggedIn=false;
   
   res.redirect('/')
 

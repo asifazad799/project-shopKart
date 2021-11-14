@@ -2,7 +2,7 @@
 <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-3 pt-0 mt-4">
             <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
-                <form class="pt-0" action="/login" method="POST">
+                <form class="pt-0" id="user-signup" action="/login" method="POST">
                    <h3 class="text-center loginTitle">Log in</h3>
                    {{#if loginERR}}
                    <p  class="text-danger text-center mt-1">{{loginERR}}</p>
@@ -20,11 +20,11 @@
                         <button type="submit" class="btn btn-primary loginFormButton">Log in</button>
                     </div>
                 </form>
-                <form action="/loginOtp" id="">
+                <form action="/loginOtp" id="otpLogin" method="post" id="otp" >
                     <h4 class="text-center mt-1">Or</h4>
                     <div class="">
                         <label  class="form-label">Mobile</label>
-                        <input type="text" class="form-control" value="9746874466" name="mobile">
+                        <input type="text" class="form-control" value="9746874466" id="mobile" name="mobile">
                     </div>
                     <div class="cl-lg-4 text-center mb-0">
                         <button type="submit" class="btn btn-primary loginFormButton">Send OTP</button>

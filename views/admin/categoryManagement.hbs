@@ -57,9 +57,9 @@
                 {{#each subcategory}}
 
             
-               
-                   <li>{{this}}
-                       <a href="/admin/delete-subcategory?category={{../this.category}}&subcategory={{this}}"><i class="fas fa-trash text-danger"></i></a>
+
+                   <li>
+                       {{this}}<a class="btn" onclick="deleteSubCategory('{{../this.category}}','{{this}}')"><i class="fas fa-trash text-danger"></i></a>
                    </li>
 
                
@@ -71,7 +71,7 @@
             </td>
             <td>
 
-                 <a href="/admin/delete-category?category={{this.category}}"><i class="fas fa-trash text-danger"></i></a>
+                 <a class="btn" onclick="deleteCategory('{{this.category}}')"  ><i class="fas fa-trash text-danger"></i></a>
 
             </td>
             
@@ -89,6 +89,82 @@
     </div>
     
 </main>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+      $(document).ready(function() {
+
+      $('#categoryTable1').DataTable(); 
+
+    } )
+
+    function deleteCategory(cat){
+    console.log('hhh')
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url:"/admin/delete-category",
+                method:"post",
+                data:{category:cat},
+                success:(result)=>{
+                    if(result.status){
+                     swal("category deleted!", {
+                         icon: "success",
+                       });
+                       location.href="/admin/categoryManagement"
+                      
+         
+                    }
+                }
+                
+            })
+      }
+    }
+    )
+    };
+    function deleteSubCategory(cat,subcat){
+    console.log('hhh')
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url:"/admin/delete-subcategory",
+                method:"post",
+                data:{category:cat,subcategory:subcat},
+                success:(result)=>{
+                    if(result.status){
+                     swal("subcategory deleted!", {
+                         icon: "success",
+                       });
+                       location.href="/admin/categoryManagement"
+                      
+         
+                    }
+                }
+                
+            })
+      }
+    }
+    )
+    }
+
+</script>
+
     
 
    

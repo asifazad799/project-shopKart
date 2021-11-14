@@ -1,0 +1,57 @@
+<div class="container" >
+            <h1>admin product varient edit</h1>
+            <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-8 pt-0 mt-0">
+            <div class="row p-3" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+                <form class="pt-0" id="user-signup" action="/signUpAction" method="POST">
+                   <h3 class="text-center loginTitle mt-1">Sign Up</h3>
+                    
+                   <div class="row mb-0">
+                       <div class=" col-lg-6">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control text" value="asif"  name="first_name" >
+                        
+                    </div>
+                    <div class=" col-lg-6">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control text" value="azad" name="lastname" >
+                    </div>
+                   {{!-- <div id="emailHelp" class="form-text ps-3" style="margin-top: -7px; margin-bottom:7px;">We'll never share your personal data with anyone else.</div> --}}
+                    </div>
+                    <div class="mb-2">
+                        <label  class="form-label">Email</label>
+                        <input type="text" class="form-control" value="asif@mail.com" name="email">
+                    </div>
+                    {{#if signUpErr}}
+                    <p  class="text-danger text-center mt-1">{{signUpErr}}</p>
+                    {{/if}}
+                    <div class="mb-2">
+                        <label  class="form-label">Mobile</label>
+                        <input type="text" class="form-control" value="9746874466" id="mobile" name="mobile">
+                    </div>
+                    <div class="mb-2">
+                        <label  class="form-label">Password</label>
+                        <input type="password" class="form-control" value="123456789" id="password" name="password">
+                    </div>
+                    <div class="mb-2">
+                        <label  class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" value="123456789" id="confirmPassword" name="confirmPassword">
+                    </div>
+                    <div class="cl-lg-4 text-center mb-2">
+                        <button type="submit" class="btn btn-primary loginFormButton">Sign Up</button>
+                    </div>
+                    
+                  </form>
+            </div>
+        </div>
+    </section>
+
+
+
+            
+
+     
+        
+        </div>
+    </div>
+</main>

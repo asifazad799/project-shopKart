@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#ffffff">
     <!-- Plugins CSS File -->
    
-    {{!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> --}}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
@@ -29,7 +29,7 @@
   
 
      <!-- Main CSS File -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    
     <link rel="stylesheet" href="assets/css/demos/demo-12.css">
     <link rel="stylesheet" href="/stylesheets/userlogin.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
@@ -74,11 +74,15 @@
 
     />
     <link rel="stylesheet" href="/stylesheets/admin.css">
+    <link rel="stylesheet" href="/stylesheets/userlogin.css">
         {{>admin-header}}
+        <link rel="stylesheet" href="/stylesheets/userlogin.css">
         
         
         {{else}}
         {{>user-header}}
+        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="/stylesheets/userlogin.css">
 
         {{/if}}
         {{/if}}
@@ -86,6 +90,8 @@
         {{{body}}}
 
         {{#if user}}
+        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="/stylesheets/userlogin.css">
             {{>user-footer}}
         {{/if}}
         

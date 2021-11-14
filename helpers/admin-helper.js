@@ -328,14 +328,14 @@ module.exports = {
 
 
 
-            await  db.get().collection(collection.PRODUCTS).deleteOne({_id:objectId(data.productId)}).then((result)=>{
+            await  db.get().collection(collection.PRODUCTS).deleteOne({_id:objectId(data.id)}).then((result)=>{
 
 
                 // console.log(result)
 
                 if(result){
 
-                    db.get().collection(collection.PRODUCT_VARIENTS).deleteOne({productId:objectId(data.productId)}).then((result)=>{
+                    db.get().collection(collection.PRODUCT_VARIENTS).deleteOne({productId:objectId(data.id)}).then((result)=>{
 
                         // let ih = data.varientId
 

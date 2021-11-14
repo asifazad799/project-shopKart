@@ -5,7 +5,7 @@
                 {{!-- <form class="pt-0" method="POST"> --}}
                    <h3 class="text-center loginTitle">Otp Validation</h3>
 
-                   <p class="text-center text-danger otpErr">Invalid Otp</p>
+                   <p class="text-center text-danger otpErr" id="otpErr">Invalid Otp</p>
                    
                     <div class="mt-2 text-center">
                         <span class="text-center text-dark fw-bold mb-0">Enter Otp sent to your mobile</span>
@@ -21,13 +21,13 @@
                         
                     </div>
                     <h6 class="text-center text-danger" id="otpTimer"></h6>
-                    <div class="row d-flex justify-content-center mb-2 mt-2">
+                    <div class="row d-flex justify-content-center mb-2 mt-2" style="margin-left: auto; margin-right:auto">
                         <div class="text-center">
                             <button type="submit" onclick="otpSend()" class="btn btn-primary loginFormButton " >Confirm</button>
                             
                         </div>
                         <div class="text-center mt-2">
-                            <a href="#" class="isDisabled" id="otpResendButton"><span class="text-center text-dark fw-bold " >Resend otp?</span></a>
+                            <button style="width:70px !important" class="btn btn-primary loginFormButton "  onclick="otpSend()" id="otpResendButton"><span  >Resend otp?</span></button>
                             
                         </div>
                         

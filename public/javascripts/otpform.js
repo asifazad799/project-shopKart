@@ -65,3 +65,4 @@ var fourth = document.getElementById("otp4").value;
     }
     })
 }
+

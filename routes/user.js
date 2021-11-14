@@ -1,14 +1,22 @@
 var express = require('express');
 const { response } = require('../app');
+const adminHelper = require('../helpers/admin-helper');
 var userHelper = require('../helpers/user-helper')
 var router = express.Router();
 
-const serviceId = "VAc6072464d3d923ad1b05f17b4e837332";
-const accountId = "AC667d161077995bd48b4bd005e94ed909";
-const authToken = "17e5f6cd45c7a691326b260d772d5ce1";
 
-const client = require("twilio")(accountId,authToken)
 
+let verifyLogin = (req,res,next)=>{
+
+  if(!req.session.user){
+    res.redirect('/userLogin')
+  }else{
+    next()
+  }
+
+
+
+}
 
 
 /* GET home page. */
@@ -17,7 +25,13 @@ router.get('/', function(req, res, next) {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 
   // if(req.session.user){
-    res.render('user/home', { title:"shopKart" ,currentUser:req.session.user,user:true});
+
+  adminHelper.viewAllProducts().then((response)=>{
+
+    res.render('user/home', { title:"shopKart" ,currentUser:req.session.user,user:true,products:response});
+
+  })
+
   // }else{
   //   res.render('user/home', { title:"shopKart" ,user:true});
   // }
@@ -35,12 +49,12 @@ router.get('/userLogin', function(req, res, next) {
 
     res.redirect('/');
     
-
   }else{
     res.render('user/userloginpage',{loginERR});
     loginERR = false;
     
   }
+
   
   
 });
@@ -51,8 +65,8 @@ router.post('/loginOtp',(req,res)=>{
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 
   let userMobile = req.body.mobile;
-
-  
+   
+  // console.log('asif')
   client.verify
   .services(serviceId)
   .verifications.create({
@@ -60,16 +74,18 @@ router.post('/loginOtp',(req,res)=>{
     channel:"sms"
   })
   .then((resp)=>{
-    // console.log(resp);
+    
+    console.log('asif')
+    console.log(resp);
     // res.status(200).json({resp});
     res.render('user/otppage',{userMobile})})
 
   // console.log(userMobile)
   
+})
   
 
 
-})
 
 router.get('/otpConfirm',(req,res)=>{
 
@@ -170,7 +186,7 @@ router.post('/signUpAction', function(req, res, next) {
   
 });
 
-router.get('/profileShorcut',(req,res)=>{
+router.get('/profileShorcut',verifyLogin,(req,res)=>{
 
   if(req.session.user){
     res.render('user/profile')

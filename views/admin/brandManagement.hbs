@@ -59,7 +59,7 @@
             </td>
             <td>
 
-                 <a href="/admin/deleteBrand?brandId={{this._id}}"><i class="fas fa-trash text-danger"></i></a>
+                 <a class="btn" onclick="deleteBrand('{{this._id}}')"><i class="fas fa-trash text-danger"></i></a>
 
             </td>
        </tr>
@@ -72,6 +72,50 @@
     </div>
     
 </main>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+      $(document).ready(function() {
+
+      $('#categoryTable1').DataTable(); 
+
+    } )
+
+    function deleteBrand(id){
+    {{!-- console.log('hhh') --}}
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url:"/admin/deleteBrand",
+                method:"post",
+                data:{brandId:id},
+                success:(result)=>{
+                    if(result.status){
+                     swal("category deleted!", {
+                         icon: "success",
+                       });
+                       location.href="/admin/brandmanagement"
+                      
+         
+                    }
+                }
+                
+            })
+      }
+    }
+    )
+    };
+    
+
+</script>
 
 
     

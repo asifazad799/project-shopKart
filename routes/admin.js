@@ -5,6 +5,21 @@ var fs= require('fs');
 const { response } = require('../app');
 var adminHelper = require('../helpers/admin-helper')
 
+let adminLoginVerify=(req,res,next)=>{
+
+  if(req.session.admin){
+    
+    
+    next()
+
+  }else{
+    
+    res.redirect('/admin/adminLogin')
+
+  }
+
+
+}
 
 var admin = {email:"asif@mail.com",password:"12345678"};
 
@@ -14,19 +29,19 @@ var Err = null;
 
 var currentAdmin=false;
 
-router.get('/', function(req, res, next) {
+router.get('/',adminLoginVerify,function(req, res, next) {
 
-  if(req.session.admin){
+  // if(req.session.admin){
 
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     
     res.render('admin/adminDashboard',{admin:true,currentAdmin});
 
-  }else{
+  // }else{
 
-    res.redirect('/admin/adminlogin')
+    // res.redirect('/admin/adminlogin')
 
-  }
+  // }
 
   
 });
@@ -41,7 +56,7 @@ router.get('/adminlogin', function(req, res, next) {
   if(!req.session.admin){
     
     
-    res.render('admin/adminLogin',{adminLoginPage:true,passwordErr,emailErr});
+    res.render('admin/adminLogin',{adminLoginPage:true,passwordErr,emailErr,admin:true});
     
     passwordErr=false;
     emailErr = false;
@@ -64,6 +79,7 @@ router.post('/login', function(req, res, next) {
       req.session.adminLoggedInErr=false;
       req.session.admin=admin;
       currentAdmin=admin;
+      req.body.admin=true;
       res.redirect('/admin/');
 
     }else{
@@ -87,14 +103,14 @@ router.post('/login', function(req, res, next) {
   
 });
 
-router.get('/adminProfileShorcut',(req,res)=>{
+router.get('/adminProfileShorcut',adminLoginVerify,(req,res)=>{
 
   res.render('admin/adminprofile',{admin:true,currentAdmin})
 
 })
 
 
-router.get('/categoryManagement',(req,res)=>{
+router.get('/categoryManagement',adminLoginVerify,(req,res)=>{
 
   adminHelper.getCategoryTable().then((response)=>{
 
@@ -111,27 +127,13 @@ router.get('/categoryManagement',(req,res)=>{
   
 })
 
-router.get('/delete-subcategory',(req,res)=>{
+router.post('/delete-subcategory',adminLoginVerify,(req,res)=>{
 
-  adminHelper.deleteSubCat(req.query).then(()=>{
-
-    
-
-      res.redirect('/admin/categoryManagement')
-    
-
-
-  })
-
-})
-
-router.get('/delete-category',(req,res)=>{
-
-  adminHelper.deleteCat(req.query).then(()=>{
+  adminHelper.deleteSubCat(req.body).then(()=>{
 
     
 
-      res.redirect('/admin/categoryManagement')
+      res.json({status:true})
     
 
 
@@ -139,8 +141,22 @@ router.get('/delete-category',(req,res)=>{
 
 })
 
+router.post('/delete-category',adminLoginVerify,(req,res)=>{
 
-router.post('/addNewCategory',(req,res)=>{
+  adminHelper.deleteCat(req.body).then(()=>{
+
+    
+
+      res.json({status:true})
+    
+
+
+  })
+
+})
+
+
+router.post('/addNewCategory',adminLoginVerify,(req,res)=>{
 
   adminHelper.addCategory(req.body).then((response)=>{
 
@@ -174,7 +190,7 @@ router.post('/addNewCategory',(req,res)=>{
 
 let brandErr = null; 
 
-router.get('/brandmanagement',(req,res)=>{
+router.get('/brandmanagement',adminLoginVerify,(req,res)=>{
 
   adminHelper.getBrand().then((response)=>{
 
@@ -187,13 +203,15 @@ router.get('/brandmanagement',(req,res)=>{
 
 })
 
-router.get('/deleteBrand',(req,res)=>{
 
-  adminHelper.deleteBrand(req.query).then((response)=>{
+
+router.post('/deleteBrand',adminLoginVerify,(req,res)=>{
+
+  adminHelper.deleteBrand(req.body).then((response)=>{
 
 
     if(response){
-      fs.unlink('./public/images/brandSymbols/'+req.query.brandId+'.png',(err)=>{
+      fs.unlink('./public/images/brandSymbols/'+req.body.brandId+'.png',(err)=>{
         if(err){
 
           console.log('error in deleting brand symbol')
@@ -205,13 +223,13 @@ router.get('/deleteBrand',(req,res)=>{
         {
 
           barandErr = "Brand deleted"
-          res.redirect('/admin/brandmanagement');
+          res.json({status:true});
         }
       })
     }else{
 
       barandErr = "Data did not found"
-      res.redirect('/admin/brandmanagement');
+      res.json({status:true});
 
     }
     
@@ -222,7 +240,7 @@ router.get('/deleteBrand',(req,res)=>{
 
 })
 
-router.post('/addNewBrand',(req,res)=>{
+router.post('/addNewBrand',adminLoginVerify,(req,res)=>{
 
   // adminHelper.addNewBrand(req.body,(result)=>{
 
@@ -275,7 +293,7 @@ router.post('/addNewBrand',(req,res)=>{
 let pErr=null;
   
 
-router.get('/addNewProduct',(req,res)=>{
+router.get('/addNewProduct',adminLoginVerify,(req,res)=>{
 
   adminHelper.getBrand().then((brandresponse)=>{
 
@@ -306,7 +324,7 @@ router.get('/addNewProduct',(req,res)=>{
 })
 
 
-router.post('/addNewProduct',(req,res)=>{
+router.post('/addNewProduct',adminLoginVerify,(req,res)=>{
 
   adminHelper.addNewProduct(req.body).then((response)=>{
 
@@ -382,7 +400,7 @@ router.post('/addNewProduct',(req,res)=>{
 
 let productErr = null;
 
-router.get('/viewproducts',(req,res)=>{
+router.get('/viewproducts',adminLoginVerify,(req,res)=>{
 
   adminHelper.viewAllProducts().then((response)=>{
 
@@ -410,16 +428,18 @@ router.get('/viewproducts',(req,res)=>{
 //   res.send(sizes);
 
 // })
-router.get('/delete-product',(req,res)=>{
+router.post('/deleteproduct',adminLoginVerify,(req,res)=>{
 
-  adminHelper.deleteProduct(req.query).then((response)=>{
+  console.log(req.body)
+
+  adminHelper.deleteProduct(req.body).then((response)=>{
 
 
     if(response.found){
 
-      let imgName= req.query.varientId;
+      let imgName= req.body.varientId;
       
-      console.log(imgName)
+      // console.log(imgName)
 
       // imgName.filter(x=> console.log(x))
   
@@ -444,11 +464,17 @@ router.get('/delete-product',(req,res)=>{
 
       }
       productErr = "Product Deleted succecfully";
+
+      res.json({status:true})
             
-            res.redirect('/admin/viewproducts')
+            // res.redirect('/admin/viewproducts')
     }else{
+
+
+      productErr = "Product did not Deleted";
+      res.json({status:true})
   
-      res.redirect('/admin/viewproducts')
+      // res.redirect('/admin/viewproducts')
   
   
     }}
@@ -458,7 +484,7 @@ router.get('/delete-product',(req,res)=>{
 })
 
  
-router.get('/editProduct',(req,res)=>{
+router.get('/editProduct',adminLoginVerify,(req,res)=>{
 
   adminHelper.editProducts(req.query).then((response)=>{
 
@@ -487,7 +513,16 @@ router.get('/editProduct',(req,res)=>{
     
 })
 
-router.post('/editProduct',(req,res)=>{
+router.get('/editVarients',(req,res)=>{
+
+  res.render('admin/varientEdit',{admin:true})
+
+
+})
+
+
+
+router.post('/editProduct',adminLoginVerify,(req,res)=>{
 
   let data = req.body;
   let productId = req.query.productId;
@@ -525,7 +560,7 @@ router.post('/editProduct',(req,res)=>{
 
 
 
-router.get('/find-subcategory',(req,res)=>{
+router.get('/find-subcategory',adminLoginVerify,(req,res)=>{
 
   adminHelper.getSubCategoryTable(req.query).then((response)=>{
 

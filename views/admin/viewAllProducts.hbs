@@ -48,18 +48,20 @@
                         <li>landing cost:{{this.landingcost}}</li>
                         <li>MRP:{{this.mrp}}</li>
                         <li>Quantity:{{this.quantity}}</li>
-                   
+                        
 
                
                 
 
                 {{/each}}
+                    <a  href="/admin/editProduct?productId={{this._id}}"><i class="fas fa-edit text-center"></i></a>
                 </ul>
+                
                 
             </td>
             <td>
 
-                 <a href="/admin/delete-product?productId={{this._id}}&varientId={{#each productVarients}}{{this._id}}{{/each}}"><i class="fas fa-trash text-danger text-center"></i></a>
+                 <a class="btn" onclick= "deleteproduct('{{this._id}}','{{#each productVarients}}{{this._id}}{{/each}}')"><i class="fas fa-trash text-danger text-center"></i></a>
 
                  <a href="/admin/editProduct?productId={{this._id}}"><i class="fas fa-edit text-center"></i></a>
             </td>
@@ -79,10 +81,44 @@
         </div>
     </div>
 </main>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <script type="text/javascript">
 
       $(document).ready(function() {
 
-      $('#categoryTable1').DataTable(); } );
+      $('#categoryTable1').DataTable(); 
 
-    </script>
+    } )
+
+    function deleteproduct(id,varientId){
+    console.log(varientId)
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url:"/admin/deleteproduct/",
+                method:"post",
+                data:{id:id,varientId:varientId},
+                success:(result)=>{
+                    if(result.status){
+                     swal("product deleted!", {
+                         icon: "success",
+                       });
+                       location.href="/admin/viewproducts"
+                      
+         
+                    }
+                }
+                
+            })
+      }
+})};
+
+</script>

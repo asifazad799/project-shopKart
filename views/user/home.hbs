@@ -164,19 +164,22 @@
                             }
                         }'
             >
-              <div class="product product-4">
-                <figure class="product-media">
+                {{#each products}}
+              <div class="product product-4" >
+                <figure class="product-media" style="height: 376px;">
                   <a href="product.html">
+                    {{#each productVarients}}
                     <img
-                      src="assets/images/demos/demo-12/products/product-1.jpg"
+                      src="/images/product/productvarients/{{this._id}}_1.png"
                       alt="Product image"
                       class="product-image"
                     />
                     <img
-                      src="assets/images/demos/demo-12/products/product-1-2.jpg"
+                      src="/images/product/productvarients/{{this._id}}_2.png"
                       alt="Product image"
                       class="product-image-hover"
                     />
+                    {{/each}}
                   </a>
 
                   <div class="product-action-vertical">
@@ -211,14 +214,16 @@
 
                 <div class="product-body">
                   <div class="product-cat">
-                    <a href="#">Clothing</a>
+                    <a href="#">{{this.productName}}</a>
                   </div>
                   <!-- End .product-cat -->
                   <h3 class="product-title">
-                    <a href="product.html">Linen-blend dress</a>
+                    <a href="product.html">{{this.category}}</a>
                   </h3>
                   <!-- End .product-title -->
-                  <div class="product-price">$60.00</div>
+                  {{#each productVarients}}
+                  <div class="product-price">₹{{this.mrp}}</div>
+                  {{/each}}
                   <!-- End .product-price -->
                   <div class="product-nav product-nav-dots">
                     <a href="#" class="active" style="background: #e5dcb1"
@@ -232,9 +237,10 @@
                 </div>
                 <!-- End .product-body -->
               </div>
+              {{/each}}
               <!-- End .product -->
 
-              <div class="product product-4">
+              {{!-- <div class="product product-4">
                 <figure class="product-media">
                   <span class="product-label label-primary">Sale</span>
                   <a href="product.html">
@@ -297,10 +303,10 @@
                   <!-- End .product-price -->
                 </div>
                 <!-- End .product-body -->
-              </div>
+              </div> --}}
               <!-- End .product -->
 
-              <div class="product product-4">
+              {{!-- <div class="product product-4">
                 <figure class="product-media">
                   <a href="product.html">
                     <img
@@ -367,7 +373,7 @@
                   <!-- End .product-nav -->
                 </div>
                 <!-- End .product-body -->
-              </div>
+              </div> --}}
               <!-- End .product -->
 
               <div class="product product-4">

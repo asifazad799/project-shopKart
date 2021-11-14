@@ -14,7 +14,7 @@ let move=(e,p,c,n)=>{
     }
 }
 
-const startOtpCount = 0.1;
+const startOtpCount = 1;
 let time = startOtpCount*60;
 const countdown = document.getElementById('otpTimer');
 const resendOtpButton = document.getElementById('otpResendButton');
@@ -37,4 +37,31 @@ function updateCoundown(){
         time--;
     }
     
+}
+
+function otpSend(){
+
+    // console.log('ouasdas')
+
+var first = document.getElementById("otp1").value;
+var second = document.getElementById("otp2").value;
+var third = document.getElementById("otp3").value;
+var fourth = document.getElementById("otp4").value;
+ 
+
+ var otpnumber = first+second+third+fourth
+ var phoneNumber = document.getElementById("mobile").value;
+
+
+    $.ajax({
+    url:'/otpConfirm?phonenumber='+phoneNumber+'&otpnumber='+otpnumber,
+    method:'get',
+    success:(response)=>{
+    if(response){
+        window.location.replace("/");
+    }else{
+        document.getElementById("otpErr").classList.remove("otpErr");
+    }
+    }
+    })
 }

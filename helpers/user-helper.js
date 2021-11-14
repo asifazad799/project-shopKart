@@ -74,6 +74,22 @@ module.exports = {
           resolve({status:false,msg:"User not found"});
         }
       })
+    },
+    otpLogin:(phoneNumber)=>{
+
+      console.log(phoneNumber)
+
+      return new Promise(async(resolve,reject)=>{
+        
+          let user = await db.get().collection(collection.USER_COLLECTION).findOne({mobile:phoneNumber})
+          
+          console.log(user)
+          resolve(user)
+          
+
+      })
+
+
     }
 
   

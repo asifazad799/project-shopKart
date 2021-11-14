@@ -3,6 +3,12 @@ const { response } = require('../app');
 var userHelper = require('../helpers/user-helper')
 var router = express.Router();
 
+const serviceId = "VAc6072464d3d923ad1b05f17b4e837332";
+const accountId = "AC667d161077995bd48b4bd005e94ed909";
+const authToken = "17e5f6cd45c7a691326b260d772d5ce1";
+
+const client = require("twilio")(accountId,authToken)
+
 
 
 /* GET home page. */
@@ -44,7 +50,58 @@ router.post('/loginOtp',(req,res)=>{
 
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 
-  res.render('user/otppage')
+  let userMobile = req.body.mobile;
+
+  
+  client.verify
+  .services(serviceId)
+  .verifications.create({
+    to:`+91${req.body.mobile}`,
+    channel:"sms"
+  })
+  .then((resp)=>{
+    // console.log(resp);
+    // res.status(200).json({resp});
+    res.render('user/otppage',{userMobile})})
+
+  // console.log(userMobile)
+  
+  
+
+
+})
+
+router.get('/otpConfirm',(req,res)=>{
+
+  // res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  // console.log('iuiyiyg')
+  let phoneNumber = req.query.phonenumber;
+  // console.log(phoneNumber)
+   let otpNumber = Number(req.query.otpnumber);
+//  typeof(otpNumber)
+   client.verify
+   .services(serviceId)
+   .verificationChecks.create({
+     to:"+91"+phoneNumber,
+     code:otpNumber
+   }).then((resp=>{
+    //  console.log('asiffffffff')
+     if(resp.valid){
+          userHelper.otpLogin(phoneNumber).then((response)=>{
+          req.session.user = response;
+          console.log(req.session.user);
+          req.session.userLoggedIn = true;
+          
+          let valid = true;
+          res.send(valid);
+       })
+     }else{
+       let valid = false;
+
+       res.send(valid);
+     }
+   }));
+
 
 
 })

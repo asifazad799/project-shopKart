@@ -136,3 +136,7 @@
     padding-bottom: 6px;
     color: red;
 }
+.otpErr{
+
+    display: none;
+}

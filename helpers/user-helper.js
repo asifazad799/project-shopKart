@@ -77,20 +77,44 @@ module.exports = {
     },
     otpLogin:(phoneNumber)=>{
 
-      console.log(phoneNumber)
+      // console.log(phoneNumber)
 
       return new Promise(async(resolve,reject)=>{
         
           let user = await db.get().collection(collection.USER_COLLECTION).findOne({mobile:phoneNumber})
+
+
+            // console.log(user)
+            if(user){
+
+              resolve({userFound:true})
+
+            }else{
+
+              resolve({userFound:false})
+            }
+
           
-          console.log(user)
-          resolve(user)
+          
+
           
 
       })
 
 
     }
+    // otpLogInUserVerification:(data)=>{
+      
+    //   return new Promise(async(resolve,reject)=>{
+        
+
+    //     let user = await db.get().collection(collection.USER_COLLECTION).findOne({})
+
+
+
+    //   })
+
+    // }
 
   
   

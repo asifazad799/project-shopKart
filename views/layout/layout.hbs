@@ -142,13 +142,20 @@
 
     ></script>
 
-
+   
         
     <script type="text/javascript">
 
+
+     
+
+
+      
+
       $(document).ready(function() {
 
-      $('#categoryTable').DataTable(); } );
+      $('#categoryTable').DataTable();
+      } );
 
     </script>
 
@@ -164,8 +171,38 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js"></script>
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    
+
 
 <script>
+
+
+
+$('#editform').validate({
+
+rules:{
+  size:{
+    required:true
+  }
+},submitHandler:function submitForm(form) {
+            swal({
+                title: "Are you sure?",
+                text: "This form will be submitted",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((isOkay) => {
+                if (isOkay) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
+
+})
    $.validator.addMethod("Email", function (value, element) {
     return this.optional(element) || value == value.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i);},'Enter a valid email'
     );
@@ -341,9 +378,7 @@ setInputFilter(document.getElementById("mobile"), function(value) {
         }
         
 
-        {{!-- $.extend(currentSubCat, {isSampleString: function() {
-              return this.sampleString == 'shirt';}
-        }); --}}
+        
 
         
 

@@ -310,17 +310,46 @@ module.exports = {
             //     }
 
             // })
+        })
+    },
+    varientEdit:(data)=>{
+        
 
+        return new Promise(async(resolve,reject)=>{
 
+            // console.log(objectId(data.varientId));
 
+            let varient = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({_id:objectId(data.varientId)})
 
+            // console.log(varient);
+
+            resolve(varient);
+
+        })
+
+    },varientUpdate:(varientId,data)=>{
+
+        return new Promise (async(resolve,reject)=>{
+
+            // console.log(varientId.varientId);
+
+            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(varientId.varientId)},{$set:{size:data.size,color:data.color,landingcost:data.landingcost,mrp:data.mrp,quantity:data.quantity}}).then((result)=>{
+                
+                resolve()
+
+            })
+            
+            // console.log(b)
 
         })
 
 
-
-
     },
+        
+
+
+
+
     deleteProduct:(data)=>{
 
 

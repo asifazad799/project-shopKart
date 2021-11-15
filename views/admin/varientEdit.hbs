@@ -1,46 +1,101 @@
 <div class="container" >
-            <h1>admin product varient edit</h1>
+            <h1 class="text-center mb-5">Product varient edit</h1>
             <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-8 pt-0 mt-0">
             <div class="row p-3" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
-                <form class="pt-0" id="user-signup" action="/signUpAction" method="POST">
-                   <h3 class="text-center loginTitle mt-1">Sign Up</h3>
+                {{#if varientData}}
+                <form class="pt-0" enctype="multipart/form-data" id="editform" onsubmit="return submitForm(this)"   action="/admin/editVarients?varientId={{varientData._id}}" method="POST">
+                <div class="row" style="display: flex;" >
+                    
+                   <h3 class="text-left  loginTitle mt-1">product:</h3>
+                        
+
+                   <h4>{{product}}</h4>
+                        
+                </div>
+                    {{#if productErr}}
+                    <p  class="text-danger text-center mt-1">{{productErr}}</p>
+                    {{/if}}
                     
                    <div class="row mb-0">
                        <div class=" col-lg-6">
-                        <label class="form-label">First Name</label>
-                        <input type="text" class="form-control text" value="asif"  name="first_name" >
+                        <label class="form-label">Product size</label>
+                        <input type="text" class="form-control text" value="{{varientData.size}}"  name="size">
                         
                     </div>
                     <div class=" col-lg-6">
-                        <label class="form-label">Last Name</label>
-                        <input type="text" class="form-control text" value="azad" name="lastname" >
+                        <label class="form-label">Product color</label>
+                        <input type="text" class="form-control text" value="{{varientData.color}}" name="email" >
                     </div>
                    {{!-- <div id="emailHelp" class="form-text ps-3" style="margin-top: -7px; margin-bottom:7px;">We'll never share your personal data with anyone else.</div> --}}
                     </div>
-                    <div class="mb-2">
-                        <label  class="form-label">Email</label>
-                        <input type="text" class="form-control" value="asif@mail.com" name="email">
-                    </div>
-                    {{#if signUpErr}}
-                    <p  class="text-danger text-center mt-1">{{signUpErr}}</p>
-                    {{/if}}
-                    <div class="mb-2">
-                        <label  class="form-label">Mobile</label>
-                        <input type="text" class="form-control" value="9746874466" id="mobile" name="mobile">
-                    </div>
-                    <div class="mb-2">
-                        <label  class="form-label">Password</label>
-                        <input type="password" class="form-control" value="123456789" id="password" name="password">
-                    </div>
-                    <div class="mb-2">
-                        <label  class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" value="123456789" id="confirmPassword" name="confirmPassword">
-                    </div>
-                    <div class="cl-lg-4 text-center mb-2">
-                        <button type="submit" class="btn btn-primary loginFormButton">Sign Up</button>
+
+                    <div class="row">
+
+                    <div class="mb-2 col-lg-4">
+                        <label  class="form-label">Landing cost</label>
+                        <input type="text" class="form-control" value="{{varientData.landingcost}}" name="landingcost">
                     </div>
                     
+                    <div class="mb-2 col-lg-4">
+                        <label  class="form-label">Mrp</label>
+                        <input type="text" class="form-control" value="{{varientData.mrp}}" id="mobile" name="mrp">
+                    </div>
+                    <div class="mb-2 col-lg-4">
+                        <label  class="form-label">Quantity</label>
+                        <input type="text" class="form-control" value="{{varientData.quantity}}" id="password" name="quantity">
+                    </div>
+                    </div>
+                    <div class="row mb-2">
+
+                        <div class="col-4" >
+
+                            <h6  class="form-label">Image 1</h6>
+                            
+                            <img src="../images/product/productvarients/{{varientData._id}}_1.png" style=" width:200px" id="imgView" alt="">
+                            <br>
+                            <input type="file" class="form-control p-2"  name="image1" style="width: 100px; "
+                            accept="image/*" onchange="viewSymbel(event)">
+                        </div>
+                        <div class="col-4" >
+
+                            <h6  class="form-label">Image 2</h6>
+                            
+                            <img src="../images/product/productvarients/{{varientData._id}}_2.png" style="width:200px" id="imgView2" alt="">
+                            <br>
+                            <input type="file" class="form-control p-2"  name="image2" style="width: 100px; "
+                            accept="image/*" onchange="viewSymbel2(event)">
+                        </div>
+                        <div class="col-4" >
+
+                            <h6  class="form-label">Image 3</h6>
+                            
+                            <img src="../images/product/productvarients/{{varientData._id}}_3.png" style=" width:200px" id="imgView3" alt="">
+                            <br>
+                            <input type="file" class="form-control p-2"  name="image3" style="width: 100px; "
+                            accept="image/*" onchange="viewSymbel3(event)">
+                        </div>
+                        
+                    </div>
+                    <div class="row d-flex justify-content-center">
+
+                        <div class="col-4" >
+
+                            <h6  class="form-label">Image 4</h6>
+                            
+                            <img src="../images/product/productvarients/{{varientData._id}}_4.png" style=" width:200px" id="imgView4" alt="">
+                            <br>
+                            <input type="file" class="form-control p-2"  name="image4" style="width : 100px "
+                            accept="image/*" onchange="viewSymbel4(event)">
+                        </div>
+
+                        
+
+                    </div>
+                    <div class="cl-lg-5 text-center mb-2">
+                        <button  type="submit"  style="width:100px" class="btn btn-primary loginFormButton mt-4">Update</button>
+                    </div>
+                    {{/if}}
                   </form>
             </div>
         </div>
@@ -55,3 +110,9 @@
         </div>
     </div>
 </main>
+
+
+
+
+    
+

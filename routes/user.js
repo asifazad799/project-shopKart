@@ -20,7 +20,7 @@ let verifyLogin = (req,res,next)=>{
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function( req, res, next) {
 
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 
@@ -50,7 +50,9 @@ router.get('/userLogin', function(req, res, next) {
     res.redirect('/');
     
   }else{
+
     res.render('user/userloginpage',{loginERR});
+
     loginERR = false;
     
   }
@@ -65,22 +67,39 @@ router.post('/loginOtp',(req,res)=>{
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 
   let userMobile = req.body.mobile;
-   
-  // console.log('asif')
-  client.verify
-  .services(serviceId)
-  .verifications.create({
-    to:`+91${req.body.mobile}`,
-    channel:"sms"
-  })
-  .then((resp)=>{
-    
-    console.log('asif')
-    console.log(resp);
-    // res.status(200).json({resp});
-    res.render('user/otppage',{userMobile})})
 
-  // console.log(userMobile)
+  userHelper.otpLogin(userMobile).then((response)=>{
+
+    if(response.userFound){
+
+      console.log(response)
+      client.verify
+      .services(serviceId)
+      .verifications.create({
+        to:`+91${req.body.mobile}`,
+        channel:"sms"
+      })
+      .then((resp)=>{
+        
+        console.log('asif')
+        // console.log(resp);
+        // res.status(200).json({resp});
+        res.render('user/otppage',{userMobile})})
+
+    }else{
+
+      loginERR = "Mobile number did not found"
+
+      res.redirect('/userLogin')
+
+    }
+
+
+    
+      // console.log(userMobile)
+
+  })
+   
   
 })
   

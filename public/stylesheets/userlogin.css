@@ -38,7 +38,7 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 100;
-    margin-left: -130px;
+    margin-left: -50px;
   }
   
   .dropdown-content a {
@@ -121,7 +121,9 @@
     opacity: 0.5;
     pointer-events: none;
 }
-
+.hide{
+    display: none;
+}
 /* .label_colorselector1{
     background-color: black;
 }

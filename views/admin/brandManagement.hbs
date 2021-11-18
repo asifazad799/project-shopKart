@@ -1,5 +1,17 @@
 
 
+
+
+                        
+                               
+{{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css"> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+
+                            
+
+
+
+
  <div class="container" style="font-size: 14px;" >
             <h1 class="text-center">Brand Management</h1>
 
@@ -8,7 +20,7 @@
             <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
                 <form class="pt-0" enctype="multipart/form-data" id="add-Barnd" action="/admin/addNewBrand" method="POST">
                 
-                   <h3 class="text-center loginTitle">Add new Brand</h3>
+                   <h3 class="text-center loginTitle mb-2">Add new Brand</h3>
                    {{#if brandErr}}
                    <p  class="text-danger text-center mt-1">{{brandErr}}</p>
                    {{/if}}
@@ -17,18 +29,37 @@
                         <input type="text" class="form-control"  name="brandName" >
                         {{!-- <div id="emailHelp" class="form-text">We'll never share your data with anyone else.</div> --}}
                     </div>
-                    <div class="form group">
+                   
 
-                    </div>
-                    <div class="">
-                        <label  class="form-label">Brand Symbol</label>
-                        <img src="" style="display:none;  height:100px;" id="imgView" alt="">
-                        <br>
-                        <input type="file" class="form-control p-3"  name="brandSymbol" style="width: 100px;"
-                        accept="image/*" onchange="viewSymbel(event)">
-                    </div>
+                        <div class="mt-5">
+                        <label for="form-label" style="font-weight: 700;">Brand Symbol</label>
+                        <div class="col-12">
+                        <div id="image-box" style="width: 300px; height: 300px; display: none;"></div>
+                        <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                            id="crop-btn">Crop</button>
+                        </div>
+
+                        <img src="" alt="" style="width: 100px; height:auto ; " id="imgview1">
+                        {{!-- <div id="preview1"></div> --}}
+                        <input type="file" name="image1" id="file1" style="padding-top: 5.7px;" class="form-control"
+                            onchange="return fileValidation1()">
+                        </div>
+                    
+
+                            
+
+
+
+
+
+                       
+                    
+                    
+                    <div class="row">
+
                     <div class="cl-lg-4 text-center mb-0">
-                        <button type="submit" class="btn btn-primary loginFormButton">Add</button>
+                        <button id="confirm-btn" type="submit" class="btn btn-primary " style="background-color: blue; margin-top:20px; width: 80px">Add</button>
+                    </div>
                     </div>
                 </form>
                 
@@ -72,6 +103,66 @@
     </div>
     
 </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+
+<script>
+    function fileValidation1() {
+        const imagebox = document.getElementById('image-box')
+        const crop_btn = document.getElementById('crop-btn')
+        var fileInput = document.getElementById('file1');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="image" style="width:100%">`
+            const image = document.getElementById('image')
+            document.getElementById('image-box').style.display = 'block'
+            document.getElementById('crop-btn').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file1');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview1').src = url
+                    document.getElementById('image-box').style.display = 'none'
+                    document.getElementById('crop-btn').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+</script>
+
+
+
+
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script type="text/javascript">
@@ -116,6 +207,7 @@
     
 
 </script>
+
 
 
     

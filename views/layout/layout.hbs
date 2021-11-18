@@ -34,6 +34,9 @@
     <link rel="stylesheet" href="/stylesheets/userlogin.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
 
+    {{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css"> --}}
+
+
     
         
 
@@ -77,6 +80,11 @@
     <link rel="stylesheet" href="/stylesheets/userlogin.css">
         {{>admin-header}}
         <link rel="stylesheet" href="/stylesheets/userlogin.css">
+        <style>
+          .error{
+            font-family:sans-serif ;
+          }
+        </style>
         
         
         {{else}}
@@ -103,56 +111,38 @@
 
 </body>
 
+<script src="assets/js/jquery.min.js"></script>
 
 
-  
-    
-    
- {{!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> --}}
- <!-- Plugins JS File -->
-    {{!-- <script src="assets/js/jquery.min.js"></script> --}}
-    	{{!-- <script src="assets/js/jquery.min.js"></script> --}}
-    {{!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
-    
-        <script src="assets/js/jquery.min.js"></script>
+
+
+<script>
 
     
-        
- <script
 
-      type="text/javascript"
+</script>
+       
+<script
 
-      charset="utf8"
+  type="text/javascript"
 
-      src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"
+  charset="utf8"
 
-    ></script>
+  src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"
 
- 
+></script>
+<script
 
-    <script
+  type="text/javascript"
 
-      type="text/javascript"
+  charset="utf8"
 
-      charset="utf8"
+  src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"
 
-      src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"
-
-    ></script>
-
-   
-        
-    <script type="text/javascript">
-
-
-     
-
-
-      
-
-      $(document).ready(function() {
+></script>
+  <script type="text/javascript">
+    
+    $(document).ready(function() {
 
       $('#categoryTable').DataTable();
       } );
@@ -178,7 +168,98 @@
 
 <script>
 
+  $("#editProduct").validate({
 
+    rules:{
+
+      sizes:{
+        required:true
+      },
+      color:{
+        required:true
+      },
+      landingcost:{
+        required:true
+      },
+      mrp:{
+        required:true
+      },
+      quantity:{
+        required:true
+      }
+    }
+    
+
+
+
+  })
+
+  
+
+
+  $("#addProduct").validate({
+    
+    rules:{
+      productName:{
+        required:true
+      },
+      brand:{
+        required:true
+      },
+      category:{
+        required:true
+      },
+      subcategory:{
+        required:true
+      },
+      discription:{
+        required:true
+      },
+      sizes:{
+        required:true
+      },
+      color:{
+        required:true
+      },
+      landingcost:{
+        required:true
+      },
+      mrp:{
+        required:true
+      },
+      quantity:{
+        required:true
+      },
+      image1:{
+        required:true
+      },
+      image2:{
+        required:true
+      },
+      image3:{
+        required:true
+      },
+      image4:{
+        required:true
+      },
+    }
+
+  })
+
+$('#add-Barnd').validate({
+  
+  rules:{
+
+    brandName:{
+      required:true,
+    },
+    image1:{
+      required:true,
+    }
+
+
+  }
+})
 
 $('#editform').validate({
 
@@ -214,12 +295,12 @@ $.validator.addMethod("customName", function(value, element) {
       rules: {
         first_name: {
           required: true,
-          minlength: 5,
+          minlength: 4,
           customName:true
         },
         lastname:{
           required:true,
-          minlength:5,
+          minlength:4,
           customName:true
         }
         ,
@@ -230,7 +311,7 @@ $.validator.addMethod("customName", function(value, element) {
         mobile:{
           required:true,
           minlength:10,
-          maxlength:10
+          
         },
         
         password:{
@@ -289,7 +370,7 @@ $.validator.addMethod("customName", function(value, element) {
 setInputFilter(document.getElementById("mobile"), function(value) {
   return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 9999999999); });
           
-       </script>
+</script>
 
 
 
@@ -378,7 +459,6 @@ setInputFilter(document.getElementById("mobile"), function(value) {
         }
         
 
-        
 
         
 
@@ -387,82 +467,7 @@ setInputFilter(document.getElementById("mobile"), function(value) {
 
 
     
-        function viewSymbel(event){
-
-            document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
-            let file = event.target.files[0].name
-            let extension = file.split('.').pop()
-            if(extension == 'jpeg'||extension == 'png'|| extension == 'jpg' ){
-
-                $('#imgView').show()
-                $('#sub').show()
-                $('#errMsg').show()
-
-            }else{
-
-                $('#sub').hide()
-                $('#errMsg').show()
-
-            }
-
-        }
-        function viewSymbel2(event){
-
-            document.getElementById('imgView2').src = URL.createObjectURL(event.target.files[0])
-            let file = event.target.files[0].name
-            let extension = file.split('.').pop()
-            if(extension == 'jpeg'||extension == 'png'|| extension == 'jpg' ){
-
-                $('#imgView2').show()
-                $('#sub').show()
-                $('#errMsg').show()
-
-            }else{
-
-                $('#sub').hide()
-                $('#errMsg').show()
-
-            }
-
-        }
-        function viewSymbel3(event){
-
-            document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
-            let file = event.target.files[0].name
-            let extension = file.split('.').pop()
-            if(extension == 'jpeg'||extension == 'png'|| extension == 'jpg' ){
-
-                $('#imgView3').show()
-                $('#sub').show()
-                $('#errMsg').show()
-
-            }else{
-
-                $('#sub').hide()
-                $('#errMsg').show()
-
-            }
-
-        }
-         function viewSymbel4(event){
-
-            document.getElementById('imgView4').src = URL.createObjectURL(event.target.files[0])
-            let file = event.target.files[0].name
-            let extension = file.split('.').pop()
-            if(extension == 'jpeg'||extension == 'png'|| extension == 'jpg' ){
-
-                $('#imgView4').show()
-                $('#sub').show()
-                $('#errMsg').show()
-
-            }else{
-
-                $('#sub').hide()
-                $('#errMsg').show()
-
-            }
-
-        }
+        
 
 </script>
 

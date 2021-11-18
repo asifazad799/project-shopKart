@@ -1,118 +1,444 @@
-<div class="container" >
-            <h1 class="text-center mb-5">Product varient edit</h1>
-            <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
-        <div class="container cl-10 col-sm-8 col-md-6 col-lg-8 pt-0 mt-0">
-            <div class="row p-3" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
-                {{#if varientData}}
-                <form class="pt-0" enctype="multipart/form-data" id="editform" onsubmit="return submitForm(this)"   action="/admin/editVarients?varientId={{varientData._id}}" method="POST">
-                <div class="row" style="display: flex;" >
-                    
-                   <h3 class="text-left  loginTitle mt-1">product:</h3>
-                        
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
 
-                   <h4>{{product}}</h4>
-                        
-                </div>
+                            
+
+
+
+
+ <div class="container" style="font-size: 14px;" >
+            <h1 class="text-center">Edit Product Varient</h1>
+
+            <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-10 pt-0 mt-4">
+            <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+                {{#if varientData}}
+                <form class="pt-0" enctype="multipart/form-data" id="editProduct" onsubmit="return submitForm(this)"   action="/admin/editVarients?varientId={{varientData._id}}" method="POST">
+                
+                   <h3 class="text-center loginTitle mb-2">Product:{{product}}</h3>
                     {{#if productErr}}
                     <p  class="text-danger text-center mt-1">{{productErr}}</p>
                     {{/if}}
+      
                     
-                   <div class="row mb-0">
-                       <div class=" col-lg-6">
-                        <label class="form-label">Product size</label>
-                        <input type="text" class="form-control text" value="{{varientData.size}}"  name="size">
-                        
-                    </div>
-                    <div class=" col-lg-6">
-                        <label class="form-label">Product color</label>
-                        <input type="text" class="form-control text" value="{{varientData.color}}" name="email" >
-                    </div>
-                   {{!-- <div id="emailHelp" class="form-text ps-3" style="margin-top: -7px; margin-bottom:7px;">We'll never share your personal data with anyone else.</div> --}}
+                    
+                    
+                    <input type="text" id="subcategory" value="{{subcategory}}" hidden >
+                    <div class="row">
+                        <p>Selected Size:{{varientData.size}}</p>
+                        <div class="col-3 ">
+                            <label class="form-label">Select Size</label>
+                            <select class="form-select" style="padding: 6px;" name="size" id="Psizes">
+                                <option selected value=""></option>
+                                
+                                
+                            </select>
+
+                        </div>
+                        <div class="col-2">
+
+                            <label class="form-label">Color</label>
+                            <input type="text" class="form-control" value="{{varientData.color}}"  name="color" >
+
+                        </div>
+                        <div class="col-5">
+                            <div class="row">
+
+                            <div class="col-8">
+
+                            <label class="form-label" >landing cost</label>
+                            <input type="text" class="form-control" value="{{varientData.landingcost}}"  name="landingcost" >
+                            </div>
+                            <div class="col-4">
+
+                                <label class="form-label">MRP</label>
+                                <input type="text" class="form-control"  value="{{varientData.mrp}}"  name="mrp" >
+
+                            </div>
+                            </div>
+
+                        </div>
+                        <div class="col-2">
+
+                            <label class="form-label">Quantity</label>
+                            <input type="text" class="form-control" value="{{varientData.quantity}}"  name="quantity" >
+
+                        </div>
+
+
                     </div>
 
+                    <div class="row"> 
+                        <div class="col-lg-4 text-center">
+
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 1</label>
+                            <div class="col-12">
+                            <div id="image-box" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn">Crop</button>
+                            </div>
+
+                            <img src="../images/product/productvarients/{{varientData._id}}_1.png" alt="" style="width: 100px; height:auto ; " id="imgview1">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image1" id="file1" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation1()">
+                            </div>  
+
+                        </div>
+                        <div class="col-lg-4 text-center">
+
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 2</label>
+                            <div class="col-12">
+                            <div id="image-box2" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn2">Crop</button>
+                            </div>
+
+                            <img src="../images/product/productvarients/{{varientData._id}}_2.png" alt="" style="width: 100px; height:auto ; " id="imgview2">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image2" id="file2" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation2()">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 text-center">
+
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 3</label>
+                            <div class="col-12">
+                            <div id="image-box3" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn3">Crop</button>
+                            </div>
+
+                            <img src="../images/product/productvarients/{{varientData._id}}_3.png" alt="" style="width: 100px; height:auto ; " id="imgview3">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image3" id="file3" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation3()">
+                            </div>
+                        </div>
+                         
+
+                    </div>
                     <div class="row">
 
-                    <div class="mb-2 col-lg-4">
-                        <label  class="form-label">Landing cost</label>
-                        <input type="text" class="form-control" value="{{varientData.landingcost}}" name="landingcost">
+                        <div class="col-12  d-flex justify-content-center">
+
+                        <div class="col-4 text-center">
+                           
+
+
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 4</label>
+                            <div class="col-12">
+                            <div id="image-box4" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn4">Crop</button>
+                            </div>
+
+                            <img src="../images/product/productvarients/{{varientData._id}}_4.png" alt="" style="width: 100px; height:auto ; " id="imgview4">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image4" id="file4" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation4()">
+                            </div>
+                            
+
+                        </div>
+                        </div>
+
+                            
+
+
                     </div>
+                   
+
                     
-                    <div class="mb-2 col-lg-4">
-                        <label  class="form-label">Mrp</label>
-                        <input type="text" class="form-control" value="{{varientData.mrp}}" id="mobile" name="mrp">
-                    </div>
-                    <div class="mb-2 col-lg-4">
-                        <label  class="form-label">Quantity</label>
-                        <input type="text" class="form-control" value="{{varientData.quantity}}" id="password" name="quantity">
-                    </div>
-                    </div>
-                    <div class="row mb-2">
 
-                        <div class="col-4" >
-
-                            <h6  class="form-label">Image 1</h6>
                             
-                            <img src="../images/product/productvarients/{{varientData._id}}_1.png" style=" width:200px" id="imgView" alt="">
-                            <br>
-                            <input type="file" class="form-control p-2"  name="image1" style="width: 100px; "
-                            accept="image/*" onchange="viewSymbel(event)">
-                        </div>
-                        <div class="col-4" >
 
-                            <h6  class="form-label">Image 2</h6>
-                            
-                            <img src="../images/product/productvarients/{{varientData._id}}_2.png" style="width:200px" id="imgView2" alt="">
-                            <br>
-                            <input type="file" class="form-control p-2"  name="image2" style="width: 100px; "
-                            accept="image/*" onchange="viewSymbel2(event)">
-                        </div>
-                        <div class="col-4" >
 
-                            <h6  class="form-label">Image 3</h6>
-                            
-                            <img src="../images/product/productvarients/{{varientData._id}}_3.png" style=" width:200px" id="imgView3" alt="">
-                            <br>
-                            <input type="file" class="form-control p-2"  name="image3" style="width: 100px; "
-                            accept="image/*" onchange="viewSymbel3(event)">
-                        </div>
-                        
+
+
+
+                       
+                    
+                    
+                    <div class="row">
+
+                    <div class="cl-lg-4 text-center mb-0 d-flex justify-content-center">
+                        <button id="confirm-btn" type="submit" class="btn btn-primary " style="background-color: blue; margin-top:20px; width: 80px">Add</button>
                     </div>
-                    <div class="row d-flex justify-content-center">
-
-                        <div class="col-4" >
-
-                            <h6  class="form-label">Image 4</h6>
-                            
-                            <img src="../images/product/productvarients/{{varientData._id}}_4.png" style=" width:200px" id="imgView4" alt="">
-                            <br>
-                            <input type="file" class="form-control p-2"  name="image4" style="width : 100px "
-                            accept="image/*" onchange="viewSymbel4(event)">
-                        </div>
-
-                        
-
                     </div>
-                    <div class="cl-lg-5 text-center mb-2">
-                        <button  type="submit"  style="width:100px" class="btn btn-primary loginFormButton mt-4">Update</button>
-                    </div>
-                    {{/if}}
-                  </form>
+                </form>
+                {{/if}}
+                
             </div>
         </div>
     </section>
 
+   
+   
+    </div>
+    </div>
+    
+</main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+
+<script>
+     
+
+        let currentSubCat = document.getElementById('subcategory').value;
+        if(currentSubCat=='shirt'){
+
+          let x = ['S','M'];
+
+          let Count = x.length;
+
+                var xoptions = "<option value='0'>select</option>"
+
+                for(let i = 0 ; i < Count ; i++ ){
+
+                  xoptions += "<option value='"+x[i]+"'>"+x[i]+"</option>"
+
+                } document.getElementById('Psizes').innerHTML = xoptions;
+
+
+
+        }else if(currentSubCat == 'shoes'){
+
+
+          let x = ['10','9'];
+
+          let Count = x.length;
+
+                var xoptions = "<option value='0'>select</option>"
+
+                for(let i = 0 ; i < Count ; i++ ){
+
+                  xoptions += "<option value='"+x[i]+"'>"+x[i]+"</option>"
+
+                } document.getElementById('Psizes').innerHTML = xoptions;
+
+
+        }
+        
+
+
+    function fileValidation1() {
+        const imagebox = document.getElementById('image-box')
+        const crop_btn = document.getElementById('crop-btn')
+        var fileInput = document.getElementById('file1');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep1" style="width:100%">`
+            const image = document.getElementById('imagep1')
+            document.getElementById('image-box').style.display = 'block'
+            document.getElementById('crop-btn').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file1');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview1').src = url
+                    document.getElementById('image-box').style.display = 'none'
+                    document.getElementById('crop-btn').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+
+    function fileValidation2() {
+        const imagebox = document.getElementById('image-box2')
+        const crop_btn = document.getElementById('crop-btn2')
+        var fileInput = document.getElementById('file2');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep2" style="width:100%">`
+            const image = document.getElementById('imagep2')
+            document.getElementById('image-box2').style.display = 'block'
+            document.getElementById('crop-btn2').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file2');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview2').src = url
+                    document.getElementById('image-box2').style.display = 'none'
+                    document.getElementById('crop-btn2').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+    function fileValidation3() {
+        const imagebox = document.getElementById('image-box3')
+        const crop_btn = document.getElementById('crop-btn3')
+        var fileInput = document.getElementById('file3');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep3" style="width:100%">`
+            const image = document.getElementById('imagep3')
+            document.getElementById('image-box3').style.display = 'block'
+            document.getElementById('crop-btn3').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file3');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview3').src = url
+                    document.getElementById('image-box3').style.display = 'none'
+                    document.getElementById('crop-btn3').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+    function fileValidation4() {
+        const imagebox = document.getElementById('image-box4')
+        const crop_btn = document.getElementById('crop-btn4')
+        var fileInput = document.getElementById('file4');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep4" style="width:100%">`
+            const image = document.getElementById('imagep4')
+            document.getElementById('image-box4').style.display = 'block'
+            document.getElementById('crop-btn4').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file4');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview4').src = url
+                    document.getElementById('image-box4').style.display = 'none'
+                    document.getElementById('crop-btn4').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+    
+</script>
+
+
+            
 
             
 
      
         
-        </div>
-    </div>
-</main>
 
 
-
-
-    
+  
+  
 

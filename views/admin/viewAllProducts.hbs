@@ -32,7 +32,11 @@
             <td>{{this.productName}}
             </td>
             {{#each productVarients}}
-            <td><img src="/images/product/productvarients/{{this._id}}_1.png" width="50px" height="50px" alt=""></td>
+            <td> <ul>
+                <li>
+                     <img src="/images/product/productvarients/{{this._id}}_1.png" width="70px" height="70px" alt="">
+                </li>
+            </ul></td>
             {{/each}}
             <td>{{this.category}}</td>
             <td>{{this.subcategory}}</td>
@@ -50,20 +54,21 @@
                         <li>Quantity:{{this.quantity}}</li>
                         
 
-               
-                    <a  href="/admin/editVarients?varientId={{this._id}}&product={{../this.productName}}"><i class="fas fa-edit text-center"></i></a>
+                   
+                    <a  href="/admin/editVarients?varientId={{this._id}}&product={{../this.productName}}&subcategory={{../this.subcategory}}"><i class="fas fa-edit fs-3 text-center"></i></a>
                 
 
                 {{/each}}
                 </ul>
-                
-                
+                {{!-- {{#each  productVarients}}
+                 <a  href="/admin/addNewVarient?product={{this.productId}}" class="btn btn-primary">Add new Varient</a> --}}
+               
             </td>
             <td>
 
-                 <a class="btn" onclick= "deleteproduct('{{this._id}}','{{#each productVarients}}{{this._id}}{{/each}}')"><i class="fas fa-trash text-danger text-center"></i></a>
+                 <a class="btn" onclick= "deleteproduct('{{this._id}}','{{#each productVarients}}{{this._id}}{{/each}}')"><i class="fas fa-trash text-danger fs-3 text-center"></i></a>
 
-                 <a href="/admin/editProduct?productId={{this._id}}"><i class="fas fa-edit text-center"></i></a>
+                 <a href="/admin/editProduct?productId={{this._id}}"><i class="fas fa-edit fs-3 text-center"></i></a>
             </td>
             
             

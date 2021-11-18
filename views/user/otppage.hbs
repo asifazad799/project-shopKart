@@ -1,4 +1,5 @@
 {{!-- <h1>otp page</h1> --}}
+
 <section class="mt-0 pt-0 d-flex justify-content-center loginForm">
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-3 pt-5 mt-4">
             <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
@@ -21,13 +22,14 @@
                         
                     </div>
                     <h6 class="text-center text-danger" id="otpTimer"></h6>
+                    <h6 class="text-center text-danger hide" id="resendotpTimer"></h6>
                     <div class="row d-flex justify-content-center mb-2 mt-2" style="margin-left: auto; margin-right:auto">
                         <div class="text-center">
                             <button type="submit" onclick="otpSend()" class="btn btn-primary loginFormButton " >Confirm</button>
                             
                         </div>
                         <div class="text-center mt-2">
-                            <button style="width:70px !important" class="btn btn-primary loginFormButton "  onclick="otpSend()" id="otpResendButton"><span  >Resend otp?</span></button>
+                            <button style="width:70px !important" class="btn btn-primary loginFormButton isDisabled"  onclick="restCoundown()" id="otpResendButton"><span  >Resend otp?</span></button>
                             
                         </div>
                         

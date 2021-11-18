@@ -645,7 +645,7 @@ blockquote.text-white cite span {
   }
 }
 .top-menu {
-  text-transform: uppercase;
+  
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -1038,6 +1038,7 @@ blockquote.text-white cite span {
   justify-content: center;
   min-width: 2rem;
   height: 2rem;
+  padding-top: 0.5px;
   border-radius: 50%;
   font-weight: 400;
   font-size: 1rem;

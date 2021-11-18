@@ -1,206 +1,220 @@
-<h1>add new product</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
 
-<div class="container" style="font-size: 14px;" >
+                            
+
+
+
+
+ <div class="container" style="font-size: 14px;" >
             <h1 class="text-center">Product Management</h1>
 
             <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-10 pt-0 mt-4">
             <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
-                <form class="pt-0" enctype="multipart/form-data" id="" action="/admin/addNewProduct" method="POST">
+                <form class="pt-0" enctype="multipart/form-data" id="addProduct" action="/admin/addNewProduct" method="POST">
                 
-                   <h3 class="text-center loginTitle">Add New Product</h3>
-                   {{#if pErr}}
+                   <h3 class="text-center loginTitle mb-2">Add new product</h3>
+                    {{#if pErr}}
                    <p  class="text-danger text-center mt-1">{{pErr}}</p>
                    {{/if}}
                    <div class="row">
-                       <div class="col-6">
 
-                        <label class="form-label">Product name</label>
-                        <input type="text" class="form-control"  name="productName" >
-                        <div class="row">
+                   <div class=" col-lg-6">
 
-                        <div class="col-12">
-
-                        <label class="form-label">Select Category</label>
+                        <label class="form-label" style="font-size: 14px;">Product Name</label>
+                        <input type="text" class="form-control text"  name="productName" >
                         
-                       <div class="input-group mb-3" >
-                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
-                            <select class="form-select" style="padding: 12px;" name="category" id="category" onchange='catChange()'>
-                                <option selected>Choose...</option>
+                    </div>
+                    <div class=" col-lg-6">
+
+                        <label class="form-label">Brand name</label>
+                        <select class="form-select" style="padding: 6px;" name="brand" id="inputGroupSelect01">
+                                <option value="">Choose...</option>
+                                {{#each brandData}}
+                                <option value="{{this.brandName}}">{{this.brandName}}</option>
+                                {{/each}}
+                                
+                        </select>
+
+                    </div>
+                   </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label">Select Category</label>
+                            <select class="form-select" style="padding: 6px;" name="category" id="category" onchange='catChange()'>
+                                <option value="">Choose...</option>
                                 {{#each catData}}
                                 <option value="{{this.category}}">{{this.category}}</option>
                                 {{/each}}
-                                {{!-- <option value="2">Two</option>
-                                <option value="3">Three</option> --}}
+                               
                             </select>
-                            </div>
+
                         </div>
+                        <div class="col-lg-6">
+                            <label class="form-label">Select SubCategory</label>
+                            <select class="form-select" style="padding: 6px;" name="subcategory" id="subcategory" onchange="sizeget()">
+                                <option value="">Choose...</option>
+                                
+                                
+                            </select>
+                        </div>
+
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="form-label">Discription</label>
+                                <textarea class="form-control" rows="3"  name="discription" >
+                                </textarea>
+
+                        </div>
+
                     </div>
 
                     <div class="row">
 
-                        
-                        <div class="col-3">
-
+                        <div class="col-3 ">
                             <label class="form-label">Select Size</label>
-                            <div class="input-group mb-3" >
-                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
-                            <select class="form-select" style="padding: 12px;" name="sizes" id="Psizes">
-                                
-                                <option selected>Choose...size</option>
-                                
-                                
-                                
-                                
+                            <select class="form-select" style="padding: 6px;" name="sizes" id="Psizes">
+                                <option value="">Choose...size</option>
                             </select>
-                            </div>
 
                         </div>
-                        <div class="col-5">
+                        <div class="col-2">
+
                             <label class="form-label">Color</label>
                             <input type="text" class="form-control"  name="color" >
 
                         </div>
-                        <div class="col-4">
-                            <label class="form-label">landing cost</label>
-                            <input type="text" class="form-control"  name="landingcost" >
-
-                        </div>
-
-                    </div>
-                    
-                       </div>
-                        <div class="col-6">
-
-                        <label class="form-label">Select Brand</label>
-                        
-                       <div class="input-group mb-3" >
-                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
-                            <select class="form-select" style="padding: 12px;" name="brand" id="inputGroupSelect01">
-                                <option selected>Choose...</option>
-                                {{#each brandData}}
-                                <option value="{{this.brandName}}">{{this.brandName}}</option>
-                                {{/each}}
-                                {{!-- <option value="2">Two</option>
-                                <option value="3">Three</option> --}}
-                            </select>
-                            </div>
-                        <div class="row">
-
-                            <div class="col-12  mt-3">
-                                <label class="form-label">Select sub Category</label>
-                        
-                       <div class="input-group mb-3" >
-                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
-                            <select class="form-select" style="padding: 12px;" name="subcategory" id="subcategory" onchange="sizeget()">
-                                <option selected>Choose...</option>
-                                
-                                <option value=""></option>
-                                
-                                {{!-- <option value="2">Two</option>
-                                <option value="3">Three</option> --}}
-                            </select>
-                            </div>
-
-
-                            </div>
-
+                        <div class="col-5">
                             <div class="row">
-                                <div class="col-4">
+
+                            <div class="col-8">
+
+                            <label class="form-label" >landing cost</label>
+                            <input type="text" class="form-control"  name="landingcost" >
+                            </div>
+                            <div class="col-4">
+
                                 <label class="form-label">MRP</label>
                                 <input type="text" class="form-control"  name="mrp" >
 
                             </div>
-                            <div class="col-4">
-                                <label class="form-label">Quantity</label>
-                                <input type="text" class="form-control"  name="quantity" >
-
                             </div>
 
-                            </div>
+                        </div>
+                        <div class="col-2">
 
-
+                            <label class="form-label">Quantity</label>
+                            <input type="text" class="form-control"  name="quantity" >
 
                         </div>
 
-                        
-                        
-                        
-                        {{!-- <div id="emailHelp" class="form-text">We'll never share your data with anyone else.</div> --}}
-                    </div>
-                    <div class="row col-12">
-                        <div class="col-12">
-                            <label class="form-label">Discription</label>
-                                <textarea class="form-control" rows="3"  name="discription" >
-                                    </textarea>
-
-                        </div>
-
-                    </div>
-                    
-                        <div class="row ms-1">
-
-                        
-
-                            <div class=" row col-6 ">
-                                <div class="col-6 ">
-
-                        <label  class="form-label">Image 1</label>
-                        <img src="" style="display:none;  height:200px; width:100%" id="imgView" alt="">
-                        <br>
-                        <input type="file" class="form-control p-3"  name="image1" style="width: 100px;"
-                        accept="image/*" onchange="viewSymbel(event)">
-                                </div>
-                                <div class="col-6">
-                                    <label  class="form-label">Image 2</label>
-                        <img src="" style="display:none;  height:200px; width:100%" id="imgView2" alt="">
-                        <br>
-                        <input type="file" class="form-control p-3"  name="image2" style="width: 100px;"
-                        accept="image/*" onchange="viewSymbel2(event)">
-
-                                </div>
-
-                            </div>
-
-                            <div class="row col-6">
-                                <div class="col-6">
-
-                                     <label  class="form-label">Image 3</label>
-                        <img src="" style="display:none;  height:200px; width:100%" id="imgView3" alt="">
-                        <br>
-                        <input type="file" class="form-control p-3"  name="image3" style="width: 100px;"
-                        accept="image/*" onchange="viewSymbel3(event)">
-
-                        
-                        </div>
-                                <div class="col-6">
-                                    <label  class="form-label">Image 4</label>
-                                        <img src="" style="display:none;  height:200px; width:100%" id="imgView4" alt="">
-                                        <br>
-                                        <input type="file" class="form-control p-3"  name="image4" style="width: 100px;"
-                                        accept="image/*" onchange="viewSymbel4(event)">
-                                        </div>
-                        </div>
 
                     </div>
 
-                        
-                               
+                    <div class="row"> 
+                        <div class="col-lg-4 text-center">
 
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 1</label>
+                            <div class="col-12">
+                            <div id="image-box" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn">Crop</button>
+                            </div>
+
+                            <img src="" alt="" style="width: 100px; height:auto ; " id="imgview1">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image1" id="file1" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation1()">
+                            </div>  
+
+                        </div>
+                        <div class="col-lg-4 text-center">
+
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 2</label>
+                            <div class="col-12">
+                            <div id="image-box2" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn2">Crop</button>
+                            </div>
+
+                            <img src="" alt="" style="width: 100px; height:auto ; " id="imgview2">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image2" id="file2" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation2()">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 text-center">
+
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 3</label>
+                            <div class="col-12">
+                            <div id="image-box3" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn3">Crop</button>
+                            </div>
+
+                            <img src="" alt="" style="width: 100px; height:auto ; " id="imgview3">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image3" id="file3" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation3()">
+                            </div>
+                        </div>
+                         
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-12  d-flex justify-content-center">
+
+                        <div class="col-4 text-center">
+                           
+
+
+                            <div class="mt-5">
+                            <label for="form-label" style="font-weight: 700;">Image 4</label>
+                            <div class="col-12">
+                            <div id="image-box4" style="width: 250px; height: 250px; display: none;"></div>
+                            <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                id="crop-btn4">Crop</button>
+                            </div>
+
+                            <img src="" alt="" style="width: 100px; height:auto ; " id="imgview4">
+                            {{!-- <div id="preview1"></div> --}}
+                            <input type="file" name="image4" id="file4" style="padding-top: 5.7px;" class="form-control"
+                                onchange="return fileValidation4()">
+                            </div>
+                            
+
+                        </div>
+                        </div>
 
                             
 
-                        
-                        
-                    
 
+                    </div>
                    
 
                     
+
+                            
+
+
+
+
+
+                       
                     
                     
-                    <div class="cl-lg-4 text-center mb-0">
-                        <button type="submit" class="btn btn-primary loginFormButton">Add</button>
+                    <div class="row">
+
+                    <div class="cl-lg-4 text-center mb-0 d-flex justify-content-center">
+                        <button id="confirm-btn" type="submit" class="btn btn-primary " style="background-color: blue; margin-top:20px; width: 80px">Add</button>
+                    </div>
                     </div>
                 </form>
                 
@@ -208,7 +222,229 @@
         </div>
     </section>
 
+   
+   
     </div>
     </div>
     
 </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+
+<script>
+    function fileValidation1() {
+        const imagebox = document.getElementById('image-box')
+        const crop_btn = document.getElementById('crop-btn')
+        var fileInput = document.getElementById('file1');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep1" style="width:100%">`
+            const image = document.getElementById('imagep1')
+            document.getElementById('image-box').style.display = 'block'
+            document.getElementById('crop-btn').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file1');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview1').src = url
+                    document.getElementById('image-box').style.display = 'none'
+                    document.getElementById('crop-btn').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+
+    function fileValidation2() {
+        const imagebox = document.getElementById('image-box2')
+        const crop_btn = document.getElementById('crop-btn2')
+        var fileInput = document.getElementById('file2');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep2" style="width:100%">`
+            const image = document.getElementById('imagep2')
+            document.getElementById('image-box2').style.display = 'block'
+            document.getElementById('crop-btn2').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file2');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview2').src = url
+                    document.getElementById('image-box2').style.display = 'none'
+                    document.getElementById('crop-btn2').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+    function fileValidation3() {
+        const imagebox = document.getElementById('image-box3')
+        const crop_btn = document.getElementById('crop-btn3')
+        var fileInput = document.getElementById('file3');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep3" style="width:100%">`
+            const image = document.getElementById('imagep3')
+            document.getElementById('image-box3').style.display = 'block'
+            document.getElementById('crop-btn3').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file3');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview3').src = url
+                    document.getElementById('image-box3').style.display = 'none'
+                    document.getElementById('crop-btn3').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+    function fileValidation4() {
+        const imagebox = document.getElementById('image-box4')
+        const crop_btn = document.getElementById('crop-btn4')
+        var fileInput = document.getElementById('file4');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="imagep4" style="width:100%">`
+            const image = document.getElementById('imagep4')
+            document.getElementById('image-box4').style.display = 'block'
+            document.getElementById('crop-btn4').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file4');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview4').src = url
+                    document.getElementById('image-box4').style.display = 'none'
+                    document.getElementById('crop-btn4').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+    
+</script>
+
+
+            
+
+            
+
+     
+        
+
+
+  
+  
+

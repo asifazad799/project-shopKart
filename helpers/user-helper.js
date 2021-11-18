@@ -14,27 +14,12 @@ module.exports = {
         userData.password=await bcrypt.hash(userData.password,10)
         delete userData.confirmPassword;
 
-        let user = await db.get().collection(collection.USER_COLLECTION).findOne({$or:[{email:userData.email},{mobile:userData.mobile}]});
+        // let user = await db.get().collection(collection.USER_COLLECTION).findOne({$or:[{email:userData.email},{mobile:userData.mobile}]});
         
 
         
           
-          if(userData.email==user?.email||userData.mobile==user?.mobile){
-            
-            if(userData.email==user?.email){
-              
-              console.log('Email already exist')
-              resolve({status:true,msg:"Email already exist"})
-              
-            }
-            else if(userData.mobile==user?.mobile){
-    
-              console.log('Mobile already exist')
-                resolve({status:true,msg:"Mobile already exist"})
-                console.log(user.mobile);
-    
-            }
-          }else{
+          
 
             await db.get().collection(collection.USER_COLLECTION).insertOne(userData).then((data)=>{
   
@@ -42,7 +27,7 @@ module.exports = {
     
               })
             
-          }
+          
   
             
         
@@ -87,22 +72,43 @@ module.exports = {
             // console.log(user)
             if(user){
 
-              resolve({userFound:true})
+              resolve({userFound:true,user})
 
             }else{
 
               resolve({userFound:false})
             }
+          })
+    
+    
+        },signUpUserVerification:(data)=>{
+
+          // console.log(data.email)
+
+          return new Promise(async(resolve,reject)=>{
+
+                let user = await db.get().collection(collection.USER_COLLECTION).findOne({$or:[{email:data.email},{mobile:data.mobile}]})
+
+                if(user){
+
+                  resolve({userFound:true})
+
+                }
+                else{
+
+                  resolve({userFound:false})
+                }
+
+          })
+
+
+        }
 
           
           
 
           
 
-      })
-
-
-    }
     // otpLogInUserVerification:(data)=>{
       
     //   return new Promise(async(resolve,reject)=>{

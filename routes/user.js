@@ -61,6 +61,27 @@ router.get('/userLogin', function(req, res, next) {
   
 });
 
+router.get('/otpResend',(req,res)=>{
+
+  client.verify
+      .services(serviceId)
+      .verifications.create({
+        to:`+91${req.query.phonenumber}`,
+        channel:"sms"
+      })
+      .then((resp)=>{
+        
+        console.log('asif')
+        // console.log(resp);
+        // res.status(200).json({resp});
+        let valid = true;
+        res.json(valid)})
+
+  
+
+
+})
+
 
 router.post('/loginOtp',(req,res)=>{
 
@@ -68,11 +89,13 @@ router.post('/loginOtp',(req,res)=>{
 
   let userMobile = req.body.mobile;
 
+  console.log('sdfghjk')
+
   userHelper.otpLogin(userMobile).then((response)=>{
 
     if(response.userFound){
 
-      console.log(response)
+      // console.log(response)
       client.verify
       .services(serviceId)
       .verifications.create({
@@ -108,10 +131,12 @@ router.post('/loginOtp',(req,res)=>{
 
 router.get('/otpConfirm',(req,res)=>{
 
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+
   // res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-  // console.log('iuiyiyg')
+  console.log('iuiyiyg')
   let phoneNumber = req.query.phonenumber;
-  // console.log(phoneNumber)
+  console.log(phoneNumber)
    let otpNumber = Number(req.query.otpnumber);
 //  typeof(otpNumber)
    client.verify
@@ -120,11 +145,12 @@ router.get('/otpConfirm',(req,res)=>{
      to:"+91"+phoneNumber,
      code:otpNumber
    }).then((resp=>{
-    //  console.log('asiffffffff')
+     console.log('asiffffffff')
      if(resp.valid){
           userHelper.otpLogin(phoneNumber).then((response)=>{
-          req.session.user = response;
-          console.log(req.session.user);
+          // console.log(response.user);
+          req.session.user = response.user;
+          // console.log(req.session.user);
           req.session.userLoggedIn = true;
           
           let valid = true;
@@ -185,25 +211,124 @@ router.get('/userSignUp', function(req, res, next) {
 
 });
 
-
+let signedUpUserData = null; 
 
 router.post('/signUpAction', function(req, res, next) {
 
-  userHelper.doSignup(req.body).then((response)=>{
-    console.log(response);
-    if(response.status){
-
-      res.redirect('/userSignUp');
-      signUpErr = response.msg;
-      
-    }else{
-      res.redirect('/userLogin');
-    }
-
-
-  })
   
+    // console.log(req.body)
+
+    userHelper.signUpUserVerification(req.body).then((response)=>{
+      
+      
+      // console.log(response);
+
+      if(response.userFound){
+
+        signUpErr="User already exist";
+
+        res.redirect('/userSignUp');
+
+      }else{
+
+        signedUpUserData = req.body;
+
+        // console.log(signedUpUserData.mobile);
+
+        let userMobile = signedUpUserData.mobile;
+
+        // console.log(response)
+      client.verify
+      .services(serviceId)
+      .verifications.create({
+        to:`+91${req.body.mobile}`,
+        channel:"sms"
+      })
+      .then((resp)=>{
+        
+        // console.log('asif')
+        // console.log(resp);
+        // res.status(200).json({resp});
+        res.render('user/signUpOtp',{userMobile})})
+
+        // res.render('user/signUpOtp',{})
+       
+
+        
+         
+      }
+
+
+
+
+
+    })
+
+      
 });
+
+router.get('/signOtpConfirm',(req,res)=>{
+
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  // console.log('iuiyiyg')
+  let phoneNumber = req.query.phonenumber;
+  // console.log(phoneNumber)
+   let otpNumber = Number(req.query.otpnumber);
+//  typeof(otpNumber)
+   client.verify
+   .services(serviceId)
+   .verificationChecks.create({
+     to:"+91"+phoneNumber,
+     code:otpNumber
+   }).then((resp=>{
+    //  console.log('asiffffffff')
+     if(resp.valid){
+
+            userHelper.doSignup(signedUpUserData).then((response)=>{
+            console.log(response);
+            if(response){
+        
+              
+
+              let valid = true;
+              res.send(valid);
+
+            }
+          })
+
+          
+          
+       
+     }else{
+       let valid = false;
+
+       res.send(valid);
+     }
+   }));
+
+
+
+})
+
+
+
+// router.post('/signUpAction', function(req, res, next) {
+
+//   userHelper.doSignup(req.body).then((response)=>{
+//     console.log(response);
+//     if(response.status){
+
+//       res.redirect('/userSignUp');
+//       signUpErr = response.msg;
+      
+//     }else{
+//       res.redirect('/userLogin');
+//     }
+
+
+//   })
+  
+// });
 
 router.get('/profileShorcut',verifyLogin,(req,res)=>{
 
@@ -218,7 +343,7 @@ router.get('/profileShorcut',verifyLogin,(req,res)=>{
 router.get('/cart',(req,res)=>{
 
   if(req.session.user){
-    res.render('user/cart');
+    res.render('user/cart',{currentUser:req.session.user,user:true});
   }else{
     res.redirect('/userLogin')
   }

@@ -1,0 +1,171 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+<div class="container" >
+            
+
+    <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-9 pt-0 mt-0">
+            <div class="row p-3" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+                <form class="pt-0" enctype="multipart/form-data" id="" action="/admin/addNewVarient?product={{product}}" method="POST">
+                   <h3 class="text-center loginTitle mt-1">Add new product varient</h3>
+                    {{#if pErr}}
+                   <p  class="text-danger text-center mt-1">{{pErr}}</p>
+                   {{/if}}
+                   
+                    
+                    
+                    
+                    <div class="row mt-1">
+
+                        <div class="col-3 ">
+                            <label class="form-label">Select Size</label>
+                            <select class="form-select" style="padding: 6px;" name="sizes" id="Psizes">
+                                <option selected>Choose...size</option>
+                            </select>
+
+                        </div>
+                        <div class="col-3">
+
+                            <label class="form-label">Color</label>
+                            <input type="text" class="form-control"  name="color" >
+
+                        </div>
+                        <div class="col-3">
+
+                            <label class="form-label">landing cost</label>
+                            <input type="text" class="form-control"  name="landingcost" >
+
+                        </div>
+                        <div class="col-3">
+
+                            <label class="form-label">Quantity</label>
+                            <input type="text" class="form-control"  name="quantity" >
+
+                            </div>
+
+                    </div>
+                    <div class=" row  ">
+                        
+                        <div class="col-6 d-flex justify-content-center">
+
+                        
+                        </div>
+                        <div class="col-6 d-flex justify-content-center">
+                            <div>
+
+                            <label  class="form-label">Image 2</label>
+                            <img src="" style="display:none;  height:200px; width:100%" id="imgView2" alt="">
+                            <br>
+                            <input type="file" class="form-control p-1"  name="image2" style="width: 170px;"
+                            accept="image/*" onchange="viewSymbel2(event)">
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-6 d-flex justify-content-center">
+
+                            <div>
+
+                            <label  class="form-label">Image 3</label>
+                            <img src="" style="display:none;  height:200px; width:100%" id="imgView3" alt="">
+                            <br>
+                            <input type="file" class="form-control p-1"  name="image3" style="width: 170px;"
+                            accept="image/*" onchange="viewSymbel3(event)">
+                            </div>
+
+
+                        
+                        </div>
+                        <div class="col-6 d-flex justify-content-center">
+                            <div>
+
+                            <label  class="form-label">Image 4</label>
+                            <img src="" style="display:none;  height:200px; width:100%" id="imgView4" alt="">
+                            <br>
+                            <input type="file" class="form-control p-1"  name="image4" style="width: 170px;"
+                            accept="image/*" onchange="viewSymbel4(event)">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="cl-lg-4 text-center mt-5 mb-2">
+                        <button type="submit" class="btn btn-primary loginFormButton">Add Product</button>
+                    </div>
+                    
+                  </form>
+                </div>
+
+                    
+            </div>
+        </div>
+    </section>
+
+            
+
+     
+        
+        </div>
+    </div>
+</main>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+<script>
+
+    function fileValidation1() {
+        const imagebox = document.getElementById('image-box')
+        const crop_btn = document.getElementById('crop-btn')
+        var fileInput = document.getElementById('file1');
+
+        var filePath = fileInput.value;
+        var allowedExtensions = /(\.jpg)$/i;
+        if (!allowedExtensions.exec(filePath)) {
+            alert('Please upload file having extensions .jpeg only.');
+            fileInput.value = '';
+            return false;
+        } else {
+            //Image preview
+            const img_data = fileInput.files[0]
+            const url = URL.createObjectURL(img_data)
+            imagebox.innerHTML = `<img src="${url}" id="image" style="width:100%">`
+            const image = document.getElementById('image')
+            document.getElementById('image-box').style.display = 'block'
+            document.getElementById('crop-btn').style.display = 'block'
+            document.getElementById('confirm-btn').style.display = 'none'
+
+            const cropper = new Cropper(image, {
+                autoCropArea: 1,
+                viewMode: 1,
+                scalable: true,
+                zoomable: true,
+                movable: true,
+                aspectRatio: 16 / 19,
+                //  preview: '.preview',
+                minCropBoxWidth: 180,
+                minCropBoxHeight: 240,
+            })
+            crop_btn.addEventListener('click', () => {
+                cropper.getCroppedCanvas().toBlob((blob) => {
+                    let fileInputElement = document.getElementById('file1');
+                    let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                    let container = new DataTransfer();
+
+                    container.items.add(file);
+                    const img = container.files[0]
+                    var url = URL.createObjectURL(img)
+                    fileInputElement.files = container.files;
+                    document.getElementById('imgview1').src = url
+                    document.getElementById('image-box').style.display = 'none'
+                    document.getElementById('crop-btn').style.display = 'none'
+                    document.getElementById('confirm-btn').style.display = 'block'
+                });
+            });
+        }
+    }
+
+
+</script>

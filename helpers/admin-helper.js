@@ -66,7 +66,7 @@ module.exports = {
         return new Promise(async(resolve,reject)=>{
 
             let isCategoryAvailable = await db.get().collection(collection.CATEGORY)
-            .findOne({category:categoryData.category});
+                                                    .findOne({category:categoryData.category});
 
             if(isCategoryAvailable){
                 let currentSubCategory = isCategoryAvailable.subcategory;
@@ -119,8 +119,7 @@ module.exports = {
             }
         })
 
-    },
-    getBrand:()=>{
+    },getBrand:()=>{
 
         return new Promise (async(resolve,reject)=>{
 
@@ -245,7 +244,7 @@ module.exports = {
                                                                                     mrp:data.mrp,
                                                                                     quantity:data.quantity}).then((varientResult)=>{
 
-                        // console.log(varientResult.insertedId);
+                        //console.log(varientResult.insertedId);
 
                         // let d=db.get().collection(collection.PRODUCTS).findOne({_id:result.insertedId}).then((re)=>{
 
@@ -254,6 +253,8 @@ module.exports = {
                         // })
 
                         let varId = varientResult.insertedId;
+
+                        console.log(varId);
 
                         resolve({alreadyAvailable:false,msg:'prouct added',varId})
 
@@ -273,6 +274,32 @@ module.exports = {
         })
 
     },
+    AddNewVarient:(product,data)=>{
+        
+        return new Promise (async(resolve,reject)=>{
+
+
+            // console.log(varient);
+            await db.get().collection(collection.PRODUCT_VARIENTS).insertOne({productId:objectId(product),
+                                                                                        size:data.sizes,
+                                                                                        color:data.color,
+                                                                                        landingcost:data.landingcost,
+                                                                                        mrp:data.mrp,
+                                                                                        quantity:data.quantity}).then((result)=>{
+
+                                                                                            console.log(result);
+
+                                                                                        })
+            
+
+
+
+
+        })
+
+
+    }
+    ,
     viewAllProducts:()=>{
 
         return new Promise(async(resolve,reject)=>{
@@ -287,9 +314,22 @@ module.exports = {
                                                                         as: "productVarients"
                                                                         }}]).toArray()
 
-                                                                        
-                                                                        //  console.log(cc[0].productVarients)
-                                                                        //  cc.map( (value) =>  {console.log(value)})
+                                                                        // let v = cc[0].productVarients
+
+                                                                        // v.map(x=> console.log(x._id))
+
+                                                                        // let varient = null;
+
+                                                                        // for(let i = 0 ; i<=0 ; i++){
+
+                                                                        //    varient = v[i]
+
+                                                                        // }
+
+                                                                        // console.log(varient._id);
+                                                                        // let varientId = varient._id;
+                                                                        // console.log(v)
+                                                                        //  cc.map( (value) =>  {console.log(value.productVarients)})
                                                                         
                  resolve(cc)
 

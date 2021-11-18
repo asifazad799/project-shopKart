@@ -159,7 +159,7 @@
   }
   
   .sidebar-wrapper .sidebar-brand > a {
-    text-transform: uppercase;
+    
     font-weight: bold;
     flex-grow: 1;
   }

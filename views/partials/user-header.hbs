@@ -508,10 +508,10 @@
             <a href="/profileShorcut" ><i class="far fa-user-circle profileShortcut"></i></a>
             <div class="dropdown-content">
               {{#if currentUser}}
-              <a href="/profileShorcut" class="text-dark text-center">{{currentUser.email}}</a>
+              <a href="/profileShorcut" id="currentUser" class="text-dark text-center">{{currentUser.email}}</a>
               <a class="btn" href="/userLogout">Log Out</a>
               {{else}}
-              <a class="btn" href="/userLogin">Log In</a>
+              <a class="btn" href="/userLogin" id="currentUser">Log In</a>
               <a class="btn" href="/userSignUp">Sign Up</a>
               {{/if}}
               {{!-- <a href="#">Link 2</a>
@@ -527,7 +527,7 @@
 
         <a href="/cart" style="font-weight: bolder;" class="wishlist-link">
             <i class="fal fa-shopping-cart fa-sm cartAll"></i>
-          <span class="wishlist-count">5</span>
+          <span class="wishlist-count" id="cartCount">{{userCartCount}}</span>
         </a>
 
         {{!-- <div class="dropdown cart-dropdown ">
@@ -861,3 +861,41 @@
       <!-- End .mobile-menu-wrapper -->
     </div>
     <!-- End .mobile-menu-container --> 
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+     
+function addToCart(product,subTotal){
+  //console.log(subTotal)
+  let user = document.getElementById('currentUser').innerHTML
+    $.ajax({
+      
+      url:'/addToCart',
+      method:'post',
+      data:{productId:product,subTotal:subTotal},
+      success:(response)=>{
+        if(response.valid){
+          
+          let cartCount = $('#cartCount').html();
+          cartCount = parseInt(cartCount)+1;
+          $('#cartCount').html(cartCount)
+
+        }else{
+          
+          Swal.fire({
+
+            position: 'middle',
+            icon: 'error',
+            title: 'Same product already in your cart',
+            showConfirmButton: false,
+            timer: 2000
+            
+          })
+
+        }
+      }
+    })
+}
+</script>   

@@ -1,3 +1,6 @@
+ <style>
+     
+ </style>
  <div class="" >
             <h1>admin view all products</h1>
 
@@ -65,10 +68,17 @@
                
             </td>
             <td>
+                <div style="display: flex;">
+
+                 <div>
 
                  <a class="btn" onclick= "deleteproduct('{{this._id}}','{{#each productVarients}}{{this._id}}{{/each}}')"><i class="fas fa-trash text-danger fs-3 text-center"></i></a>
+                 </div>
+                 <div style="margin-top: 7px;">
+                 <a href="/admin/editProduct?productId={{this._id}}" ><i class="fas fa-edit fs-3 p-0 text-center"></i></a>
+                 </div>
+                </div>
 
-                 <a href="/admin/editProduct?productId={{this._id}}"><i class="fas fa-edit fs-3 text-center"></i></a>
             </td>
             
             

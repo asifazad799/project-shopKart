@@ -1,0 +1,162 @@
+<div class="container" >
+            <h1 class="text-center">All Users</h1>
+
+            <div class="col-12 p-4 mt-4" style="background-color: rgb(222, 221, 221); border-radius:4px">
+
+                {{#if productErr}}
+
+                <p class="text-danger">{{productErr}}</p>
+
+                {{/if}}
+                
+
+    
+    <table id="allUsers" class="table table-striped" style="width:100%; font-size:15px !important;">
+        <thead style="font-size: 15px;">
+            <tr >
+                <th>Index</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+               
+                
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each users}}
+        <tr>
+            <td>{{@index}}</td>
+            
+            <td>{{this.first_name}} {{this.lastname}}</td>
+           
+            <td>{{this.mobile}}</td>
+            <td>{{this.email}}</td>
+            
+            <td>
+                {{#if blocked}}
+                <a class="btn btn-success text-white" onclick="unblockUser('{{this._id}}')">Unblock</a>
+                {{else}}
+                <a class="btn btn-danger text-white" onclick="blockUser('{{this._id}}')" style="width: 76px;">Block</a>
+                {{/if}}
+                 
+            </td>
+            
+            
+        </tr>
+        {{/each}}
+        </tbody>
+        
+        
+
+    </table>
+            </div>
+            
+
+     
+        
+        </div>
+    </div>
+</main>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+    $(document).ready(function() {
+
+    $('#allUsers').DataTable(); 
+
+    })
+
+    function blockUser(userId){
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want block this user?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'red',
+            cancelButtonColor: 'green',
+            confirmButtonText: 'Block'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                
+                $.ajax({
+                    
+                    url:'/admin/blockUser',
+                    method:'post',
+                    data:{userId:userId},
+                    success:(response)=>{
+
+                        if(response.valid){
+
+                        Swal.fire('User Blocked').then((result)=>{
+                                window.location.reload()
+                            });
+
+                            setTimeout(window.location.reload.bind(window.location),2000);
+
+                        }else{
+
+                            window.location.reload()
+                        }
+                        
+
+                    }
+
+                })
+
+                
+            }
+            })
+    
+
+
+    }
+
+function unblockUser(userId){
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want unblock this user?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'green',
+            cancelButtonColor: 'red',
+            confirmButtonText: 'Block'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                
+                $.ajax({
+                    
+                    url:'/admin/blockUser',
+                    method:'post',
+                    data:{userId:userId},
+                    success:(response)=>{
+
+                        if(response.valid){
+
+                        Swal.fire('User Blocked').then((result)=>{
+                                window.location.reload()
+                            });
+
+                            setTimeout(window.location.reload.bind(window.location),2000);
+
+                        }else{
+
+                            window.location.reload()
+                        }
+
+                    }
+
+                })
+
+                
+            }
+            })
+    
+
+
+    }
+
+
+</script>

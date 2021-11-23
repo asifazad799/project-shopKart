@@ -1,0 +1,43 @@
+<section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-4 pt-0 mt-2">
+            <div class="row p-4" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+                <form class="pt-0" id="addNewAddress" action="/addNewAddress" method="POST">
+                   <h3 class="text-center loginTitle mt-1 pb-2 pt-1">Add New Address</h3>
+                    
+                    {{#if addressErr}}
+                    <p  class="text-danger text-center mb-1">{{addressErr}}</p>
+                    {{/if}}
+                   
+                    <div class="mb-2">
+                        <label  class="form-label">House Number/street</label>
+                        <input type="text" class="form-control" value="building no:2" name="houseNumber">
+                    </div>
+                    <div class="mb-2">
+                        <label  class="form-label">Locality/city</label>
+                        <input type="text" class="form-control" value="malppuram" id="" name="locality">
+                    </div>
+                    <div class="mb-2">
+                        <label  class="form-label">District</label>
+                        <input type="text" class="form-control" value="malappuram" name="district">
+                    </div>
+                    <div class="row mb-0">
+                       <div class=" col-lg-6">
+                        <label class="form-label">State</label>
+                        <input type="text" class="form-control text" value="kerala"  name="state" >
+                        
+                    </div>
+                    <div class=" col-lg-6">
+                        <label class="form-label">Pincode</label>
+                        <input type="text" class="form-control text" id="pincode" value="679332" name="pincode" >
+                    </div>
+                   {{!-- <div id="emailHelp" class="form-text ps-3" style="margin-top: -7px; margin-bottom:7px;">We'll never share your personal data with anyone else.</div> --}}
+                    </div>
+                    
+                    <div class="cl-lg-4 text-center mb-2 mt-2">
+                        <button type="submit" class="btn btn-primary loginFormButton">Add</button>
+                    </div>
+                    
+                  </form>
+            </div>
+        </div>
+    </section>

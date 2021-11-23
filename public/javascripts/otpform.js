@@ -83,12 +83,12 @@ function resetTimer(){
             }
         })
 
-
-
-    
-
-    
 }
+
+
+    
+
+    
 
 function otpSend(){
 

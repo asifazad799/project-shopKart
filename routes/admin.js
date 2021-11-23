@@ -103,6 +103,40 @@ router.post('/login', function(req, res, next) {
   
 });
 
+
+router.get('/viewAllUsers',(req,res)=>{
+
+  adminHelper.getAllUsers().then((response)=>{
+
+    console.log(response)
+    res.render('admin/viewAllUsers',{admin:true,users:response})
+
+
+  })
+  
+
+})
+
+router.post('/blockUser',(req,res)=>{
+  
+  // console.log(req.body)
+  let user1 = req.body.userId;
+  adminHelper.blockUser(user1)
+  res.json({valid:true})
+
+
+})
+router.get('/viewAllBlockedUsers',(req,res)=>{
+
+  adminHelper.getAllBlockedUser().then((response)=>{
+    
+    // console.log(response) 
+    res.render('admin/viewAllBlockedUsers',{admin:true,users:response})
+
+  })
+
+})
+
 router.get('/adminProfileShorcut',adminLoginVerify,(req,res)=>{
 
   res.render('admin/adminprofile',{admin:true,currentAdmin})

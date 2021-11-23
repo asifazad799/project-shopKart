@@ -113,14 +113,16 @@
 
 <script src="assets/js/jquery.min.js"></script>
 
+{{!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script> --}}
 
 
 
-<script>
+
+
+
 
     
 
-</script>
        
 <script
 
@@ -161,12 +163,58 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js"></script>
 
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    
+<script src="/javascripts/resetFormValidation.js"></script>
 
 
 <script>
+$("#addNewAddress").validate({
+    
+    rules:{
+      houseNumber:{
+        required:true,
+      },
+      locality:{
+        required:true,
+      },
+      district:{
+        required:true,
+      },
+      state:{
+        required:true,
+      },
+      pincode:{
+        required:true,
+      },
+    }
+})
+ function setInputFilter(textbox, inputFilter) {
+  ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+    textbox.addEventListener(event, function() {
+      if (inputFilter(this.value)) {
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      } else {
+        this.value = "";
+      }
+    });
+  });
+}
+setInputFilter(document.getElementById("pincode"), function(value) {
+  return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 9999999999); });
+
+</script>
+
+
+<script>
+
+  
 
   $("#editProduct").validate({
 
@@ -188,10 +236,6 @@
         required:true
       }
     }
-    
-
-
-
   })
 
   
@@ -259,6 +303,43 @@ $('#add-Barnd').validate({
 
 
   }
+})
+
+$("#updateAddress").validate({
+  
+  rules:{
+      houseNumber:{
+        required:true,
+      },
+      locality:{
+        required:true,
+      },
+      district:{
+        required:true,
+      },
+      state:{
+        required:true,
+      },
+      pincode:{
+        required:true,
+      },
+    },submitHandler:function submitForm(form) {
+            swal({
+                title: "Are you sure?",
+                text: "This Address will be updated",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((isOkay) => {
+                if (isOkay) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
+
+
 })
 
 $('#editform').validate({
@@ -367,9 +448,11 @@ $.validator.addMethod("customName", function(value, element) {
     });
   });
 }
+
 setInputFilter(document.getElementById("mobile"), function(value) {
   return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 9999999999); });
-          
+
+    
 </script>
 
 

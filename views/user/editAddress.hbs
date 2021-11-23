@@ -1,0 +1,46 @@
+<section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-4 pt-0 mt-2">
+             
+            <div class="row p-4" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+                {{#each address}}
+                <form class="pt-0" id="updateAddress" onsubmit="return submitForm(this)" action="/updateAddress?addressId={{this.address.addressId}}" method="POST">
+                   <h3 class="text-center loginTitle mt-1 pb-2 pt-1">Edit Address</h3>
+                    
+                   
+                   
+                    <div class="mb-2">
+                        <label  class="form-label">House Number/street</label>
+                        <input type="text" class="form-control" value="{{this.address.houseNumber}}" name="houseNumber">
+                    </div>
+                    <div class="mb-2">
+                        <label  class="form-label">Locality/city</label>
+                        <input type="text" class="form-control" value="{{this.address.locality}}" id="" name="locality">
+                    </div>
+                    <div class="mb-2">
+                        <label  class="form-label">District</label>
+                        <input type="text" class="form-control" value="{{this.address.district}}" name="district">
+                    </div>
+                    <div class="row mb-0">
+                       <div class=" col-lg-6">
+                        <label class="form-label">State</label>
+                        <input type="text" class="form-control text" value="{{this.address.state}}"  name="state" >
+                        
+                    </div>
+                    <div class=" col-lg-6">
+                        <label class="form-label">Pincode</label>
+                        <input type="text" class="form-control text" id="pincode" value="{{this.address.pincode}}" name="pincode" >
+                    </div>
+                   {{!-- <div id="emailHelp" class="form-text ps-3" style="margin-top: -7px; margin-bottom:7px;">We'll never share your personal data with anyone else.</div> --}}
+                    </div>
+                    {{/each}}
+                    {{#if addressUpdateErr1}}
+                    <p  class="text-danger text-center mb-1">Same already exist</p>
+                    {{/if}}
+                    <div class="cl-lg-4 text-center mb-2 mt-2">
+                        <button type="submit" class="btn btn-primary loginFormButton">Add</button>
+                    </div>
+                    
+                  </form>
+            </div>
+        </div>
+    </section>

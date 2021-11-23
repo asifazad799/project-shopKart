@@ -7,6 +7,53 @@ const { PRODUCT_VARIENTS, PRODUCTS } = require("../config/collection");
 
 module.exports = {
 
+    getAllUsers:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let users = await db.get().collection(collection.USER_COLLECTION).find().toArray()
+
+            resolve(users)
+
+        })
+
+    },
+    blockUser:(user1)=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:objectId(user1)})
+
+            console.log(user.blocked)
+
+            if(user.blocked){
+
+                // console.log('blocked')
+                await db.get().collection(collection.USER_COLLECTION).updateOne({_id:objectId(user1)},{$set:{blocked:false}})
+                
+            }else{
+
+                // console.log('not blocked')
+                await db.get().collection(collection.USER_COLLECTION).updateOne({_id:objectId(user1)},{$set:{blocked:true}})
+
+            }
+
+
+        })
+
+
+    },
+    getAllBlockedUser:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let blockedUsers = await db.get().collection(collection.USER_COLLECTION).find({blocked:true}).toArray()
+
+            resolve(blockedUsers)
+
+        })
+
+    },
 
     getCategoryTable:()=>{
 
@@ -208,16 +255,14 @@ module.exports = {
            }
 
         })
-
-
-
-        
-
     },
     addNewProduct:(data)=>{
 
         return new Promise(async(resolve,reject)=>{
-
+            
+            data.landingcost = parseInt(data.landingcost)
+            data.mrp = parseInt(data.mrp)
+            data.quantity = parseInt(data.quantity)
             let isProductAvailable = await db.get().collection(collection.PRODUCTS).findOne({productName:data.productName});
 
             if(isProductAvailable){
@@ -235,7 +280,7 @@ module.exports = {
 
                     
                 //  console.log(result.insertedId);
-                 if(result){
+                if(result){
                     
                     db.get().collection(collection.PRODUCT_VARIENTS).insertOne({productId:result.insertedId,
                                                                                     size:data.sizes,
@@ -244,13 +289,7 @@ module.exports = {
                                                                                     mrp:data.mrp,
                                                                                     quantity:data.quantity}).then((varientResult)=>{
 
-                        //console.log(varientResult.insertedId);
-
-                        // let d=db.get().collection(collection.PRODUCTS).findOne({_id:result.insertedId}).then((re)=>{
-
-                        //     console.log(re)
-
-                        // })
+                        
 
                         let varId = varientResult.insertedId;
 
@@ -261,12 +300,10 @@ module.exports = {
                     })
                     
 
-                 }
+                }
     
                    
                 })
-
-
 
             }
 
@@ -274,6 +311,8 @@ module.exports = {
         })
 
     },
+
+
     AddNewVarient:(product,data)=>{
         
         return new Promise (async(resolve,reject)=>{

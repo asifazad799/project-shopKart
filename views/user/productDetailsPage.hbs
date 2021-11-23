@@ -1,9 +1,23 @@
+<style>
+    .cartCount{
+    border-radius: 2px;
+    line-height: 30px;
+}
+.buttonMinus{
+    width: 30px;
+    border-radius: 2px;
+    border: none;
+    color: white;
+    padding-top: 3px;
+    background-color: rgb(3, 3, 156);
+}
+</style>
 <main class="main">
-            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+            {{!-- <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                 <div class="container d-flex align-items-center">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Products</a></li>
+                        <li class="breadcrumb-item"><sapn>Home</sapn></li>
+                        <li class="breadcrumb-item"><span></span></li>
                         <li class="breadcrumb-item active" aria-current="page">Default</li>
                     </ol>
 
@@ -19,17 +33,18 @@
                         </a>
                     </nav><!-- End .pager-nav -->
                 </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+            </nav><!-- End .breadcrumb-nav --> --}}
 
             <div class="page-content">
                 <div class="container">
+                    {{#each response}}
                     <div class="product-details-top">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="product-gallery product-gallery-vertical">
                                     <div class="row">
                                         <figure class="product-main-image">
-                                            <img id="product-zoom" src="assets/images/products/single/1.jpg" data-zoom-image="assets/images/products/single/1-big.jpg" alt="product image">
+                                            <img id="product-zoom" src="/images/product/productvarients/{{this._id}}_1.png" data-zoom-image="/images/product/productvarients/{{this._id}}_1.png" alt="product image">
 
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                 <i class="icon-arrows"></i>
@@ -37,20 +52,20 @@
                                         </figure><!-- End .product-main-image -->
 
                                         <div id="product-zoom-gallery" class="product-image-gallery">
-                                            <a class="product-gallery-item active" href="#" data-image="assets/images/products/single/1.jpg" data-zoom-image="assets/images/products/single/1-big.jpg">
-                                                <img src="assets/images/products/single/1-small.jpg" alt="product side">
+                                            <a class="product-gallery-item active" href="#" data-image="/images/product/productvarients/{{this._id}}_1.png" data-zoom-image="/images/product/productvarients/{{this._id}}_1.png">
+                                                <img src="/images/product/productvarients/{{this._id}}_1.png" alt="product side">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="assets/images/products/single/2.jpg" data-zoom-image="assets/images/products/single/2-big.jpg">
-                                                <img src="assets/images/products/single/2-small.jpg" alt="product cross">
+                                            <a class="product-gallery-item" href="#" data-image="/images/product/productvarients/{{this._id}}_2.png" data-zoom-image="/images/product/productvarients/{{this._id}}_2.png">
+                                                <img src="/images/product/productvarients/{{this._id}}_2.png" alt="product cross">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="assets/images/products/single/3.jpg" data-zoom-image="assets/images/products/single/3-big.jpg">
-                                                <img src="assets/images/products/single/3-small.jpg" alt="product with model">
+                                            <a class="product-gallery-item" href="#" data-image="/images/product/productvarients/{{this._id}}_3.png" data-zoom-image="/images/product/productvarients/{{this._id}}_3.png">
+                                                <img src="/images/product/productvarients/{{this._id}}_3.png" alt="product with model">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="assets/images/products/single/4.jpg" data-zoom-image="assets/images/products/single/4-big.jpg">
-                                                <img src="assets/images/products/single/4-small.jpg" alt="product back">
+                                            <a class="product-gallery-item" href="#" data-image="/images/product/productvarients/{{this._id}}_4.png" data-zoom-image="/images/product/productvarients/{{this._id}}_4.png">
+                                                <img src="/images/product/productvarients/{{this._id}}_4.png" alt="product back">
                                             </a>
                                         </div><!-- End .product-image-gallery -->
                                     </div><!-- End .row -->
@@ -60,9 +75,9 @@
                             <div class="col-md-6">
                                 <div class="product-details">
                                     {{!-- brand --}}
-                                    <h1>Roadster</h1>
-                                    <h2 class="product-title" style="font-weight: 600;">Dark yellow lace cut out swing dress</h2><!-- End .product-title -->
-
+                                    <h1>{{this.product.brand}}</h1>
+                                    <h2 class="product-title" style="font-weight: 600;">{{this.product.category}} <span style="font-size: medium;">{{this.product.productName}}</span> </h2><!-- End .product-title -->
+                                    <h2 class="product-title" style="font-weight: 600;"></h2>
                                     {{!-- <div class="ratings-container">
                                         <div class="ratings">
                                             <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
@@ -71,7 +86,7 @@
                                     </div><!-- End .rating-container --> --}}
 
                                     <div class="product-price">
-                                        ₹849.00
+                                       ₹{{this.mrp}}
                                         
                                     </div><!-- End .product-price -->
                                     <p class="text-success">All tax is included</p>
@@ -93,7 +108,7 @@
                                         </div><!-- End .product-nav -->
                                     </div><!-- End .details-filter-row --> --}}
                                     {{!-- color selection --}}
-                                    <div class=" details-row-size mt-2 Pcolors">
+                                    {{!-- <div class=" details-row-size mt-2 Pcolors">
                                         <h6>Colors</h6>
                                          <label class="label_colorselector1" style="background-color: blue;" for="colorselector1">
                                              <input class="colorselector1" id="colorselector1" name="colorselector" hidden type="radio" value="blue">
@@ -104,16 +119,16 @@
                                         <label class="label_colorselector3" style="background-color: yellow;" for="colorselector3">
                                              <input class="colorselector3" id="colorselector3" name="colorselector" hidden type="radio" value="yellow">
                                         </label>
-                                    </div>
+                                    </div> --}}
                                     {{!-- end of color selection --}}
                                     {{!-- size selection --}}
                                     <div class=" details-row-size mt-2 Psizes">
                                         <h6>Sizes</h6>
                                          <label class="label_sizeselector1 text-center"  for="sizeselector1">
                                              <input class="sizeselector1" id="sizeselector1" name="sizeselector" hidden type="radio" value="small">
-                                             <span class="fs-1 sizes">S</span>
+                                             <span class="fs-1 sizes">{{this.size}}</span>
                                         </label>
-                                        <label class="label_colorselector2 text-center"  for="sizeselector2">
+                                        {{!-- <label class="label_colorselector2 text-center"  for="sizeselector2">
                                             
                                             <input class="sizeselector2" id="sizeselector2" name="sizeselector" hidden type="radio" value="medium">
                                             <span class="fs-1 sizes">M</span>
@@ -121,7 +136,7 @@
                                         <label class="label_sizeselector3 text-center"  for="sizeselector3">
                                              <input class="sizeselector3" id="colorselector3" name="sizeselector" hidden type="radio" value="larg">
                                              <span class="fs-1 sizes">L</span>
-                                        </label>
+                                        </label> --}}
                                     </div>
                                     {{!-- end of size selection --}}
                                     {{!-- <div class="details-filter-row details-row-size">
@@ -139,38 +154,46 @@
                                         <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
                                     </div><!-- End .details-filter-row --> --}}
 
-                                    <div class="details-filter-row details-row-size mt-3 mb-3">
+                                    {{!-- <div class="details-filter-row details-row-size mt-3 mb-3">
                                         <label for="qty"> <h6 class="pt-1">Qty</h6></label>
                                         <div class="product-details-quantity" >
                                             <input type="number" id="qty" class="Pquatity"  value="1" min="1" max="10" step="1" data-decimals="0" required>
                                         </div><!-- End .product-details-quantity -->
-                                    </div><!-- End .details-filter-row -->
+                                    </div><!-- End .details-filter-row --> --}}
+                                     {{!-- <div class="cart-product-quantity ms-0 pt-3" style="margin-top:-14px"> --}}
+                                       
+                                        {{!-- <input type="number" class="cartCount" style="border-radius: 2px !important ; height:200px; padding:5px !important;"  value="{{this.quantity}}" min="0" max="10" step="1" data-decimals="0" required> --}}
+                                        
+                                    {{!-- </div> --}}
+
 
                                     <div class="product-details-action">
                                         <div class="row">
-                                            <a href="#" class="cartButton text-center ms-4"><span>Add to cart</span></a>
-                                            <a href="#" class="cartButton text-center ms-4"><span>Buy</span></a>
+                                            <a onclick="addToCart('{{this._id}}','{{this.mrp}}')" class="cartButton text-center ms-3" style="color: white; cursor: pointer;"><span style="margin-top: 435px;">Add to cart</span></a>
+                                            <a  class="cartButton text-center ms-3" style="color: white; cursor: pointer;"><span>Buy</span></a>
+                                            <a  class="cartButton text-center ms-3" style="padding: 0px; width: 47px !important;"> <i class="icon-heart-o wishlistIcon" style="font-size: 24px; color:white"></i></a>
                                         </div>
                                         
 
-                                        <div class="details-action-wrapper">
-                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist"></a>
+                                        {{!-- <div class="details-action-wrapper">
+                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist"></a> --}}
                                             {{!-- <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to Compare</span></a> --}}
-                                        </div><!-- End .details-action-wrapper -->
+                                        {{!-- </div> --}}
+                                        <!-- End .details-action-wrapper -->
                                     </div><!-- End .product-details-action -->
 
                                     <div class="product-details-footer">
-                                        <div class="product-cat">
+                                        {{!-- <div class="product-cat">
                                             <span>Category:</span>
                                             <a href="#">Women</a>,
                                             <a href="#">Dresses</a>,
                                             <a href="#">Yellow</a>
-                                        </div><!-- End .product-cat -->
+                                        </div><!-- End .product-cat --> --}}
                                     {{!-- product info section --}}
                                     <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
                                         <div class="product-desc-content">
                                             <h3>Product Information</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
+                                            <p>{{this.product.discription}}</p>
                                             <ul>
                                                 <li>Nunc nec porttitor turpis. In eu risus enim. In vitae mollis elit. </li>
                                                 <li>Vivamus finibus vel mauris ut vehicula.</li>
@@ -182,7 +205,7 @@
                                     </div><!-- .End .tab-pane -->
                                 {{!-- product review section --}}
                                 {{!-- <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link"> --}}
-                                <div class="reviews">
+                                {{!-- <div class="reviews">
                                     <h3>Reviews (2)</h3>
                                     <div class="review">
                                         <div class="row no-gutters">
@@ -235,7 +258,7 @@
                                             </div><!-- End .col-auto -->
                                         </div><!-- End .row -->
                                     </div><!-- End .review -->
-                                </div><!-- End .reviews -->
+                                </div><!-- End .reviews --> --}}
                             {{!-- </div><!-- .End .tab-pane --> --}}
 
                                         {{!-- <div class="social-icons social-icons-sm">
@@ -250,7 +273,7 @@
                             </div><!-- End .col-md-6 -->
                         </div><!-- End .row -->
                     </div><!-- End .product-details-top -->
-
+                    {{/each}}
                     {{!-- <div class="product-details-tab">
                         <ul class="nav nav-pills justify-content-center" role="tablist">
                             <li class="nav-item">
@@ -393,11 +416,12 @@
                                 }
                             }
                         }'>
+                        {{#each relatedProducts}}
                         <div class="product product-7 text-center">
                             <figure class="product-media">
-                                <span class="product-label label-new">New</span>
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-4.jpg" alt="Product image" class="product-image">
+                                <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New</span>
+                                <a href="/productDetails?productVerientId={{this.productvarient._id}}">
+                                    <img src="/images/product/productvarients/{{this.productvarient._id}}_1.png" alt="Product image" class="product-image">
                                 </a>
 
                                 <div class="product-action-vertical">
@@ -413,20 +437,20 @@
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#">Women</a>
+                                    <a href="#">{{this.category}}</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Brown paperbag waist <br>pencil skirt</a></h3><!-- End .product-title -->
+                                <h3 class="product-title"><a href="product.html">{{this.productName}}</a></h3><!-- End .product-title -->
                                 <div class="product-price">
-                                    $60.00
+                                    ₹{{this.productvarient.mrp}}
                                 </div><!-- End .product-price -->
-                                <div class="ratings-container">
+                                {{!-- <div class="ratings-container">
                                     <div class="ratings">
                                         <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
                                     </div><!-- End .ratings -->
                                     <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container -->
+                                </div><!-- End .rating-container --> --}}
 
-                                <div class="product-nav product-nav-thumbs">
+                                {{!-- <div class="product-nav product-nav-thumbs">
                                     <a href="#" class="active">
                                         <img src="assets/images/products/product-4-thumb.jpg" alt="product desc">
                                     </a>
@@ -437,11 +461,11 @@
                                     <a href="#">
                                         <img src="assets/images/products/product-4-3-thumb.jpg" alt="product desc">
                                     </a>
-                                </div><!-- End .product-nav -->
+                                </div><!-- End .product-nav --> --}}
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
-
-                        <div class="product product-7 text-center">
+                        {{/each}}
+                        {{!-- <div class="product product-7 text-center">
                             <figure class="product-media">
                                 <span class="product-label label-out">Out of Stock</span>
                                 <a href="product.html">
@@ -474,9 +498,9 @@
                                     <span class="ratings-text">( 6 Reviews )</span>
                                 </div><!-- End .rating-container -->
                             </div><!-- End .product-body -->
-                        </div><!-- End .product -->
+                        </div><!-- End .product --> --}}
 
-                        <div class="product product-7 text-center">
+                        {{!-- <div class="product product-7 text-center">
                             <figure class="product-media">
                                 <span class="product-label label-top">Top</span>
                                 <a href="product.html">
@@ -522,9 +546,9 @@
                                     </a>
                                 </div><!-- End .product-nav -->
                             </div><!-- End .product-body -->
-                        </div><!-- End .product -->
+                        </div><!-- End .product --> --}}
 
-                        <div class="product product-7 text-center">
+                        {{!-- <div class="product product-7 text-center">
                             <figure class="product-media">
                                 <a href="product.html">
                                     <img src="assets/images/products/product-10.jpg" alt="Product image" class="product-image">
@@ -556,9 +580,9 @@
                                     <span class="ratings-text">( 0 Reviews )</span>
                                 </div><!-- End .rating-container -->
                             </div><!-- End .product-body -->
-                        </div><!-- End .product -->
+                        </div><!-- End .product --> --}}
 
-                        <div class="product product-7 text-center">
+                        {{!-- <div class="product product-7 text-center">
                             <figure class="product-media">
                                 <a href="product.html">
                                     <img src="assets/images/products/product-7.jpg" alt="Product image" class="product-image">
@@ -590,8 +614,107 @@
                                     <span class="ratings-text">( 2 Reviews )</span>
                                 </div><!-- End .rating-container -->
                             </div><!-- End .product-body -->
-                        </div><!-- End .product -->
+                        </div><!-- End .product --> --}}
                     </div><!-- End .owl-carousel -->
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
+            
+    
+
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
+<script>
+        
+    function addToCart(productId,mrp){
+
+        //console.log(productId)
+
+        //let currentQuantity = parseInt(document.getElementById(productId).innerHTML);
+        mrp = parseInt(mrp);
+        
+            
+            $.ajax({
+
+                url:'/productAddToCart',
+                method:'post',
+                data:{productId:productId,
+                        mrp:mrp},
+                success:(response)=>{
+                    
+                    if(response.valid){
+
+                        let cartCount = $('#cartCount').html();
+                        cartCount = parseInt(cartCount)+1;
+                        $('#cartCount').html(cartCount)
+
+
+                        Swal.fire({
+                            position: 'middle',
+                            icon: 'success',
+                            title: 'Product addded to cart',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+
+                    }else{
+                        
+                        Swal.fire({
+                            position: 'middle',
+                            icon: 'error',
+                            title: 'Same product already in your cart',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+                    }
+
+                }
+
+            })
+
+    }
+                         
+                    
+
+                
+
+            
+
+
+
+
+    
+
+    function countUpdateD(productId,quantity,count){
+       
+        quantity = parseInt(quantity);
+        count = parseInt(count);
+        console.log(quantity)
+        let currentQuantity = parseInt(document.getElementById(productId).innerHTML);
+
+        console.log(currentQuantity)
+
+        if(currentQuantity <=1 && count==-1){
+
+            document.getElementById('buttonMinus2').setAttribute('disabled')
+             
+        } else{
+
+            if(currentQuantity>=quantity && count == 1){
+                
+                swal("!Sorry there is no stock left")
+
+            }else{
+
+              document.getElementById(productId).innerHTML = currentQuantity + count;
+                          
+            }
+
+        }
+
+    }
+</script>
+
+          
+               

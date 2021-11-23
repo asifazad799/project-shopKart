@@ -5,5 +5,7 @@ module.exports = {
     SUBCATEGORY:'subcategory',
     BRAND:'brand',
     PRODUCTS:'products',
-    PRODUCT_VARIENTS:'productvarients'
+    PRODUCT_VARIENTS:'productvarients',
+    CART :'cart',
+    ADDRESS:'address'
 }

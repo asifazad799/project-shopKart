@@ -1,0 +1,133 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<div class="container" >
+            <h1 class="text-center">All Orders</h1>
+
+            <div class="col-12 p-4 mt-4" style="background-color: rgb(222, 221, 221); border-radius:4px">
+
+                {{#if productErr}}
+
+                <p class="text-danger">{{productErr}}</p>
+
+                {{/if}}
+                
+
+    
+    <table id="allUsers" class="table table-striped" style="width:100%; font-size:15px !important;">
+        <thead style="font-size: 15px;">
+            <tr >
+                <th>Index</th>
+                <th>User</th>
+                <th>Address</th>
+                
+                <th>Final Total</th>
+                <th>Delivery Type</th>
+                <th>Pyment Method</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each response}}
+        <tr>
+            <td>{{@index}}</td>
+            
+            <td >{{#if this.user}}
+               
+                    <dl>{{user.first_name}} {{user.lastname}}</dl>
+                    <dl>{{user.email}}</dl>
+                    <dl>{{user.mobile}}</dl>
+                
+                {{/if}}
+            </td>
+            
+            <td>
+                
+                    {{this.address.address.houseNumber}},
+                    {{this.address.address.locality}},
+                    {{this.address.address.state}},
+                    {{this.address.address.pincode}},
+                
+                
+            </td>
+            <td> 
+                {{this.finalTotal}}
+                <a href="/admin/allOrderedProduct?orderId={{this._id}}" class="btn btn-primary loginFormButton" style="height: 40px; margin-top:49px ;">All products</a>
+            </td>
+            
+            <td>
+                {{this.deliveryType}}
+                 
+            </td>
+             <td>
+                {{this.paymentMethod}}
+                 
+            </td>
+            <td>
+                {{this.date}}
+            </td>
+             <td>
+               <div class="dropdown" style="width: 150px;">
+                <a class="btn btn-secondary dropdown-toggle" style="width: 150px;" href="#" role="button" id="{{this._id}}" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{this.orderStatus}}
+                </a>
+
+                <ul class="dropdown-menu"  aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" onclick="change('placed','{{this._id}}')"  >placed</a></li>
+                    <li><a class="dropdown-item" onclick="change('shipped','{{this._id}}')"  >Shipped</a></li>
+                    <li><a class="dropdown-item" onclick="change('Canceled','{{this._id}}')" >Canceled</a></li>
+                </ul>
+                </div>
+                
+                 
+            </td>
+
+
+            
+            
+        </tr>
+        {{/each}}
+        </tbody>
+        
+        
+
+    </table>
+            </div>
+            
+
+     
+        
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+     $(document).ready(function() {
+
+    $('#allUsers').DataTable(); 
+
+    })
+    
+    function change(value,orderId){
+        
+        document.getElementById(orderId).innerHTML = value;
+        $.ajax({
+            
+                url:'/admin/updateOrderStatus',
+                method:'post',
+                data:{orderStatus:value,
+                        orderId:orderId},
+                success:(response)=>{
+                    
+                }
+        })
+    };
+
+
+
+
+                    
+
+
+</script>
+        
+

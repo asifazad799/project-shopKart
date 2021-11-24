@@ -167,7 +167,7 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script src="/javascripts/resetFormValidation.js"></script>
-
+<script src="/javascripts/cartValidation.js"></script>
 
 <script>
 $("#addNewAddress").validate({
@@ -238,6 +238,45 @@ setInputFilter(document.getElementById("pincode"), function(value) {
     }
   })
 
+  $("#updateVarientProduct").validate({
+    rules:{
+      productName:{
+        required:true
+      },
+      brand:{
+        required:true
+      },
+      category:{
+        required:true
+      },
+      subcategory:{
+        required:true
+      },
+      discription:{
+        required:true
+      },
+      sizes:{
+        required:true
+      },
+      color:{
+        required:true
+      },
+      landingcost:{
+        required:true,
+        digits:true
+      },
+      mrp:{
+        required:true,
+        digits:true
+      },
+      quantity:{
+        required:true,
+        min:1,
+        digits:true
+      }
+
+    }
+  })
   
 
 
@@ -266,13 +305,17 @@ setInputFilter(document.getElementById("pincode"), function(value) {
         required:true
       },
       landingcost:{
-        required:true
+        required:true,
+        digits:true
       },
       mrp:{
-        required:true
+        required:true,
+        digits:true
       },
       quantity:{
-        required:true
+        required:true,
+        min:1,
+        digits:true
       },
       image1:{
         required:true

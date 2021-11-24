@@ -37,19 +37,6 @@ let verifyLogin =(req,res,next)=>{
   }
 }
   
-
-
-
-    
-
-
-  
- 
-
-    
-
-
-/* GET home page. */
 router.get('/',async function( req, res, next) {
 
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -81,6 +68,19 @@ router.get('/',async function( req, res, next) {
 });
 
 
+
+    
+
+
+  
+ 
+
+    
+
+
+/* GET home page. */
+
+
 let loginERR=false;
 
 router.get('/userLogin', function(req, res, next) {
@@ -108,7 +108,7 @@ router.get('/userLogin', function(req, res, next) {
 });
 
 
- 
+/* otp resend */
  
 router.get('/otpResend',(req,res)=>{
 
@@ -202,14 +202,14 @@ router.get('/changePasswordOtpConfirm',verifyLogin,(req,res)=>{
    }));
 })
 
-router.get('/resetPasswordPage',verifyLogin,(req,res)=>{
+  router.get('/resetPasswordPage',verifyLogin,(req,res)=>{
 
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-
 
   res.render('user/resetPasswordPage')
 
 })
+
   
 
 
@@ -522,13 +522,16 @@ router.post('/addNewAddress',verifyLogin,(req,res)=>{
       res.redirect('/addNewAddress')
 
     }else{
-
+      
       addressAdded = true;
       res.redirect('/profileShorcut')
 
-    }
-  })
+  }
 })
+})
+
+      
+
 
 router.post('/deleteAddress',verifyLogin,(req,res)=>{
   
@@ -625,6 +628,7 @@ router.get('/cart',verifyLogin,async(req,res)=>{
 
     let grandTotal = await userHelper.getGrandTotal(req.session.user._id)
     let cartEmpty  = false ;
+
     if(userCartCount>0){
 
       cartEmpty = false
@@ -657,22 +661,43 @@ router.get('/cart',verifyLogin,async(req,res)=>{
  
 })
 
-router.get('/checkOut',(req,res)=>{
+router.get('/checkOut',verifyLogin,async(req,res)=>{
   
-  res.render('user/checkout')
+  let data = req.query 
+  let address = await userHelper.getAddress(req.session.user._id)
+
+  //console.log(address)
+  let delCharge = 0;
+  if(data.delivery=='express'){
+
+     delCharge = 40
+
+  }else{
+
+    delCharge = 0
+
+  }
+  let userCartCount = await userHelper.getCartCount(req.session.user._id)
+  let userId = req.session.user._id
+  userHelper.getCartItems(userId).then((response)=>{
+
+    res.render('user/checkout',{data,address,delCharge,response,userCartCount,currentUser:req.session.user})
+
+  })
+
 
 })
 
-router.post('/checkOut',(req,res)=>{
+router.post('/checkOut',verifyLogin,(req,res)=>{
   
-  console.log(req.body)
-  res.send('asif')
+  res.json({valid:true})
 
 })
 
-router.post('/cartCountUpdate',(req,res)=>{
+router.post('/cartCountUpdate',verifyLogin,(req,res)=>{
 //console.log(req.body)
   userHelper.changeCartQuantity(req.body).then(async(response)=>{
+
 
 
     res.json({valid:true})
@@ -683,6 +708,23 @@ router.post('/cartCountUpdate',(req,res)=>{
   
 })
 
+router.post('/placeOrder',verifyLogin,(req,res)=>{
+  
+  // console.log(req.body)
+
+  userHelper.orders(req.body,req.session.user._id).then((response)=>{
+    
+    // console.log(response.insertedId)
+    userHelper.stockUpdate(response.insertedId).then((response)=>{
+
+      res.json({valid:true})
+
+    })
+
+  })
+
+
+})
 
 // router.get('/cartItemRemoved',(req,res)=>{
   
@@ -779,7 +821,11 @@ router.post('/productAddToCart',verifyLogin,(req,res)=>{
   }
 })
     
+router.get('/myOrders',(req,res)=>{
+  
+  res.render('user/myOrders')
 
+})
   
 
 

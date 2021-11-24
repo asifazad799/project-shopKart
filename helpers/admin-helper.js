@@ -410,9 +410,19 @@ module.exports = {
 
         return new Promise (async(resolve,reject)=>{
 
+            let quantity=parseInt(data.quantity) 
+            let mrp = parseInt(data.mrp)
+            let landingcost = parseInt(data.landingcost)
             // console.log(varientId.varientId);
 
-            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(varientId.varientId)},{$set:{size:data.size,color:data.color,landingcost:data.landingcost,mrp:data.mrp,quantity:data.quantity}}).then((result)=>{
+            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(varientId.varientId)},{$set:{size:data.size,
+                                                                                                color:data.color,
+                                                                                                landingcost:landingcost,
+                                                                                                mrp:mrp,
+                                                                                                quantity:quantity,
+                                                                                                stockOut:false}}).then((result)=>{
+
+                
                 
                 resolve()
 
@@ -500,6 +510,124 @@ module.exports = {
 
         })
 
+
+    },
+    getAllOrders:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+
+            let data  = await db.get().collection(collection.ORDERS).aggregate([
+                {
+                    $lookup:{
+                        from:collection.USER_COLLECTION,
+                        localField:'userId',
+                        foreignField:'_id',
+                        as:'user'
+                    }
+                },
+                {
+                    $unwind:'$user'
+                },
+                {
+                    $unwind:'$address' 
+                }
+                // {
+                //     "$lookup": {
+                //       "from": collection.ADDRESS,
+                //       "let": {"addressId": "$address"},
+                //       pipeline: [
+                //         {
+                //           "$match": {
+                //             "$expr": {
+
+                //                 "$eq":["userId","$userId"],
+                //                 "$in": ["$$addressId","$address.addressId" ],
+                                
+                //             },
+                //           },
+                //         },
+                //       ],
+                //       as:'jAddress'
+                //     }
+                //   },
+                  
+                  
+            
+                
+               
+                
+            ]).toArray()
+
+            console.log(data)
+
+            resolve(data)
+
+        })
+
+    },
+    updateOrderStatus:(order)=>{
+
+        return new Promise(async(resolve,rejecr)=>{
+
+            await db.get().collection(collection.ORDERS).updateOne({_id:objectId(order.orderId)},{$set:{orderStatus:order.orderStatus}}).then((result)=>{
+
+                resolve
+            })
+            //console.log(order)
+
+        })
+
+
+    },
+    getOrderedProduct:(orderId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+
+            
+            //console.log(orderId.orderId)
+
+            let data = await db.get().collection(collection.ORDERS).aggregate([
+                {
+                    $match:{_id:objectId(orderId.orderId)}
+                },
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $project:{cartItems:1}
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'cartItems.product',
+                        foreignField:'_id',
+                        as:'products'
+                    }
+                },
+                {
+                    $unwind:"$products"
+                },
+                {
+                    $lookup:{
+
+                        from:collection.PRODUCTS,
+                        localField:'products.productId',
+                        foreignField:'_id',
+                        as:'productCore'
+                        
+                    }
+                },
+                {
+                    $unwind:"$productCore"
+                }
+            ]).toArray()
+
+            
+            console.log(data)
+
+            resolve(data)
+
+        })
 
     }
 

@@ -161,6 +161,44 @@ router.get('/categoryManagement',adminLoginVerify,(req,res)=>{
   
 })
 
+router.get('/orderManagement',(req,res)=>{
+
+  adminHelper.getAllOrders().then((response)=>{
+
+    console.log(response)
+
+    res.render('admin/orders',{admin:true,response})
+
+  })
+  
+
+})
+
+router.post('/updateOrderStatus',(req,res)=>{
+  
+  adminHelper.updateOrderStatus(req.body).then((response)=>{
+    
+    res.json({valid:true})
+
+  })
+
+})
+  
+router.get('/allOrderedProduct',(req,res)=>{
+  
+  //console.log(req.query) 
+
+  adminHelper.getOrderedProduct(req.query).then((response)=>{
+
+    
+    //console.log(response)
+    res.render('admin/orderedProduct',{admin:true,response})
+
+  })
+
+
+})
+
 router.post('/delete-subcategory',adminLoginVerify,(req,res)=>{
 
   adminHelper.deleteSubCat(req.body).then(()=>{
@@ -618,10 +656,10 @@ router.post('/editVarients',adminLoginVerify,(req,res)=>{
   let prImg4 = req.files?.image4;
   let varientId = req.query.varientId;
 
-  console.log(prImg1)
-  console.log(prImg2)
-  console.log(prImg3)
-  console.log(prImg4)
+  // console.log(prImg1)
+  // console.log(prImg2)
+  // console.log(prImg3)
+  // console.log(prImg4)
 
   
 

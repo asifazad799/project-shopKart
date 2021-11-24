@@ -628,6 +628,124 @@ module.exports = {
           })
 
 
+        },
+        orders:(orderData,userId)=>{
+
+          return new Promise(async(resolve,reject)=>{
+
+            let cartItem = await db.get().collection(collection.CART).findOne({userId:objectId(userId)})
+
+            let address = await db.get().collection(collection.ADDRESS)
+            .aggregate([
+              {$match: {'address.addressId': objectId(orderData.address)}},
+              {$project: {
+                  _id:0,
+                  address: {$filter: {
+
+                    input: '$address',
+                    as: 'address',
+                    cond: {$eq: ['$$address.addressId', objectId(orderData.address)]}
+
+                  }}
+                }
+              },
+              {
+                $project:{
+                  address:{$arrayElemAt:['$address',0]},_id:0
+                }
+              },
+              
+          
+            ]).toArray()
+            
+            // console.log(address)
+            await db.get().collection(collection.ORDERS).insertOne({userId:objectId(userId),
+                                                                      finalTotal:orderData.finalTotal,
+                                                                      deliveryType:orderData.deliveryType,
+                                                                      paymentMethod:orderData.paymentMethod,
+                                                                      address:address,
+                                                                      orderStatus:'Ordered',
+                                                                      date:Date(),
+                                                                    cartItems:cartItem.cartItems}).then((result)=>{
+
+
+
+                                                                      resolve(result)
+                                                                    })
+                                         
+                                                                    // let abc = await db.get().collection(collection.PRODUCT_VARIENTS).aggregate([
+                                                                    //   {
+                                                                    //     $match:{_id:cartItem.cartItems.productId}
+                                                                    //   }
+                                                                    // ]).
+                                                                    // console.log(abc)
+           
+            // await db.get().collection(collection.CART).findOneAndDelete({userId:objectId(userId)}).then((result)=>{
+
+            //   resolve()
+
+            // })
+
+          })
+
+        },
+        stockUpdate:(orderId)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+            
+            let prod = await db.get().collection(collection.ORDERS).aggregate([
+              {
+                $match:{_id:objectId(orderId)}
+              },
+              {
+                $unwind:'$cartItems'
+              },
+              {
+                $project:{
+                  item:"$cartItems.product",
+                  quantity:"$cartItems.quantity"
+                }
+              },
+              {
+                $lookup:{
+                  from:collection.PRODUCT_VARIENTS,
+                  localField:'item',
+                  foreignField:'_id',
+                  as:'products'
+                }
+              },
+              {
+                $project:{
+                  item:1,quantity:1,product:{$arrayElemAt:['$products',0]},
+                  newQuantity:{ $subtract: [{$arrayElemAt:['$products.quantity',0]},'$quantity']}
+                }
+              }
+            ]).toArray()
+
+            let arrLen = prod.length;
+            // console.log(prod,arrLen)
+            // console.log('asif')
+            prod.map(async(value)=>{
+              
+              if(value.newQuantity>=1){
+
+                await db.get().collection(collection.PRODUCT_VARIENTS)
+                .updateOne({_id:objectId(value.item)},{$set:{quantity:value.newQuantity}})
+
+              }else{
+                
+                await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(value.item)},{$set:{stockOut:true,quantity:0}})
+
+              }
+
+
+            })
+             resolve()
+
+
+
+          })
+
         }
 
         // verifyCartStatus:(userId)=>{

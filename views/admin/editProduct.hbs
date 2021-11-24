@@ -1,64 +1,87 @@
 <div class="container" >
-            <h1>Edit product</h1>
+            
 
+        
 
-            {{#if product}}
-            <form method="post" action="/admin/editProduct?productId={{product._id}}">
-                <div class="mb-3">
-                    <label for="" class="form-label">Product Name</label>
-                    <input type="text" class="form-control" id="" value="{{product.productName}}" name="productName">
-                {{!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> --}}
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Brand</label>
-                    <select class="form-select" style="padding: 12px;" name="brand" id="inputGroupSelect01">
-                                <option  selected>{{product.brand}}</option>
-                                {{#each brandData}}
-                                <option value="{{this.brandName}}">{{this.brandName}}</option>
-                                {{/each}}
-                                {{!-- <option value="2">Two</option>
-                                <option value="3">Three</option> --}}
-                            </select>
-                </div>
+        
+<section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-6 pt-0 mt-4">
+            <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+                <h3 class="text-center loginTitle">Edit Product</h3>
+                {{#if product}}
+                <form method="post" id="addProduct" action="/admin/editProduct?productId={{product._id}}">
+                   {{#if loginERR}}
+                   <p  class="text-danger text-center mt-1">{{loginERR}}</p>
+                   {{/if}}
+                   <div class="row">
+                        
 
-                <div class=" mb-3" >
-                    <label for=""class="form-label"> category </label>
-                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
-                            <select class="form-select" style="padding: 12px;" name="category" id="category" onchange='catChange()'>
-                                <option selected>{{product.category}}</option>
-                                {{#each catData}}
-                                <option value="{{this.category}}">{{this.category}}</option>
-                                {{/each}}
-                                {{!-- <option value="2">Two</option>
-                                <option value="3">Three</option> --}}
-                            </select>
-                </div>
-                <div class="mb-3" >
-                    <label for=""class="form-label">sub category </label>
-                            {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
-                            <select class="form-select" style="padding: 12px;" name="subcategory" id="subcategory" onchange="sizeget()">
-                                <option selected>{{product.subcategory}}</option>
-                                
-                                <option value=""></option>
-                                
-                                {{!-- <option value="2">Two</option>
-                                <option value="3">Three</option> --}}
-                            </select>
-                </div>
+                            <div class="col-6 mb-3">
+                                <label for="" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="" value="{{product.productName}}" name="productName">
+                                {{!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> --}}
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Brand</label>
+                                <select class="form-select" style="" name="brand" id="inputGroupSelect01">
+                                            <option  selected>{{product.brand}}</option>
+                                            {{#each brandData}}
+                                            <option value="{{this.brandName}}">{{this.brandName}}</option>
+                                            {{/each}}
+                                            {{!-- <option value="2">Two</option>
+                                            <option value="3">Three</option> --}}
+                                </select>
+                            </div>
+                       
 
-                <div class="col-12">
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3" >
+                            <label for=""class="form-label"> category </label>
+                                {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
+                                <select class="form-select"  name="category" id="category" onchange='catChange()'>
+                                    <option selected>{{product.category}}</option>
+                                    {{#each catData}}
+                                    <option value="{{this.category}}">{{this.category}}</option>
+                                    {{/each}}
+                                    {{!-- <option value="2">Two</option>
+                                    <option value="3">Three</option> --}}
+                                </select>
+                        </div>
+                        <div class="col-6 mb-3" >
+                            <label for=""class="form-label">sub category </label>
+                                    {{!-- <label class="input-group-text" for="inputGroupSelect01"></label> --}}
+                                    <select class="form-select"  name="subcategory" id="subcategory" onchange="sizeget()">
+                                        <option selected>{{product.subcategory}}</option>
+                                        
+                                        <option value=""></option>
+                                        
+                                        {{!-- <option value="2">Two</option>
+                                        <option value="3">Three</option> --}}
+                                    </select>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
                             <label class="form-label">Discription</label>
                                 <textarea class="form-control" rows="3"  name="discription" >
                                 {{product.discription}}</textarea>
 
-                </div>
-                
-                
-                <button type="submit" class="btn btn-primary p-3">Submit</button>
-            </form>
-            {{/if}}
+                        </div>
 
-     
+                    </div>
+                    
+                    <div class="cl-lg-4 text-center mt-4">
+                        <button type="submit" class="btn btn-primary loginFormButton">Update</button>
+                    </div>
+                </form>
+                {{/if}}
+            </div>
+        </div>
+    </section>
+
+
         
         </div>
     </div>

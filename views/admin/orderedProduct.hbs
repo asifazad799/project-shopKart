@@ -1,0 +1,50 @@
+  <div class="container col-12" >
+        <h1>Ordered Products</h1>
+        
+
+        <diV class="row">
+            {{#each response}}
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                <img src="/images/product/productvarients/{{this.products._id}}_1.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <div class="row ">
+                        <div class="col-12">
+
+                        <h5 class="card-title">{{this.productCore.productName}}</h5>
+                        </div>
+                        <div class="col-6 mt-0">
+                            <p class="card-text">quatity:{{this.cartItems.quantity}}</p>
+                        </div>
+                        <div class="col-6 mt-0">
+                            <p class="card-text">Mrp:{{this.products.mrp}}</p>
+                        </div>
+                        <div class="col-12 mt-2">
+
+                            <h6>Total:{{this.cartItems.subTotal}}</h6>
+
+                        </div>
+                    </div>
+                    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+                </div>
+                </div>
+            </div>
+            {{/each}}
+        </diV>
+          
+
+    </div>
+</main>
+                
+                            
+
+                            
+
+                        
+
+
+
+                        
+
+
+                    

@@ -633,7 +633,21 @@ module.exports = {
 
           return new Promise(async(resolve,reject)=>{
 
-            let cartItem = await db.get().collection(collection.CART).findOne({userId:objectId(userId)})
+            // await db.get().collection(collection.CART).updateOne({userId:objectId(userId)},{$push:{cartItems:{orderStatus:'placed'}}})
+             
+            let cartItem = await db.get().collection(collection.CART).aggregate([
+              {
+                $match:{userId:objectId(userId)}
+              },
+              {
+                $set:{cartItems:{orderStatus:'placed'}}
+              },
+              {
+                $project:{cartItems:1,_id:0}
+              }
+            ]).toArray()
+
+            //console.log(cartItem[0].cartItems)
 
             let address = await db.get().collection(collection.ADDRESS)
             .aggregate([
@@ -665,26 +679,20 @@ module.exports = {
                                                                       paymentMethod:orderData.paymentMethod,
                                                                       address:address,
                                                                       orderStatus:'Ordered',
-                                                                      date:Date(),
-                                                                    cartItems:cartItem.cartItems}).then((result)=>{
+                                                                      date:new Date(),
+                                                                      cartItems:cartItem[0].cartItems,
+                                                                      }).then(async(result)=>{
 
+                                                                        await db.get().collection(collection.CART).findOneAndDelete({userId:objectId(userId)})
 
+                                                                        
 
                                                                       resolve(result)
                                                                     })
                                          
-                                                                    // let abc = await db.get().collection(collection.PRODUCT_VARIENTS).aggregate([
-                                                                    //   {
-                                                                    //     $match:{_id:cartItem.cartItems.productId}
-                                                                    //   }
-                                                                    // ]).
-                                                                    // console.log(abc)
+                                                                    
            
-            // await db.get().collection(collection.CART).findOneAndDelete({userId:objectId(userId)}).then((result)=>{
-
-            //   resolve()
-
-            // })
+            
 
           })
 
@@ -746,7 +754,91 @@ module.exports = {
 
           })
 
+        },
+        getMyOrers:(user)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+            
+            let myOrders = await db.get().collection(collection.ORDERS).aggregate([
+              {
+
+                  $match:{userId:objectId(user)}
+
+              },
+              
+              {
+                $project:
+                   {
+                      expectedDeliveryDate:
+                         {
+                            $dateAdd:
+                               {
+                                  startDate: "$date",
+                                  unit: "day",
+                                  amount: 3
+                               },
+                         },cartItems:1,
+                         address:"$address.address",
+                         orderStatus:1,
+                         date: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                        
+                   }
+              },
+              {
+                $project:
+                   {
+                        cartItems:1,
+                        address:1,
+                        orderStatus:1,
+                        date:1,
+                        expectedDeliveryDate: { $dateToString: { format: "%Y-%m-%d", date: "$expectedDeliveryDate" } }
+                   }
+              },
+              {
+                $unwind:"$cartItems"
+              },
+              {
+                $lookup:{
+                  from:collection.PRODUCT_VARIENTS,
+                  localField:'cartItems.product',
+                  foreignField:'_id',
+                  as:'product'
+                }
+                
+              }
+              ,
+              {
+                $unwind:"$product"
+              },
+              {
+                $lookup:{
+                  from:collection.PRODUCTS,
+                  localField:'product.productId',
+                  foreignField:'_id',
+                  as:'coreProduct'
+                }
+              },
+              {
+                $unwind:"$coreProduct",
+              },
+              {
+                $unwind:"$address",
+              },
+           
+            ]).toArray()
+
+            console.log(myOrders)
+
+            resolve(myOrders)
+
+          })
+
         }
+              
+
+
+              
+            
 
         // verifyCartStatus:(userId)=>{
 

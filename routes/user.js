@@ -821,9 +821,17 @@ router.post('/productAddToCart',verifyLogin,(req,res)=>{
   }
 })
     
-router.get('/myOrders',(req,res)=>{
+router.get('/myOrders',verifyLogin,async(req,res)=>{
+
+  userCartCount = await userHelper.getCartCount(req.session.user._id)
+  userHelper.getMyOrers(req.session.user._id).then((response)=>{
+    
+    // console.log(response)
+    
+    res.render('user/myOrders',{response,userCartCount,currentUser:req.session.user})
+
+  })
   
-  res.render('user/myOrders')
 
 })
   

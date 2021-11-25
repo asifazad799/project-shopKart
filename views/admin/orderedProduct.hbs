@@ -1,40 +1,77 @@
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
   <div class="container col-12" >
         <h1>Ordered Products</h1>
+        <div class="col-12 p-4 mt-4" style="background-color: rgb(222, 221, 221); border-radius:4px">
+        <table id="categoryTable1" class="table table-striped" style=" width:100%; font-size:15px !important;">
+        <thead style="font-size: 15px;">
+            <tr >
+                <th>Index</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Quantity</th>
+                <th>Mrp</th>
+                <th>Total</th>
+                <th>Action</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {{#each response}}
+        <tr>
+            <td>{{@index}}</td>
+            
+            <td>{{this.productCore.productName}}</td>
+            
+            <td> 
+                     <img src="/images/product/productvarients/{{this.products._id}}_1.png" width="70px" height="70px" alt="">
+            </td>
+            
+            <td>{{this.cartItems.quantity}}</td>
+            <td>{{this.products.mrp}}</td>
+            <td>
+                
+               {{this.cartItems.subTotal}}
+               
+            </td>
+            <td>
+               <div class="dropdown" style="width: 150px;">
+                            <a class="btn btn-secondary dropdown-toggle" style="width: 150px;" href="#" role="button" id="{{this.products._id}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{this.cartItems.orderStatus}}
+                            </a>
+
+                            <ul class="dropdown-menu"  aria-labelledby="dropdownMenuLink">
+                                
+                                <li><a class="dropdown-item" onclick="change('placed','{{this.products._id}}')"  >placed</a></li>
+                                <li><a class="dropdown-item" onclick="change('shipped','{{this.products._id}}')"  >Shipped</a></li>
+                                <li><a class="dropdown-item" onclick="change('Canceled','{{this.products._id}}')" >Canceled</a></li>
+                                <li><a class="dropdown-item" onclick="change('Delivered','{{this.products._id}}')" >Delivered</a></li>
+
+                            </ul>
+                        </div>
+
+            </td>
+            
+            
+        </tr>
+        {{/each}}
+        </tbody>
+        
         
 
-        <diV class="row">
-            {{#each response}}
-            <div class="col-3">
-                <div class="card" style="width: 18rem;">
-                <img src="/images/product/productvarients/{{this.products._id}}_1.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <div class="row ">
-                        <div class="col-12">
-
-                        <h5 class="card-title">{{this.productCore.productName}}</h5>
-                        </div>
-                        <div class="col-6 mt-0">
-                            <p class="card-text">quatity:{{this.cartItems.quantity}}</p>
-                        </div>
-                        <div class="col-6 mt-0">
-                            <p class="card-text">Mrp:{{this.products.mrp}}</p>
-                        </div>
-                        <div class="col-12 mt-2">
-
-                            <h6>Total:{{this.cartItems.subTotal}}</h6>
-
-                        </div>
-                    </div>
-                    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
-                </div>
-                </div>
-            </div>
-            {{/each}}
-        </diV>
-          
+    </table>
+    </div>    
 
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+     $(document).ready(function() {
+
+      $('#categoryTable1').DataTable(); 
+
+    } )
+</script>
                 
                             
 

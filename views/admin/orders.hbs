@@ -96,28 +96,15 @@
     $('#allUsers').DataTable(); 
 
     })
-    
-    function change(value,orderId){
-        
-        document.getElementById(orderId).innerHTML = value;
-        $.ajax({
-            
-                url:'/admin/updateOrderStatus',
-                method:'post',
-                data:{orderStatus:value,
-                        orderId:orderId},
-                success:(response)=>{
-                    
-                }
-        })
-    };
-
-
-
-
-                    
-
-
 </script>
+    
+    
+
+
+
+
+                    
+
+
         
 

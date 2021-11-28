@@ -6,6 +6,11 @@ var objectId = require("mongodb").ObjectId;
 const { response } = require("express");
 const { ObjectId } = require("bson");
 const { PRODUCTS } = require("../config/collection");
+const Razorpay = require('razorpay')
+var instance = new Razorpay({
+    key_id: 'rzp_test_17oewiAfnFqdfq',
+    key_secret: 'SzzvQxAz29SV4KHsHz4M2pOH',
+});
 
 module.exports = {
     
@@ -566,14 +571,14 @@ module.exports = {
             .aggregate([
               {$match: {'address.addressId': objectId(addressId)}},
               {$project: {
-                  _id:0,
-                  address: {$filter: {
+                    _id:0,
+                    address: {$filter: {
 
-                    input: '$address',
-                    as: 'address',
-                    cond: {$eq: ['$$address.addressId', objectId(addressId)]}
+                      input: '$address',
+                      as: 'address',
+                      cond: {$eq: ['$$address.addressId', objectId(addressId)]}
 
-                  }}
+                    }}
                 }
               },
               {
@@ -629,7 +634,7 @@ module.exports = {
 
 
         },
-        orders:(orderData,userId)=>{
+        orders:(payId,orderData,userId)=>{
 
           return new Promise(async(resolve,reject)=>{
 
@@ -647,7 +652,7 @@ module.exports = {
               }
             ]).toArray()
 
-            //console.log(cartItem[0].cartItems)
+            console.log(cartItem[0])
 
             let address = await db.get().collection(collection.ADDRESS)
             .aggregate([
@@ -678,6 +683,7 @@ module.exports = {
                                                                       deliveryType:orderData.deliveryType,
                                                                       paymentMethod:orderData.paymentMethod,
                                                                       address:address,
+                                                                      paymentId:payId,
                                                                       orderStatus:'Ordered',
                                                                       date:new Date(),
                                                                       cartItems:cartItem[0].cartItems,
@@ -827,9 +833,73 @@ module.exports = {
            
             ]).toArray()
 
-            console.log(myOrders)
+            //console.log(myOrders)
 
             resolve(myOrders)
+
+          })
+
+        },
+        removeFromOrder:(data)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+
+            //console.log(data)
+
+            await db.get().collection(collection.ORDERS).updateOne({_id:objectId(data.orderId),"cartItems.product": objectId(data.productId)},{$set:{"cartItems.$.orderStatus":"userCaceled","cartItems.$.quantity":0,"cartItems.$.remove":true}}).then( async(result)=>{
+                                  
+              if(result){
+                
+                await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(data.productId)},{$inc:{quantity:data.quantity}}).then((res)=>{
+                  
+
+                  resolve()
+
+                })
+
+              }
+
+            })
+
+          })
+
+        },
+        generateRazorPay:(orderId,finalTotal)=>{
+
+          return new Promise(async(resolve,reject)=>{
+            
+            // orderId = toString(orderId)
+
+            instance.orders.create({
+              amount: finalTotal*100,
+              currency: "INR",
+              receipt: ""+orderId 
+            },(err,order)=>{
+              // console.log("New Order :",order);
+              resolve(order)
+            });
+            
+            
+
+          })
+
+        },
+        verifyPayment:(details)=>{
+
+          return new Promise(async (resolve,reject)=>{
+
+            const crypto = require('crypto');
+            
+            let hmac = crypto.createHmac('sha256', 'SzzvQxAz29SV4KHsHz4M2pOH');
+            
+            hmac.update(details['response[razorpay_order_id]']+'|'+details['response[razorpay_payment_id]']);
+            hmac=hmac.digest('hex');
+            if(hmac==details['response[razorpay_signature]']){
+              resolve()
+            }else{
+              reject()
+            }
+
 
           })
 

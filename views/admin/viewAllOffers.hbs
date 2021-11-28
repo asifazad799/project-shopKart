@@ -1,0 +1,72 @@
+
+            <h1 class="text-center">View All offers</h1>
+<div class="" style="display: flex; justify-content: space-around;">
+
+            
+
+    <div class="col-6 p-4 mt-4  " style="background-color: rgb(238, 238, 238); border-radius:4px">
+
+    <table id="categoryTable1" class="table table-striped text-center" style="width:100%; font-size:15px !important;">
+        <thead style="font-size: 15px;">
+            <tr >
+                <th>Index</th>
+                <th>Category</th>
+                {{!-- <th>Sub Category</th> --}}
+                
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each response}}
+        <tr>
+            <td>{{@index}}</td>
+            
+            <td>{{this.category}}</td>
+            {{!-- <td>
+
+                {{#each subcat}}
+                
+                    <dl style="font-weight: 500;">Subcategory:{{this.subcategory}}</dl>
+                    <dl style="color: red;">Offer:{{this.offer}}%</dl>
+                    <dl>Starting date:{{this.startingDate}}</dl>
+                    <dl>Expiry date:{{this.expairyDate}}</dl>
+                    <dl class="">
+
+                    <a href="/admin/editCatOffer?subcategory={{this.subcategory}}" ><i class="far fa-edit "></i></a>
+                    <a href="/admin/deleteCatOffer?subcategory={{this.subcategory}}" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                    </dl>
+
+                {{/each}}
+            </td> --}}
+            <td>
+                <dl class="">
+
+                    <a href="/admin/editCatOffer?category={{this.category}}" ><i class="far fa-edit "></i></a>
+                    <a href="/admin/deleteCatOffer?category={{this.category}}" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+
+                </dl>
+            </td>
+            
+               
+        </tr>  
+        {{/each}}
+        </tbody>
+        
+        
+
+    </table>
+            </div>
+
+     
+        
+        </div>
+    </div>
+</main>
+
+<script>
+     $(document).ready(function() {
+
+      $('#categoryTable1').DataTable(); 
+
+    } )
+</script>

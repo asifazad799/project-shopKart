@@ -18,10 +18,10 @@ let adminLoginVerify=(req,res,next)=>{
 
   }
 
-
 }
 
 var admin = {email:"asif@mail.com",password:"12345678"};
+
 
 /* GET users listing. */
 
@@ -161,30 +161,64 @@ router.get('/categoryManagement',adminLoginVerify,(req,res)=>{
   
 })
 
-router.get('/orderManagement',(req,res)=>{
+router.get('/orderManagement',adminLoginVerify,(req,res)=>{
 
   adminHelper.getAllOrders().then((response)=>{
 
     console.log(response)
 
-    res.render('admin/orders',{admin:true,response})
+    res.render('admin/orders',{admin:true,response,currentAdmin})
 
   })
   
 
 })
 
-router.post('/updateOrderStatus',(req,res)=>{
+router.post('/updateOrderStatus',adminLoginVerify,(req,res)=>{
+
+  let verifyData = req.body.orderStatus
+
   
-  adminHelper.updateOrderStatus(req.body).then((response)=>{
+
+  
+
+  // console.log(verifyData)
+
+  if(verifyData == 'placed'||verifyData == 'shipped'||verifyData == 'Canceled'||verifyData == 'Delivered'){
+
+    adminHelper.updateOrderStatus(req.body).then((response)=>{
+
+      if(response.delivered){
+
+        res.json({delivered:true})
+        
+      }else if(response.canceld){
+
+        res.json({canceled:true})
+
+      }else if(response.usercanceld){
+
+        res.json({usercanceld:true})
+
+      }
+      else{
+        
+        res.json({valid:true})
+
+      }
+      
+    })
+  }else{
     
-    res.json({valid:true})
+    res.json({invalid:true})
 
-  })
-
-})
+  }
   
-router.get('/allOrderedProduct',(req,res)=>{
+})
+
+  
+  
+router.get('/allOrderedProduct',adminLoginVerify,(req,res)=>{
   
   //console.log(req.query) 
 
@@ -192,7 +226,7 @@ router.get('/allOrderedProduct',(req,res)=>{
 
     
     //console.log(response)
-    res.render('admin/orderedProduct',{admin:true,response})
+    res.render('admin/orderedProduct',{admin:true,response,currentAdmin})
 
   })
 
@@ -783,7 +817,54 @@ router.get('/find-subcategory',adminLoginVerify,(req,res)=>{
 
 })
 
+//Ofer management
 
+router.get('/viewAllOffers',(req,res)=>{
+
+  adminHelper.getCatOffers().then((response)=>{
+    
+    //console.log(response)
+    res.render('admin/viewAllOffers',{admin:true,currentAdmin,response})
+
+  })
+  
+
+})
+
+let sameOfferErr = false; 
+
+router.get('/addNewOffer',(req,res)=>{
+
+  adminHelper.getCategoryTable().then((catresponse)=>{
+    
+
+    res.render('admin/addNewOffers',{admin:true,currentAdmin,catData:catresponse,sameOfferErr:sameOfferErr})
+    sameOfferErr = false;
+
+  })
+  
+
+})
+
+router.post('/addNewCatOffer',(req,res)=>{
+  
+  //console.log(req.body)
+  adminHelper.addNewCatOffer(req.body).then((response)=>{
+
+    if(response.sameExist){
+      
+      sameOfferErr = true;
+      res.redirect('/admin/addNewOffer')
+
+    }else{
+      
+      sameOfferErr = false
+      res.redirect('/admin/viewAllOffers')
+
+    }
+  })
+
+})
 
 // console.log(req.files)
 
@@ -799,40 +880,4 @@ res.redirect('/admin/adminlogin')
 })
 
 module.exports = router;
-    
-
-
-
-    
-
-
-    
-  
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-    
-
-   
-
-
-
-
-
-
-
-
-
-
 

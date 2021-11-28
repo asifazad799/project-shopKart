@@ -123,23 +123,6 @@ module.exports = {
                 
                 var isAvailable = currentSubCategory.includes(categoryData.subcategory) //checking existing
 
-                // currentSubCategory.forEach(element => {
-                    
-                // if(element==x){
-
-                //     //console.log(element);
-                //     isAvailable = true;
-                    
-
-
-                // }else{
-
-                //     //console.log('not found')
-                //     isAvailable = false;
-
-                // }});
-
-                //console.log(isAvailable)
 
                 if(isAvailable){
 
@@ -345,50 +328,114 @@ module.exports = {
 
             
 
-             let cc = await db.get().collection(collection.PRODUCTS).aggregate([{
-                                                                        $lookup: {
-                                                                        from: PRODUCT_VARIENTS,
-                                                                        localField: "_id" ,
-                                                                        foreignField: "productId",
-                                                                        as: "productVarients"
-                                                                        }}]).toArray()
-
-                                                                        // let v = cc[0].productVarients
-
-                                                                        // v.map(x=> console.log(x._id))
-
-                                                                        // let varient = null;
-
-                                                                        // for(let i = 0 ; i<=0 ; i++){
-
-                                                                        //    varient = v[i]
-
-                                                                        // }
-
-                                                                        // console.log(varient._id);
-                                                                        // let varientId = varient._id;
-                                                                        // console.log(v)
-                                                                        //  cc.map( (value) =>  {console.log(value.productVarients)})
-                                                                        
-                 resolve(cc)
-
-
-            // await db.get().collection(collection.PRODUCTS).find().toArray(async(err,productdata)=>{
-
-            //     //console.log(data)
-
-            //     if(productdata){
-
-            //          var gh = await db.get().collection(collection.PRODUCT_VARIENTS).find({productId:productdata._id}).toArray()
-
-            //         console.log(productdata._id)
-
-            //         resolve()
+            let cc = await db.get().collection(collection.PRODUCTS).
+            aggregate([
+            
+            // },
+            // {
+            //     $unwind:"$catOfferDetails"
+            // },
+            // {
+            //     $project:{catd:"$catOfferDetails.subcat",category:1,subcategory:1}
+            // },
+            // {
+            //     $unwind:"$catd"
+            // },
+            // {
+            //     $match:{"subcategory":"catd.subcategory"}
+            // },
+            // {  
+            //     $project: {
+            //       result: {
+            //         $filter: {
+            //           input: "$catOfferDetails", 
+            //           as:"item", 
+            //           cond: { $eq: ["$subcategory", "$$catOfferDetails.subcategory"]}
+            //         }
+            //       }
+            //     }
+            // },
+            
+            {
+                $lookup: {
+                from: collection.PRODUCT_VARIENTS,
+                localField: "_id" ,
+                foreignField: "productId",
+                as: "productVarients"
+                }
+            },
+            // {
+            //     $lookup:{
                     
+            //         from:collection.CATOFFERS,
+            //         localField:'categoryOfferId',
+            //         foreignField:'subcat.offerId',
+            //         as:'offer'  
+                   
 
             //     }
+            // },
+            // {
+            //     $project:{
 
-            // })
+            //        productName:1,category:1,subcategory:1,
+            //        offer:{
+            //            $filter:{
+            //                input:"$offer",
+            //                as:'offer',
+            //                cond: { $in: ["$subcategory","$$offer.subcat.subcategory"]}
+            //            }
+            //        }
+                    
+            //     }
+            // },
+            // {
+            //     $unwind:"$offer"
+            // }
+            
+            // {
+            //     $unwind:"$offer.subcat"
+            // },
+            // {  
+            //     $project: {
+            //         result: {
+            //         $filter: {
+            //             input: "$offer", 
+            //             as:"item", 
+            //             cond: { $eq: ["$subcategory", "$$offer.subcategory"]}
+            //         }
+            //         }
+            //     }
+            // },
+            // {
+            //     $project:{
+            //         catd:"$offer.subcat",
+                    
+            //         category:1,subcategory:1}
+            // },
+            // {
+            //     $unwind:"$catd"
+            // }
+            // {
+            //     $project:{
+                    
+            //         "offer.subcat":{
+            //             $filter:{
+            //                 input:"$offer.subcat",
+            //                 as:'catoffer',
+            //                 cond:{$eq:['$$offer.subcat.subcategory',"subcategory"]}
+            //             }
+            //         }
+
+            //     }
+            // }
+
+            ]).toArray()
+
+            console.log(cc)
+                                                                        
+            resolve(cc)
+        
         })
     },
     varientEdit:(data)=>{
@@ -566,26 +613,90 @@ module.exports = {
 
     },
     updateOrderStatus:(order)=>{
+        
+        
 
-        return new Promise(async(resolve,rejecr)=>{
+        return new Promise(async(resolve,reject)=>{
+            // console.log(order)
 
-            await db.get().collection(collection.ORDERS).updateOne({_id:objectId(order.orderId)},{$set:{orderStatus:order.orderStatus}}).then((result)=>{
+            let quantity=parseInt(order.quantity)
 
-                resolve
-            })
-            //console.log(order)
+            let currentStatus = await db.get().collection(collection.ORDERS).aggregate([
+            {
+                $match:{_id:objectId(order.orderId),"cartItems.product": objectId(order.productId)}
+            },
+            {
+                $unwind:"$cartItems"
+            },
+            {
+                $match:{"cartItems.product": objectId(order.productId)}
+            },
+            {
+                $project:{cartItems:1,_id:0}
+            }
+            ]).toArray()
 
+            
+            let status = currentStatus[0].cartItems.orderStatus
+            //console.log(status)
+            
+            if(status=="Delivered"){
+
+                resolve({delivered:true})
+
+            }else if(status=="Canceled"){
+
+                resolve({canceld:true})
+
+            }else if(status=="userCaceled"){
+
+                resolve({usercanceld:true})
+
+            }
+            else{
+
+                if(order.orderStatus=='Canceled'){
+                        
+                    await db.get().collection(collection.ORDERS).updateOne({_id:objectId(order.orderId),"cartItems.product": objectId(order.productId)},{$set:{"cartItems.$.orderStatus":order.orderStatus,"cartItems.$.quantity":0,"cartItems.$.remove":true}}).then( async(result)=>{
+                                  
+                        if(result){
+                          
+                          await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(order.productId)},{$inc:{quantity:quantity}}).then((res)=>{
+                            
+                            resolve({delivered:false})
+          
+                          })
+          
+                        }
+          
+                      })
+                }else if(order.orderStatus=='Delivered'){
+
+                    await db.get().collection(collection.ORDERS).updateOne({_id:objectId(order.orderId),"cartItems.product": objectId(order.productId)},{$set:{"cartItems.$.orderStatus":order.orderStatus,"cartItems.$.quantity":0,"cartItems.$.delivered":true}}).then( async(result)=>{
+
+                        resolve()
+
+                    })
+
+                }
+                else{
+                    await db.get().collection(collection.ORDERS).updateOne({_id:objectId(order.orderId),"cartItems.product": objectId(order.productId) },{$set:{"cartItems.$.orderStatus":order.orderStatus}}).then((result)=>{
+    
+                        resolve({delivered:false})
+    
+                    })
+
+                }
+
+            }
         })
-
 
     },
     getOrderedProduct:(orderId)=>{
         
         return new Promise(async(resolve,reject)=>{
 
-            
             //console.log(orderId.orderId)
-
             let data = await db.get().collection(collection.ORDERS).aggregate([
                 {
                     $match:{_id:objectId(orderId.orderId)}
@@ -622,13 +733,139 @@ module.exports = {
                 }
             ]).toArray()
 
-            
             console.log(data)
 
             resolve(data)
 
         })
 
+    },
+    addNewCatOffer:(data)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let offerExist = await db.get().collection(collection.CATOFFERS).findOne(
+                            {category:data.category}) 
+
+            if(offerExist){
+
+                resolve({sameExist:true})
+                //sub cat offer integration//
+                // let arr = offerExist.subcat
+                
+                // let currentStatus = arr.findIndex((ele)=>ele.subcategory==data.subcategory)
+                               
+                // console.log(currentStatus)
+
+                // if(currentStatus==-1){
+                    
+                //     let offer = parseInt(data.offer)
+                //     await db.get().collection(collection.CATOFFERS).updateOne(
+                //         {category:data.category},
+                //         {$push:{subcat:{
+                //             offerId:new objectId(),
+                //             subcategory:data.subcategory,
+                //             offer:offer,
+                //             startingDate:data.startingDate,
+                //             expairyDate:data.startingDate}}}).then(async(result)=>{
+
+                //                 let df = await db.get().collection(collection.CATOFFERS).
+                //                     aggregate([
+                //                     {
+                //                         $match:{category:data.category}
+                //                     },
+                //                     {
+                //                         $unwind:"$subcat"
+                //                     },
+                //                     {
+                //                         $match:{"subcat.subcategory":data.subcategory}
+                //                     }
+                                    
+                //                     ]).toArray()
+
+                //                    let offerId = df[0].subcat.offerId
+
+                //                    console.log(offerId)
+
+                //                    await db.get().collection(collection.PRODUCTS).updateMany(
+                //                         {$and:[{category:data.category},{subcategory:data.subcategory}]},
+                //                         {$set:{categoryOfferId:objectId(offerId),categoryOffer:true}}).then((res)=>{
+        
+                                        
+                //                             resolve({sameExist:false})
+        
+                //                         })
+                                
+
+                //             })
+                    
+                // }else{
+                    
+                //     resolve({sameExist:true})
+                    
+                // }
+                
+                
+
+            }else{
+
+                //console.log(offerExist)
+                let offer = parseInt(data.offer)
+                await db.get().collection(collection.CATOFFERS).insertOne(
+                    {category:data.category,
+                        offer:offer,
+                        startingDate:data.startingDate,
+                        expairyDate:data.startingDate}).then(async(result)=>{
+
+                           
+                            //console.log(offerId)
+
+                            let items = await db.get().collection(collection.PRODUCTS).find({category:data.category}).toArray()
+
+                            //console.log(items)
+
+                            
+                            
+                            resolve({sameExist:false})
+                                //resolve({sameExist:false})
+
+                            
+
+                                // let df = await db.get().collection(collection.CATOFFERS).
+                                // aggregate([
+                                // {
+                                //     $match:{category:data.category}
+                                // },
+                                // {
+                                //     $unwind:"$subcat"
+                                // },
+                                // {
+                                //     $match:{"subcat.subcategory":data.subcategory}
+                                // }
+                                
+                                // ]).toArray()
+
+                               //let offerId = df[0].subcat.offerId
+
+
+
+                        })
+
+            }
+        })
+
+    },
+    getCatOffers:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let catOfferData = await db.get().collection(collection.CATOFFERS).find().toArray()
+
+            //console.log(catOfferData)
+
+            resolve(catOfferData)
+
+        })
     }
 
 

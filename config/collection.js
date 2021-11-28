@@ -8,5 +8,6 @@ module.exports = {
     PRODUCT_VARIENTS:'productvarients',
     CART :'cart',
     ADDRESS:'address',
-    ORDERS:'orders'
+    ORDERS:'orders',
+    CATOFFERS:'categoryoffers'
 }

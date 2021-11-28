@@ -1,8 +1,10 @@
+const { ObjectId } = require('bson');
 var express = require('express');
 const { response } = require('../app');
 const adminHelper = require('../helpers/admin-helper');
 var userHelper = require('../helpers/user-helper')
 var router = express.Router();
+var paypal = require('paypal-rest-sdk')
 
 
 
@@ -58,7 +60,7 @@ router.get('/',async function( req, res, next) {
       
     // }
     
-    console.log(response.productVarients)
+    // console.log(response.productVarients)
     res.render('user/home', { title:"shopKart" ,currentUser:req.session.user,user:true,products:response,userCartCount});
 
   })
@@ -403,19 +405,13 @@ router.post('/signUpAction', function(req, res, next) {
 
         // res.render('user/signUpOtp',{})
        
-
-        
-         
       }
-
-
-
-
-
+      
     })
 
       
 });
+
 
 router.get('/signOtpConfirm',(req,res)=>{
 
@@ -451,34 +447,6 @@ router.get('/signOtpConfirm',(req,res)=>{
   }));
 })
    
-   
-   
-              
-
-
-          
-          
-       
-
-
-
-// router.post('/signUpAction', function(req, res, next) {
-
-//   userHelper.doSignup(req.body).then((response)=>{
-//     console.log(response);
-//     if(response.status){
-
-//       res.redirect('/userSignUp');
-//       signUpErr = response.msg;
-      
-//     }else{
-//       res.redirect('/userLogin');
-//     }
-
-
-//   })
-  
-// });
 let addressAdded = false;
 let adressUpdated = false;
 let passwordReseted = false;
@@ -662,7 +630,9 @@ router.get('/cart',verifyLogin,async(req,res)=>{
 })
 
 router.get('/checkOut',verifyLogin,async(req,res)=>{
-  
+
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+
   let data = req.query 
   let address = await userHelper.getAddress(req.session.user._id)
 
@@ -708,30 +678,196 @@ router.post('/cartCountUpdate',verifyLogin,(req,res)=>{
   
 })
 
-router.post('/placeOrder',verifyLogin,(req,res)=>{
+router.post('/placeOrder',verifyLogin,async(req,res)=>{
   
   // console.log(req.body)
 
-  userHelper.orders(req.body,req.session.user._id).then((response)=>{
-    
-    // console.log(response.insertedId)
-    userHelper.stockUpdate(response.insertedId).then((response)=>{
+  let paymentMethod = req.body.paymentMethod
+  let finalTotal = parseInt(req.body.finalTotal) 
 
-      res.json({valid:true})
+
+
+  
+  if(paymentMethod == "COD"){
+    let payId = "COD";
+    userHelper.orders(payId,req.body,req.session.user._id).then((response)=>{
+    
+      // console.log(response.insertedId)
+      //let orderId = response.insertedId
+  
+      userHelper.stockUpdate(response.insertedId).then((response)=>{
+        
+        console.log(paymentMethod)
+        
+        res.json({cod_valid:true})
+  
+  
+      })
+  
+    })
+
+    
+  }else if(paymentMethod == "razorpay"){
+
+    req.session.orderDetails = await req.body;
+
+    //console.log(req.session.orderDetails)
+
+    let payId  = new ObjectId()
+    //console.log(payId+"asif azad")
+    userHelper.generateRazorPay(payId,finalTotal).then((response)=>{
+      
+      // console.log('genarater')
+      // console.log(response)
+      res.json(response)
 
     })
 
+  }else if(paymentMethod == "paypal"){
+
+    req.session.orderDetails = await req.body;
+    
+    let create_payment_json = {
+      "intent": "sale",
+      "payer": {
+          "payment_method": "paypal"
+      },
+      "redirect_urls": {
+          "return_url": "http://localhost:3000/success",
+          "cancel_url": "http://localhost:3000/canceled"
+      },
+      "transactions": [{
+          "item_list": {
+              "items": [{
+                  
+                  "price": req.body.finalTotal,
+                  "currency": "USD",
+                  "quantity":1
+              }]
+          },
+          "amount": {
+              "currency": "USD",
+              "total": req.body.finalTotal
+          },
+          "description": "Payment done is secure"
+      }]
+    };
+
+    paypal.payment.create(create_payment_json, function (error, payment) {
+      if (error) {
+          throw error;
+      } else {
+          // console.log("Create Payment Response");
+          console.log(payment);
+          // res.send('test')
+          for(let i = 0 ; i < payment.links.length ; i++){
+            
+            if(payment.links[i].rel === 'approval_url' ){
+              
+              // res.redirect(payment.links[i].href);
+              let url = payment.links[i].href;
+
+              res.json({paypal:true,url:url})
+
+            }
+
+          }
+      }
+    });
+
+  }
+
+});
+
+
+
+router.post('/verifyPayment',verifyLogin,(req,res)=>{
+  
+  //console.log(req.body)
+  //console.log('asif')
+  userHelper.verifyPayment(req.body).then((result)=>{
+    
+    userHelper.orders(req.body['order[receipt]'],req.session.orderDetails,req.session.user._id).then((response)=>{
+      //console.log(req.body['order[receipt]'])
+      userHelper.stockUpdate(response.insertedId).then((response)=>{
+
+        req.session.orderDetails=null;
+        console.log('payment done');
+        res.json({status:true})
+
+      })
+
+    })
+  }).catch((err)=>{
+    console.log(err)
+    res.json({status:'payment failed'})
+
   })
+})
+
+router.get('/canceled',verifyLogin, async(req,res)=>{
+
+  let userCartCount = await userHelper.getCartCount(req.session.user._id)
+  
+  res.render('user/orderErrorpage',{userCartCount,currentUser:req.session.user})
+
+})
+    
+  
+
+
+
+
+router.get('/success',verifyLogin,(req,res)=>{
+
+  let total = req.session.orderDetails.finalTotal
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+
+  const execute_payment_json = {
+    "payer_id": payerId,
+    "transactions": [{
+        "amount": {
+            "currency": "USD",
+            "total": total
+        }
+    }]
+  };
+
+  paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+    if (error) {
+        console.log(error.response);
+        throw error;
+    } else {
+        // console.log(JSON.stringify(payment));
+        //res.send('Success');
+        userHelper.orders(paymentId,req.session.orderDetails,req.session.user._id).then((result)=>{
+
+          userHelper.stockUpdate(result.insertedId).then((response)=>{
+
+            req.session.orderDetails=null;
+            let userCartCount = 0;
+            res.render('user/orderSuccessPage',{currentUser:req.session.user,userCartCount})
+
+          })
+
+        })
+    }
+  });
 
 
 })
 
-// router.get('/cartItemRemoved',(req,res)=>{
+
+router.get('/orderSuccessPage',verifyLogin,(req,res)=>{
+
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+
+  let userCartCount = 0;
   
-//   res.redirect('/cart')
+  res.render('user/orderSuccessPage',{currentUser:req.session.user,userCartCount})
 
-// })
-
+})
 
 router.post('/removeCart',verifyLogin,(req,res)=>{
 
@@ -747,7 +883,7 @@ router.post('/removeCart',verifyLogin,(req,res)=>{
   })
 })
   
-router.get('/wishlist',(req,res)=>{
+router.get('/wishlist',verifyLogin,(req,res)=>{
   
   if(req.session.user){
     res.render('user/wishlist');
@@ -834,13 +970,28 @@ router.get('/myOrders',verifyLogin,async(req,res)=>{
   
 
 })
+
+router.post('/removeFromOrder',(req,res)=>{
+  
+  req.body.quantity = parseInt(req.body.quantity)
+
+  //console.log(req.body)
+
+  userHelper.removeFromOrder(req.body).then((response)=>{
+    
+    res.json({valid:true})
+
+  })
+
+})
+
   
 
 
 
-router.get('/otpvalidation', function(req, res, next) {
-  res.render('user/otppage',{ title:"shopKart", admin:false });
-});
+// router.get('/otpvalidation', function(req, res, next) {
+//   res.render('user/otppage',{ title:"shopKart", admin:false });
+// });
 
 router.get('/userLogout',(req,res)=>{
 

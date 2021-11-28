@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="col-sm-8 p-3">
-                            <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Orders</h6>
+                            <h4 class="m-b-20 p-b-5 b-b-default f-w-600 text-center">Orders</h4>
                             <div class="row">
                                 {{#each response}}
                                 <div class="card-block">
@@ -48,10 +48,17 @@
                                                 <p class="card-text text-dark">{{this.product.color}}</p>
                                                 
                                                 {{!-- <p class="card-text" ><small class="text-muted" id="mrp">₹{{this.productvarient.mrp}}</small></p> --}}
-                                                
-                                                <p><span class="text-dark">status : </span>{{this.cartItems.orderStatus}}</p> 
+                                                {{#if this.cartItems.remove}}
+                                                <p><span class="text-dark">status : </span><span  style="color:red">Canceled</span> </p>
+                                                {{else}}
+                                                <p><span class="text-dark">status : </span><span style="color: rgb(4, 180, 4);">{{this.cartItems.orderStatus}}</span> </p>
+                                                {{/if}}
                                                 <p><span class="text-dark">Ordered : </span>{{this.date}}</p>
-                                                <p><span class="text-dark">Delivery : </span><span  style="color:green;">{{this.expectedDeliveryDate}}</span></p>
+                                                {{#if this.cartItems.remove}}
+                                                <p><span class="text-dark">Delivery : </span><span  style="color:Red;">Order is Canceled</span></p>
+                                                {{else}}
+                                                <p><span class="text-dark">Delivery : </span><span  style="color:rgb(4, 180, 4);">{{this.expectedDeliveryDate}}</span></p>
+                                                {{/if}}
                                                 <p><span class="text-dark">Address : </span>{{this.address.houseNumber}} ,
                                                                                             {{this.address.locality}} ,
                                                                                             {{this.address.district}} ,
@@ -67,24 +74,19 @@
                                     
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-3 ps-md-3 pe-lg-3 pt-md-5">
-                                        
-
                                         <div class="row pe-lg-5 pt-md-5">
-
-                                            <button onclick="cancelOrder('{{this._id}}','{{this.product._id}}','{{this.cartItems.quantity}}')"  class="btn btn-danger mt-2" style="border-radius: 3px; position: absolute; bottom: 0;">Cancel</button>
-
+                                            {{#if this.cartItems.delivered}}
+           
+                                            {{else}}
+                                            {{#if this.cartItems.remove}}
+                                            <button onclick=""  class="btn btn-danger mt-2"  style="border-radius: 3px; position: absolute; bottom: 0;">Remove</button>
+                                            {{else}}
+                                            <button onclick="cancelOrder('{{this._id}}','{{this.product._id}}','{{this.cartItems.quantity}}')"  class="btn btn-danger mt-2"  style="border-radius: 3px; position: absolute; bottom: 0;">Cancel</button>
+                                            {{/if}}
+                                            {{/if}}
                                         </div>
-                                        
-
                                     </div>
-                                   
-                                       
-                                        
-                                   
-                                   
                                 </div>
-                                    
-                                    
                                 </div> 
                                 {{/each}}
                             </div>
@@ -95,11 +97,73 @@
         </div>
     </div>
 </div>
+                                        
+
+                                            
+                                        
+
+                                   
+                                       
+                                        
+                                   
+                                   
+                                    
+                                    
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 
-    function cancelOrder(orderId,productId){
+    
 
-        console.log(orderId,productId)
+    function cancelOrder(orderId,productId,quantity){
+
+        //console.log(orderId,productId,quantity)
+
+        //quantity = parseInt(quantity)
+
+        Swal.fire({
+
+            title: 'Are you sure?',
+            text: "You want to cancel this order!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                
+                $.ajax({
+
+                    url:"/removeFromOrder",
+                    method:"post",
+                    data:{  orderId:orderId,
+                            productId:productId,
+                            quantity:quantity
+                    },
+                    success:(response)=>{
+
+                        
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+
+                    }
+
+                })
+
+                
+
+            }
+
+        })
+
+
+        
     }
 
 </script>

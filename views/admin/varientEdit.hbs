@@ -10,15 +10,15 @@
 
 
  <div class="container" style="font-size: 14px;" >
-            <h1 class="text-center">Edit Product Varient</h1>
+            <h3 class="text-center">Edit Product Varient</h3>
 
             <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-10 pt-0 mt-4">
-            <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+            <div class="row pb-2 p-5"style="background-color:  #eeeeee; border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187);">
                 {{#if varientData}}
-                <form class="pt-0" enctype="multipart/form-data" id="updateVarientProduct" onsubmit="return submitForm(this)"   action="/admin/editVarients?varientId={{varientData._id}}" method="POST">
+                <form class="pt-0" enctype="multipart/form-data" id="updateVarientProduct" onsubmit="return submitForm(this)"   action="/admin/editVarients?varientId={{varientData._id}}&productId={{productId}}" method="POST">
                 
-                   <h3 class="text-center loginTitle mb-2">Product:{{product}}</h3>
+                   <h4 class="text-center loginTitle mb-2">Product:<span class="text-dark fs-5">{{product}}</span></h4>
                     {{#if productErr}}
                     <p  class="text-danger text-center mt-1">{{productErr}}</p>
                     {{/if}}
@@ -30,7 +30,7 @@
                     <div class="row">
                         <p>Selected Size:{{varientData.size}}</p>
                         <div class="col-3 ">
-                            <label class="form-label">Select Size</label>
+                            <label class="">Select Size</label>
                             <select class="form-select" style="padding: 6px;" name="size" id="Psizes">
                                 <option selected value=""></option>
                                 
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-2">
 
-                            <label class="form-label">Color</label>
+                            <label class="">Color</label>
                             <input type="text" class="form-control" value="{{varientData.color}}"  name="color" >
 
                         </div>
@@ -49,12 +49,12 @@
 
                             <div class="col-8">
 
-                            <label class="form-label" >landing cost</label>
+                            <label class="" >landing cost</label>
                             <input type="text" class="form-control" value="{{varientData.landingcost}}"  name="landingcost" >
                             </div>
                             <div class="col-4">
 
-                                <label class="form-label">MRP</label>
+                                <label class="">MRP</label>
                                 <input type="text" class="form-control"  value="{{varientData.mrp}}"  name="mrp" >
 
                             </div>
@@ -63,7 +63,7 @@
                         </div>
                         <div class="col-2">
 
-                            <label class="form-label">Quantity</label>
+                            <label class="">Quantity</label>
                             <input type="text" class="form-control" value="{{varientData.quantity}}"  name="quantity" >
 
                         </div>
@@ -75,7 +75,7 @@
                         <div class="col-lg-4 text-center">
 
                             <div class="mt-5">
-                            <label for="form-label" style="font-weight: 700;">Image 1</label>
+                            <label for="" style="font-weight: 700;">Image 1</label>
                             <div class="col-12">
                             <div id="image-box" style="width: 250px; height: 250px; display: none;"></div>
                             <button class="btn btn-primary mt-3" type="button" style="display: none;"
@@ -84,7 +84,7 @@
 
                             <img src="../images/product/productvarients/{{varientData._id}}_1.png" alt="" style="width: 100px; height:auto ; " id="imgview1">
                             {{!-- <div id="preview1"></div> --}}
-                            <input type="file" name="image1" id="file1" style="padding-top: 5.7px;" class="form-control"
+                            <input type="file" name="image1" id="file1" style="padding-top: 5.7px;" class="form-control mt-3"
                                 onchange="return fileValidation1()">
                             </div>  
 
@@ -101,7 +101,7 @@
 
                             <img src="../images/product/productvarients/{{varientData._id}}_2.png" alt="" style="width: 100px; height:auto ; " id="imgview2">
                             {{!-- <div id="preview1"></div> --}}
-                            <input type="file" name="image2" id="file2" style="padding-top: 5.7px;" class="form-control"
+                            <input type="file" name="image2" id="file2" style="padding-top: 5.7px;" class="form-control mt-3"
                                 onchange="return fileValidation2()">
                             </div>
                         </div>
@@ -118,7 +118,7 @@
 
                             <img src="../images/product/productvarients/{{varientData._id}}_3.png" alt="" style="width: 100px; height:auto ; " id="imgview3">
                             {{!-- <div id="preview1"></div> --}}
-                            <input type="file" name="image3" id="file3" style="padding-top: 5.7px;" class="form-control"
+                            <input type="file" name="image3" id="file3" style="padding-top: 5.7px;" class="form-control mt-3"
                                 onchange="return fileValidation3()">
                             </div>
                         </div>
@@ -143,7 +143,7 @@
 
                             <img src="../images/product/productvarients/{{varientData._id}}_4.png" alt="" style="width: 100px; height:auto ; " id="imgview4">
                             {{!-- <div id="preview1"></div> --}}
-                            <input type="file" name="image4" id="file4" style="padding-top: 5.7px;" class="form-control"
+                            <input type="file" name="image4" id="file4" style="padding-top: 5.7px;" class="form-control mt-3"
                                 onchange="return fileValidation4()">
                             </div>
                             
@@ -155,24 +155,11 @@
 
 
                     </div>
-                   
-
-                    
-
-                            
-
-
-
-
-
-                       
-                    
-                    
                     <div class="row">
 
-                    <div class="cl-lg-4 text-center mb-0 d-flex justify-content-center">
-                        <button id="confirm-btn" type="submit" class="btn btn-primary " style="background-color: blue; margin-top:20px; width: 80px">Add</button>
-                    </div>
+                        <div class="cl-lg-4 text-center mb-0 d-flex justify-content-center">
+                            <button id="confirm-btn" type="submit" class="btn btn-primary " style="background-color: blue; margin-top:20px; width: 80px">Add</button>
+                        </div>
                     </div>
                 </form>
                 {{/if}}

@@ -1,14 +1,12 @@
-     
-  
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.jqueryui.min.css">   
 
+<div class="container" style="font-size: 14px;" >
+            
 
-        
-     <div class="container" style="font-size: 14px;" >
-            <h1 class="text-center">catergory Management</h1>
-
-            <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+    <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-5 pt-0 mt-4">
-            <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+            <div class="row pb-1 p-3" style="background-color: rgb(238, 238, 238); border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187);">
                 <form class="pt-0" id="add-category" action="/admin/addNewCategory" method="POST">
                 
                    <h3 class="text-center loginTitle">Add new category</h3>
@@ -16,16 +14,16 @@
                    <p  class="text-danger text-center mt-1">{{Err}}</p>
                    {{/if}}
                    <div class="">
-                        <label class="form-label">Catagory</label>
+                        <label class="">Catagory</label>
                         <input type="text" class="form-control"  name="category" >
                         {{!-- <div id="emailHelp" class="form-text">We'll never share your data with anyone else.</div> --}}
                     </div>
-                    <div class="">
-                        <label  class="form-label">Sub Category</label>
+                    <div class="mt-2">
+                        <label  class="">Sub Category</label>
                         <input type="text" class="form-control"  name="subcategory">
                     </div>
-                    <div class="cl-lg-4 text-center mb-0">
-                        <button type="submit" class="btn btn-primary loginFormButton">Add</button>
+                    <div class="cl-lg-4 text-center mt-3 mb-0">
+                        <button type="submit" class="btn btn-primary loginFormButton" style="width: 80px;">Add</button>
                     </div>
                 </form>
                 
@@ -33,10 +31,10 @@
         </div>
     </section>
 
-    <div class="col-12 p-4 mt-4" style="background-color: rgb(222, 221, 221); border-radius:4px">
+    <div class="col-12 p-4 mt-4" style="background-color: #f9f9fa; border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
 
     
-    <table id="categoryTable" class="table table-striped text-center" style="width:100%; font-size:15px !important;">
+    <table id="categoryTable" class="display text-center" style="width:100%; font-size:15px !important;">
         <thead style="font-size: 15px;">
             <tr >
                 <th>Index</th>
@@ -53,20 +51,20 @@
             
             
             <td>
-                <ul>
+                
                 {{#each subcategory}}
 
             
 
-                   <li>
+                   <dl>
                        {{this}}<a class="btn" onclick="deleteSubCategory('{{../this.category}}','{{this}}')"><i class="fas fa-trash text-danger"></i></a>
-                   </li>
+                   </dl>
 
                
                 
 
                 {{/each}}
-                </ul>
+                
                 
             </td>
             <td>

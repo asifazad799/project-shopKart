@@ -6,28 +6,28 @@
 
 
  <div class="container" style="font-size: 14px;" >
-            <h1 class="text-center">Product Management</h1>
+            
 
-            <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+    <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-10 pt-0 mt-4">
-            <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+            <div class="row pb-2 p-5" style="background-color:  #eeeeee; border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187);">
                 <form class="pt-0" enctype="multipart/form-data" id="addProduct" action="/admin/addNewProduct" method="POST">
                 
-                   <h3 class="text-center loginTitle mb-2">Add new product</h3>
+                    <h3 class="text-center loginTitle mb-2">Add new product</h3>
                     {{#if pErr}}
-                   <p  class="text-danger text-center mt-1">{{pErr}}</p>
-                   {{/if}}
-                   <div class="row">
+                    <p  class="text-danger text-center mt-1">{{pErr}}</p>
+                    {{/if}}
+                    <div class="row">
 
-                   <div class=" col-lg-6">
+                    <div class=" col-lg-6">
 
-                        <label class="form-label" style="font-size: 14px;">Product Name</label>
+                        <label class="" style="font-size: ;">Product Name</label>
                         <input type="text" class="form-control text"  name="productName" >
                         
                     </div>
                     <div class=" col-lg-6">
 
-                        <label class="form-label">Brand name</label>
+                        <label class="">Brand name</label>
                         <select class="form-select" style="padding: 6px;" name="brand" id="inputGroupSelect01">
                                 <option value="">Choose...</option>
                                 {{#each brandData}}
@@ -40,7 +40,7 @@
                    </div>
                     <div class="row">
                         <div class="col-lg-6">
-                            <label class="form-label">Select Category</label>
+                            <label class="">Select Category</label>
                             <select class="form-select" style="padding: 6px;" name="category" id="category" onchange='catChange()'>
                                 <option value="">Choose...</option>
                                 {{#each catData}}
@@ -51,7 +51,7 @@
 
                         </div>
                         <div class="col-lg-6">
-                            <label class="form-label">Select SubCategory</label>
+                            <label class="">Select SubCategory</label>
                             <select class="form-select" style="padding: 6px;" name="subcategory" id="subcategory" onchange="sizeget()">
                                 <option value="">Choose...</option>
                                 
@@ -63,7 +63,7 @@
                     
                     <div class="row">
                         <div class="col-12">
-                            <label class="form-label">Discription</label>
+                            <label class="">Discription</label>
                                 <textarea class="form-control" rows="3"  name="discription" >
                                 </textarea>
 
@@ -74,7 +74,7 @@
                     <div class="row">
 
                         <div class="col-3 ">
-                            <label class="form-label">Select Size</label>
+                            <label class="">Select Size</label>
                             <select class="form-select" style="padding: 6px;" name="sizes" id="Psizes">
                                 <option value="">Choose...size</option>
                             </select>
@@ -82,7 +82,7 @@
                         </div>
                         <div class="col-2">
 
-                            <label class="form-label">Color</label>
+                            <label class="">Color</label>
                             <input type="text" class="form-control"  name="color" >
 
                         </div>
@@ -91,12 +91,12 @@
 
                             <div class="col-8">
 
-                            <label class="form-label" >landing cost</label>
+                            <label class="" >landing cost</label>
                             <input type="text" class="form-control"  name="landingcost" >
                             </div>
                             <div class="col-4">
 
-                                <label class="form-label">MRP</label>
+                                <label class="">MRP</label>
                                 <input type="text" class="form-control"  name="mrp" >
 
                             </div>
@@ -105,7 +105,7 @@
                         </div>
                         <div class="col-2">
 
-                            <label class="form-label">Quantity</label>
+                            <label class="">Quantity</label>
                             <input type="text" class="form-control"  name="quantity" >
 
                         </div>
@@ -117,7 +117,7 @@
                         <div class="col-lg-4 text-center">
 
                             <div class="mt-5">
-                            <label for="form-label" style="font-weight: 700;">Image 1</label>
+                            <label for="" style="font-weight: 700;">Image 1</label>
                             <div class="col-12">
                             <div id="image-box" style="width: 250px; height: 250px; display: none;"></div>
                             <button class="btn btn-primary mt-3" type="button" style="display: none;"
@@ -134,7 +134,7 @@
                         <div class="col-lg-4 text-center">
 
                             <div class="mt-5">
-                            <label for="form-label" style="font-weight: 700;">Image 2</label>
+                            <label for="" style="font-weight: 700;">Image 2</label>
                             <div class="col-12">
                             <div id="image-box2" style="width: 250px; height: 250px; display: none;"></div>
                             <button class="btn btn-primary mt-3" type="button" style="display: none;"
@@ -151,7 +151,7 @@
                         <div class="col-lg-4 text-center">
 
                             <div class="mt-5">
-                            <label for="form-label" style="font-weight: 700;">Image 3</label>
+                            <label for="" style="font-weight: 700;">Image 3</label>
                             <div class="col-12">
                             <div id="image-box3" style="width: 250px; height: 250px; display: none;"></div>
                             <button class="btn btn-primary mt-3" type="button" style="display: none;"

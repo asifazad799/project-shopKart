@@ -164,8 +164,15 @@
                         {{#each products}}
                         <div class="product product-7 text-center">
                             <figure class="product-media">
-                                {{!-- <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New</span> --}}
+
                                 {{#each productVarients}}
+                                  {{#if this.productOfferPrice}}
+                                  <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">Special Offer</span>
+                                  {{else}}
+                                  {{#if this.catOfferPrice}}
+                                  <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New Offer</span>
+                                  {{/if}}
+                                {{/if}}
                                 <a href="/productDetails?productVerientId={{this._id}}">
                                     <img src="/images/product/productvarients/{{this._id}}_1.png" alt="Product image" class="product-image">
                                 </a>
@@ -198,9 +205,28 @@
                                 </div>
                                 <h3 class="product-title"><a href="product.html">{{this.category}}</a></h3><!-- End .product-title -->
                                 {{#each productVarients}}
-                                <div class="product-price" style="color: blue;">
-                                    ₹{{this.mrp}}
-                                </div><!-- End .product-price -->
+                                  {{#if this.productOfferPrice}}
+                                   <div class="product-price" style="color: blue;">
+                                      ₹{{this.productOfferPrice}}
+                                  </div>
+                                  <div class="product-price" style="color: blue;">
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.mrp}}</s>
+                                  </div><!-- End .product-price -->
+
+                                  {{else}}
+                                  {{#if this.catOfferPrice}}
+                                  <div class="product-price" style="color: blue;">
+                                      ₹{{this.catOfferPrice}}
+                                  </div>
+                                  <div class="product-price" style="color: blue;">
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.mrp}}</s>
+                                  </div><!-- End .product-price -->
+                                  {{else}}
+                                  <div class="product-price" style="color: blue;">
+                                      ₹{{this.mrp}}
+                                  </div>
+                                  {{/if}}
+                                  {{/if}}
                                 {{/each}}
                                 {{!-- <div class="ratings-container">
                                     <div class="ratings">

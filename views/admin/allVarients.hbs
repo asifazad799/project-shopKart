@@ -1,0 +1,119 @@
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.jqueryui.min.css">
+
+<div class="" >
+            
+
+
+<div class="col-12 p-4 mt-4" style=" background-color:#f9f9fa ; border-radius:3px;  border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+<h4 class="text-center">All products</h4>
+                {{#if productErr}}
+
+                <p class="text-danger">{{productErr}}</p>
+
+                {{/if}}
+                
+
+    
+    <table id="categoryTable1" class="display text-center" style="width:100%; font-size:15px !important;">
+        <thead style="font-size: 15px;">
+            <tr >
+                <th>Index</th>
+                <th>Name</th>
+                <th>image</th>
+                <th>Size</th>
+                <th>Color</th>
+                <th>Landing Cost</th>
+                <th>Mrp</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each response}}
+        <tr>
+            <td>{{@index}}</td>
+            
+            <td>{{this.productName}}
+            </td>
+            
+            <td>
+                
+                <img src="/images/product/productvarients/{{this.varients._id}}_1.png" width="70px" height="70px" alt="">
+                
+            </td>
+          
+            <td>{{this.varients.size}}</td>
+            <td>{{this.varients.color}}</td>
+            <td>{{this.varients.landingcost}} </td>
+            <td>{{this.varients.mrp}}</td>
+            <td>{{this.varients.quantity}}</td>
+            <td class="">
+                <dl class="" style="margin-left: -9px; margin-top: 15px;">
+
+                    <a  href="/admin/editVarients?varientId={{this.varients._id}}&product={{this.productName}}&subcategory={{this.subcategory}}&productId={{this._id}}"><i class="far fa-edit "></i></a>
+                    
+                    <a onclick="" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                </dl>
+
+            </td>
+            
+            
+        </tr>
+        {{/each}}
+        </tbody>
+        
+        
+
+    </table>
+            </div>
+
+     
+        
+        </div>
+    </div>
+</main>
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+      $(document).ready(function() {
+
+      $('#categoryTable1').DataTable(); 
+
+    } )
+
+    function deleteproduct(id,varientId){
+    console.log(varientId)
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url:"/admin/deleteproduct/",
+                method:"post",
+                data:{id:id,varientId:varientId},
+                success:(result)=>{
+                    if(result.status){
+                     swal("product deleted!", {
+                         icon: "success",
+                       });
+                       location.href="/admin/viewproducts"
+                      
+         
+                    }
+                }
+                
+            })
+      }
+})};
+
+</script>

@@ -1,9 +1,13 @@
 
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.jqueryui.min.css">
+
 <div class="" >
-            <h1>admin view all products</h1>
+            
 
-            <div class="col-12 p-4 mt-4" style="background-color: rgb(222, 221, 221); border-radius:4px">
 
+<div class="col-12 p-4 mt-4" style=" background-color:#f9f9fa ; border-radius:3px;  border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+<h4 class="text-center">All products</h4>
                 {{#if productErr}}
 
                 <p class="text-danger">{{productErr}}</p>
@@ -12,12 +16,12 @@
                 
 
     
-    <table id="categoryTable1" class="table table-striped" style="width:100%; font-size:15px !important;">
+    <table id="categoryTable1" class="display text-center" style="width:100%; font-size:15px !important;">
         <thead style="font-size: 15px;">
             <tr >
                 <th>Index</th>
                 <th>Name</th>
-                <th>image</th>
+               
                 <th>Category</th>
                 <th>Sub Category</th>
                 <th>Varients</th>
@@ -32,50 +36,18 @@
             
             <td>{{this.productName}}
             </td>
-            {{#each productVarients}}
-            <td> <ul>
-                <li>
-                     <img src="/images/product/productvarients/{{this._id}}_1.png" width="70px" height="70px" alt="">
-                </li>
-            </ul></td>
-            {{/each}}
+           
             <td>{{this.category}}</td>
             <td>{{this.subcategory}}</td>
+            <td><a class="btn btn-success text-white" href="/admin/getVarients?productId={{this._id}}">Varients</a></td>
+           
             <td>
-                <ul>
-                {{#each productVarients}}
-
-                       
-                        <li>size:{{this.size}}</li>
-                        
-                        <li>color:{{this.color}}</li>
-                        
-                        <li>landing cost:{{this.landingcost}}</li>
-                        <li>MRP:{{this.mrp}}</li>
-                        <li>Quantity:{{this.quantity}}</li>
-                        
-
-                   
-                    <a  href="/admin/editVarients?varientId={{this._id}}&product={{../this.productName}}&subcategory={{../this.subcategory}}"><i class="fas fa-edit fs-3 text-center"></i></a>
-                
-
-                {{/each}}
-                </ul>
-                {{!-- {{#each  productVarients}}
-                 <a  href="/admin/addNewVarient?product={{this.productId}}" class="btn btn-primary">Add new Varient</a> --}}
                
-            </td>
-            <td>
-                <div style="display: flex;">
+                <dl class="" style="margin-left: -9px;">
 
-                 <div>
-
-                 <a class="btn" onclick= "deleteproduct('{{this._id}}','{{#each productVarients}}{{this._id}}{{/each}}')"><i class="fas fa-trash text-danger fs-3 text-center"></i></a>
-                 </div>
-                 <div style="margin-top: 7px;">
-                 <a href="/admin/editProduct?productId={{this._id}}" ><i class="fas fa-edit fs-3 p-0 text-center"></i></a>
-                 </div>
-                </div>
+                    <a href="/admin/editProduct?productId={{this._id}}" ><i class="far fa-edit "></i></a>
+                    <a onclick="deleteproduct('{{this._id}}','{{#each productVarients}}{{this._id}}{{/each}}')" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                </dl>
 
             </td>
             
@@ -94,6 +66,8 @@
         </div>
     </div>
 </main>
+
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script type="text/javascript">
@@ -103,6 +77,9 @@
       $('#categoryTable1').DataTable(); 
 
     } )
+
+    
+    
 
     function deleteproduct(id,varientId){
     console.log(varientId)

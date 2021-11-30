@@ -1,9 +1,13 @@
+const { Console } = require('console');
 var express = require('express');
 var router = express.Router();
 var fs= require('fs');
+const { order } = require('paypal-rest-sdk');
+const Taskrouter = require('twilio/lib/rest/Taskrouter');
 
 const { response } = require('../app');
-var adminHelper = require('../helpers/admin-helper')
+var adminHelper = require('../helpers/admin-helper');
+const userHelper = require('../helpers/user-helper');
 
 let adminLoginVerify=(req,res,next)=>{
 
@@ -35,7 +39,7 @@ router.get('/',adminLoginVerify,function(req, res, next) {
 
     res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     
-    res.render('admin/adminDashboard',{admin:true,currentAdmin});
+    res.redirect('/admin/adminDashBoard');
 
   // }else{
 
@@ -45,6 +49,39 @@ router.get('/',adminLoginVerify,function(req, res, next) {
 
   
 });
+
+router.get('/adminDashBoard',async(req,res)=>{
+
+  let orderCound= await adminHelper.getOrderCount()
+  let totalProfit = await adminHelper.totalProfit()
+  let UserCount = await adminHelper.getAllUsers();
+  UserCount = UserCount.length;
+  
+ 
+  //console.log(asif)
+ 
+  res.render('admin/adminDashboard',{admin:true,currentAdmin,orderCound,totalProfit,UserCount});
+
+})
+
+router.get('/getSalesTable',async(req,res)=>{
+  
+  await adminHelper.getPerDaySalesData().then(async(response)=>{
+    
+    // console.log(response)
+
+   
+
+    //console.log(response)
+    // asifdate = response.dateArray;
+    // count = response.salesCount;
+
+    res.json(response)
+
+  })
+
+
+})
 
 var passwordErr = false;
 var emailErr = false;
@@ -67,6 +104,7 @@ router.get('/adminlogin', function(req, res, next) {
   }
   
 });
+
 
 
 router.post('/login', function(req, res, next) {
@@ -533,6 +571,21 @@ router.post('/addNewProduct',adminLoginVerify,(req,res)=>{
 
 })
 
+router.get('/getVarients',(req,res)=>{
+
+  //console.log(req.query)
+  adminHelper.getVarients(req.query.productId).then((response)=>{
+
+    //console.log(response)
+    res.render('admin/allVarients',{admin:true,currentAdmin,response})
+
+  })
+
+
+})
+
+
+
 let productErr = null;
 
 router.get('/viewproducts',adminLoginVerify,(req,res)=>{
@@ -558,13 +611,6 @@ router.get('/viewproducts',adminLoginVerify,(req,res)=>{
 
 })
 
-// router.get('/find-sizes',(req,res)=>{
-
-//   let sizes = ['S','m'];
-
-//   res.send(sizes);
-
-// })
 router.post('/deleteproduct',adminLoginVerify,(req,res)=>{
 
   console.log(req.body)
@@ -654,7 +700,7 @@ router.get('/editVarients',adminLoginVerify,(req,res)=>{
 
 
   // console.log(req.query);
-
+  let productId = req.query.productId
   let product = req.query.product;
   let subcategory = req.query.subcategory
 
@@ -665,7 +711,7 @@ router.get('/editVarients',adminLoginVerify,(req,res)=>{
     console.log(response.size);
 
 
-    res.render('admin/varientEdit',{admin:true,varientData:response,product,currentAdmin,subcategory})
+    res.render('admin/varientEdit',{admin:true,varientData:response,product,currentAdmin,subcategory,productId})
 
   })
 
@@ -765,8 +811,8 @@ router.post('/editVarients',adminLoginVerify,(req,res)=>{
     }
   
    
-
-    res.redirect('/admin/viewproducts')
+    let produtcId = req.query.productId
+    res.redirect('/admin/getVarients?productId='+produtcId)
     // res.json({status:true})
 
   })
@@ -817,14 +863,17 @@ router.get('/find-subcategory',adminLoginVerify,(req,res)=>{
 
 })
 
-//Ofer management
+//Offer management
+
+let catOfferChanged = false;
 
 router.get('/viewAllOffers',(req,res)=>{
 
   adminHelper.getCatOffers().then((response)=>{
     
     //console.log(response)
-    res.render('admin/viewAllOffers',{admin:true,currentAdmin,response})
+    res.render('admin/viewAllOffers',{admin:true,currentAdmin,response,catOfferChanged})
+    catOfferChanged = false;
 
   })
   
@@ -866,7 +915,143 @@ router.post('/addNewCatOffer',(req,res)=>{
 
 })
 
+router.get('/editCatOffer',(req,res)=>{
+
+  adminHelper.editCatOffer(req.query.category).then((response)=>{
+
+    adminHelper.getCategoryTable().then((catresponse)=>{
+      
+
+      res.render('admin/editCatOffer',{admin:true,currentAdmin,response,catData:catresponse})
+
+    })
+    
+
+  }).catch((reject)=>{
+    
+    console.log('not edited')
+
+  })
+
+})
+
+router.post('/deleteCatOffer',(req,res)=>{
+  
+  console.log(req.body)
+  adminHelper.deleteCatOffer(req.body.category).then((response)=>{
+    
+    res.json({valid:true})
+
+  })
+
+})
+
+router.post('/updateCatOffer1',(req,res)=>{
+  
+  let category = req.query.category;
+  adminHelper.updateCatOffer(req.query.cafOfferId,category,req.body).then((response)=>{
+  
+    // console.log('catUpdate')
+    catOfferChanged = true;
+    res.redirect('/admin/viewAllOffers')
+
+  })
+
+})
+
+let sameProductOfferErr = false;
+
+router.get('/addNewProductOffer',(req,res)=>{
+  
+  adminHelper.viewAllProducts().then((response)=>{
+    
+    res.render('admin/AddNewProductOffer',{admin:true,currentAdmin,response,sameProductOfferErr})
+    sameOfferErr = false; 
+
+  })
+
+
+})
+
+router.post('/addNewProductOffer',(req,res)=>{
+  
+  adminHelper.addNewProductOffer(req.body).then(()=>{
+
+    res.redirect('/admin/viewAllProductOffers')
+
+  }).catch(()=>{
+    
+    sameProductOfferErr = true;
+    res.redirect('/admin/addNewProductOffer')
+
+  })
+
+})
+
+router.get('/viewAllProductOffers',(req,res)=>{
+  
+  adminHelper.getAllProductOffer().then((response)=>{
+    //console.log(response)
+    res.render('admin/viewAllProductOffers',{currentAdmin,admin:true,response})
+
+  }).catch(()=>{
+    
+    console.log('error')
+
+  })
+
+
+})
+
+router.get('/editProductOffer',(req,res)=>{
+
+  adminHelper.editProductOffer(req.query.productOffer).then((result)=>{
+    
+    adminHelper.viewAllProducts().then((response)=>{
+
+      
+      res.render('admin/editProductOffer',{admin:true,result:result,response,sameProductOfferErr})
+      sameProductOfferErr=false
+      
+
+    })
+    
+
+
+  })
+
+})
+
+router.post('/updateProductOffer',(req,res)=>{
+  
+  console.log(req.query)
+  adminHelper.updateProductOffer(req.query.offerId,req.body).then(()=>{
+    
+    res.redirect('/admin/viewAllProductOffers')    
+
+  }).catch(()=>{
+    
+    sameProductOfferErr = true;
+    res.redirect('/editProductOffer')
+
+  })
+
+})
+
+router.get('/deleteProductOffer',(req,res)=>{
+  
+  console.log( req.query)
+  adminHelper.deleteProductOffer(req.query).then((response)=>{
+
+    
+    res.json({valid:true})
+
+  })
+
+
+})
 // console.log(req.files)
+
 
 
 router.get('/adminLogout',(req,res)=>{

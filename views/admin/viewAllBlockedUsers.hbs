@@ -1,7 +1,10 @@
-<div class="container" >
-            <h1 class="text-center">All Blocked Users</h1>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.jqueryui.min.css">
 
-            <div class="col-12 p-4 mt-4" style="background-color: rgb(222, 221, 221); border-radius:4px">
+<div class="container" >
+
+<div class="col-12 p-4 mt-4" style="background-color: #f9f9fa; border-radius:4px; box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+            <h4 class="text-center">All Blocked Users</h4>
 
                 {{#if productErr}}
 
@@ -11,7 +14,7 @@
                 
 
     
-    <table id="allUsers" class="table table-striped" style="width:100%; font-size:15px !important;">
+    <table id="allUsers" class="text-center display" style="width:100%; font-size:15px !important;">
         <thead style="font-size: 15px;">
             <tr >
                 <th>Index</th>

@@ -1,0 +1,63 @@
+<section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+    <div class="container cl-10 col-sm-8 col-md-6 col-lg-5 pt-0 mt-4">
+        <div class="row pb-2 p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+            {{#if result}}
+            <form class="pt-0" id="catOffer" action="/admin/updateProductOffer?offerId={{result._id}}" method="POST">
+                <h3 class="text-center loginTitle">Add new product offer</h3>
+                {{#if sameProductOfferErr}}
+                <div class="d-flex justify-content-center">
+
+                    <p class="text-danger">Offer already available for this Product</p>
+                </div>
+
+                {{/if}}
+                <div class="row">
+
+                    <div class="col-lg-12 pt-1">
+                        <label for="browser">select product</label>
+                        <input list="browsers" name="product" id="browser" value="{{result.productName}}" style="width: 100%; padding: 3.9px; border: 1px solid rgb(206, 212, 218);border-radius: 4px;">
+                        <datalist id="browsers">
+                            {{#each response}}
+                            <option value="{{this.productName}}">
+                            {{/each}}
+                        </datalist>
+
+                    </div>
+                   
+                </div>
+                <div class="row pt-1">
+
+                    <div class="col-6">
+
+                        <label for="startingDate">Starting date</label>
+                        <input type="date" id="startingDate" value="{{result.startingDate}}" name="startingDate" style="padding: 6px; border-radius: 4px; border: 1px solid #ced4da; width:100%">
+                        
+                    </div>
+
+                    
+                    <div class="col-6">
+
+                        <label for="expairyDate">Expairy date</label>
+                        <input type="date" id="expairyDate" value="{{result.expairyDate}}" name="expairyDate" style="padding: 6px; border-radius: 4px; border: 1px solid #ced4da; width:100%">
+                        
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-2">
+                    <div class="col-3">
+
+                        <label  class="">Offer in Percentege</label>
+                        <input type="text" class="form-control text-center" value="{{result.offer}}" id="offer" name="offer">
+
+                    </div>
+                </div>
+                        
+                <div class="cl-lg-4 text-center mb-0 mt-4">
+
+                    <button type="submit" class="btn btn-primary loginFormButton" style="width: 90px;">Add</button>
+
+                </div>
+            </form>
+            {{/if}}
+        </div>
+    </div>
+</section>

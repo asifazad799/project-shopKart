@@ -1,18 +1,27 @@
-
-            <h1 class="text-center">View All offers</h1>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.jqueryui.min.css">
+    
+   
 <div class="" style="display: flex; justify-content: space-around;">
 
-            
+    {{#if catOfferChanged}}
 
-    <div class="col-6 p-4 mt-4  " style="background-color: rgb(238, 238, 238); border-radius:4px">
+        <input id="offerChanged" hidden>
 
-    <table id="categoryTable1" class="table table-striped text-center" style="width:100%; font-size:15px !important;">
+    {{/if}}
+
+<div class="col-7 p-4 mt-4  " style="background-color: #f9f9fa; border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+    <h4 class="text-center">View All offers</h4>
+
+    <table id="categoryTable1" class="display text-center" style="width:100%; font-size:15px !important;">
         <thead style="font-size: 15px;">
             <tr >
                 <th>Index</th>
                 <th>Category</th>
+                <th>off</th>
                 {{!-- <th>Sub Category</th> --}}
-                
+                <th>Starting Date</th>
+                <th>Expiry Date</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -22,6 +31,7 @@
             <td>{{@index}}</td>
             
             <td>{{this.category}}</td>
+            <td>{{this.offer}}</td>
             {{!-- <td>
 
                 {{#each subcat}}
@@ -39,10 +49,16 @@
                 {{/each}}
             </td> --}}
             <td>
+                {{this.startingDate}}
+            </td>
+            <td>
+                {{this.expairyDate}}
+            </td>
+            <td>
                 <dl class="">
 
                     <a href="/admin/editCatOffer?category={{this.category}}" ><i class="far fa-edit "></i></a>
-                    <a href="/admin/deleteCatOffer?category={{this.category}}" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                    <a onclick="deleteCategory('{{this.category}}')" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
 
                 </dl>
             </td>
@@ -62,11 +78,79 @@
         </div>
     </div>
 </main>
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
      $(document).ready(function() {
 
       $('#categoryTable1').DataTable(); 
 
     } )
+
+   if(document.getElementById('offerChanged')){
+       
+            const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+        })
+
+        Toast.fire({
+        icon: 'success',
+        title: 'Offer details updated successfuly'
+        })
+
+   }
+
+   function deleteCategory(category){
+       //console.log('asif')
+       //console.log(category)
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                
+                $.ajax({
+
+                    url:'/admin/deleteCatOffer',
+                    data:{category:category},
+                    method:'post',
+                    success:(response)=>{
+                        
+                        if(response.valid){
+                            
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            ).then((result)=>{
+                                
+                               
+
+                            })
+
+                        }
+
+                    }
+
+                })
+
+            }
+        })
+
+   }
+
+
+     
 </script>

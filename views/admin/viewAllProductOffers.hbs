@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.jqueryui.min.css">
+    
+ 
+<div class="" style="display: flex; justify-content: space-around;">
+
+
+    <div class="col-8 p-4 mt-4  " style="background-color: #f9f9fa; border-radius:4px; border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+<h4 class="text-center">View all product offers</h4>
+
+    <table id="categoryTable1" class="display text-center" style="width:100%; font-size:15px !important;  width:720px">
+        <thead style="font-size: 15px;">
+            <tr >
+                <th>Index</th>
+                <th>Produtc Name</th>
+                <th>off</th>
+                {{!-- <th>Sub Category</th> --}}
+                <th>Starting Date</th>
+                <th>Expiry Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each response}}
+        <tr>
+            <td>{{@index}}</td>
+            
+            <td>{{this.productName}}</td>
+            <td>{{this.offer}}</td>
+            {{!-- <td>
+
+                {{#each subcat}}
+                
+                    <dl style="font-weight: 500;">Subcategory:{{this.subcategory}}</dl>
+                    <dl style="color: red;">Offer:{{this.offer}}%</dl>
+                    <dl>Starting date:{{this.startingDate}}</dl>
+                    <dl>Expiry date:{{this.expairyDate}}</dl>
+                    <dl class="">
+
+                    <a href="/admin/editCatOffer?subcategory={{this.subcategory}}" ><i class="far fa-edit "></i></a>
+                    <a href="/admin/deleteCatOffer?subcategory={{this.subcategory}}" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                    </dl>
+
+                {{/each}}
+            </td> --}}
+            <td>
+                {{this.startingDate}}
+            </td>
+            <td>
+                {{this.expairyDate}}
+            </td>
+            <td>
+                <dl class="">
+
+                    <a href="/admin/editProductOffer?productOffer={{this._id}}" ><i class="far fa-edit "></i></a>
+                    <a onclick="deleteProductOffer12('{{this._id}}','{{this.productName}}')" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                </dl>
+                    
+            </td>
+            
+               
+        </tr>  
+        {{/each}}
+        </tbody>
+        
+        
+
+    </table>
+            </div>
+
+     
+        
+        </div>
+    </div>
+</main>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    
+    
+
+   
+     $(document).ready(function() {
+
+      $('#categoryTable1').DataTable(); 
+
+     
+
+    } )
+
+        //console.log('asif')
+
+
+     
+</script>

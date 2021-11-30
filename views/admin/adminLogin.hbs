@@ -1,8 +1,8 @@
 <section class="mt-0 pt-0 d-flex justify-content-center loginForm mt-2 pt-5" >
-        <div class="container cl-10 col-sm-8 col-md-6 col-lg-4 pt-5 mt-5">
-            <div class="row pt-2 pb-2  p-5" style="background-color: rgb(222, 221, 221); border-radius: 6px;">
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-3 pt-5 mt-5">
+            <div class="row pt-2 pb-2  p-4" style="background-color: #eeeeee; border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187);">
                 <form class="pt-2" action="/admin/login" method="POST">
-                   <h3 class="text-center loginTitle pb-1 mb-2 mb-1">Admin Log in</h3>
+                   <h3 class="text-center loginTitle pb-1 mb-3">Admin Log in</h3>
                    {{#if passwordErr}}
                    <p  class="text-danger text-center mt-1">Password did not match</p>
                    {{/if}}
@@ -10,15 +10,15 @@
                    <p  class="text-danger text-center mt-1">Email did not match</p>
                    {{/if}}
                    <div class="mt-0">
-                        <label class="form-label">Email address</label>
+                        <label class="" style="font-weight: 600;">Email address</label>
                         <input type="email" class="form-control" value="asif@mail.com" name="email" aria-describedby="emailHelp">
                     </div>
                     <div class="">
-                        <label  class="form-label">Password</label>
+                        <label  class="mt-2" style="font-weight: 600;">Password</label>
                         <input type="password" class="form-control" value="12345678" name="password">
                     </div>
                     <div class="cl-lg-4 text-center mt-3 pt-2 mb-3">
-                        <button type="submit" class="btn btn-primary loginFormButton">Log in</button>
+                        <button type="submit" class="btn btn-primary loginFormButton" style="width: 110px;">Log in</button>
                     </div>
                 </form>
             </div>

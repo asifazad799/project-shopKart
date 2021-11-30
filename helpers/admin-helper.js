@@ -7,6 +7,132 @@ const { PRODUCT_VARIENTS, PRODUCTS } = require("../config/collection");
 
 module.exports = {
 
+    getOrderCount:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let orderCount = await db.get().collection(collection.ORDERS).aggregate([
+
+                {
+                    $unwind:'$cartItems'
+                },
+                {
+                    $project:{
+
+                        total:{ $sum:"$cartItems.quantity"},
+                        revenue:"$cartItems.subTotal",
+
+                    }
+                },
+                
+            ]).toArray()
+            
+            //console.log(orderCount)
+                
+            let quantity = 0 
+            let reveneu = 0
+
+            await orderCount.map((element)=>{
+
+                quantity = element.total+quantity
+                reveneu = element.revenue+reveneu
+            })
+            
+            
+            //console.log(quantity)
+            // console.log(orderCount)
+            resolve({quantity,reveneu})
+
+        })
+
+    },
+    totalProfit:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+
+            let totalRevenue = await db.get().collection(collection.ORDERS).aggregate([
+
+                {
+                    $unwind:'$cartItems'
+                },
+                {
+                    $project:{quantity:"$cartItems.quantity",
+                                productId:"$cartItems.product",
+                                subTotal:"$cartItems.subTotal"
+                    }
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'productId',
+                        foreignField:'_id',
+                        as:'product'
+                    }
+                },
+                {
+                    $unwind:"$product"
+                },
+                {
+                    $project:{
+                        
+                        landingcost:"$product.landingcost",
+                        quantity:1,
+                        subTotal:1
+                    }
+                }
+            ]).toArray()
+
+            console.log(totalRevenue)
+            
+            let totalCost = 0;
+            let totalGet = 0
+            await totalRevenue.map((element)=>{
+                
+                if(element.quantity!=0){
+                     
+                    totalCost= element.quantity*element.landingcost+totalCost
+                    totalGet = element.subTotal+totalGet
+
+                }
+                
+            })
+            
+            let totalProfit = totalGet - totalCost;
+            
+            //console.log(totalCost,totalGet,totalProfit)
+
+            resolve(totalProfit)
+        })
+
+    },
+    getPerDaySalesData:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let data = await db.get().collection(collection.ORDERS).aggregate([
+               
+                {
+                    $project:{
+                        date:{$dateToString: { format: "%Y-%m-%d", date: "$date" } },cartItems:1
+                    }
+                },
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $group:{
+                        _id:"$date",
+                        count:{$sum:"$cartItems.quantity"}
+                    }
+                }
+            ]).toArray()
+
+            console.log(data)
+            resolve(data)
+        })
+
+    },
+
     getAllUsers:()=>{
 
         return new Promise(async(resolve,reject)=>{
@@ -432,11 +558,42 @@ module.exports = {
 
             ]).toArray()
 
-            console.log(cc)
+            //console.log(cc)
                                                                         
             resolve(cc)
         
         })
+    },
+    getVarients:(productId)=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            //console.log(productId+'asif')
+
+            let varients = await db.get().collection(collection.PRODUCTS).aggregate([
+                
+                {
+                    $match:{_id:objectId(productId)}
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'_id',
+                        foreignField:'productId',
+                        as:'varients'
+                    }
+                },
+                {
+                    $unwind:"$varients"
+                }
+
+            ]).toArray()
+
+            //console.log(varients)
+            resolve(varients)
+
+        })
+
     },
     varientEdit:(data)=>{
         
@@ -820,10 +977,43 @@ module.exports = {
                            
                             //console.log(offerId)
 
-                            let items = await db.get().collection(collection.PRODUCTS).find({category:data.category}).toArray()
+                            let items = await db.get().collection(collection.PRODUCTS).aggregate([
+                                {
+                                    $match:{category:data.category}
+                                },
+                                {
+                                    $lookup:{
+                                        from:collection.PRODUCT_VARIENTS,
+                                        localField:'_id',
+                                        foreignField:'productId',
+                                        as:'productvarient'
+                                    }
+                                },
+                                {
+                                    $unwind:"$productvarient"
+                                }
+                                
+                            
+                            ]).toArray()
 
-                            //console.log(items)
+                            // console.log(items)
 
+                            await items.map(async(product)=>{
+                                
+                                let mrp = product.productvarient.mrp
+                                
+                                let off=(mrp/100)*offer;
+                                    
+                                let offerPrice = mrp-off;
+                                
+                                offerPrice = offerPrice.toFixed(2)
+
+                                //console.log('mrp:'+mrp+"off:"+off+"offerPrice:"+offerPrice)
+                                
+                                await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                                {$set:{catOfferPrice:offerPrice,catOffer:true}})
+
+                            })
                             
                             
                             resolve({sameExist:false})
@@ -866,6 +1056,276 @@ module.exports = {
             resolve(catOfferData)
 
         })
+    },
+    editCatOffer:(category)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let data = await db.get().collection(collection.CATOFFERS)
+                        .findOne({category:category})
+
+                        if(data){
+                            
+                            resolve(data)
+                        }else{
+                            
+                            reject()
+
+                        }
+
+        })
+
+    },
+    updateCatOffer:(catOfferId,category,data)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            // console.log(catOfferId,data)
+            let offer = parseInt(data.offer)
+            await db.get().collection(collection.CATOFFERS).updateOne({_id:objectId(catOfferId)},
+                    {
+                        $set:{
+                            
+                            
+                            offer:offer,
+                            startingDate:data.startingDate,
+                            expairyDate:data.startingDate
+
+                        }
+                    })
+                    .then(async(result)=>{
+
+                       
+                        //console.log(offerId)
+
+                        let items = await db.get().collection(collection.PRODUCTS).aggregate([
+                            {
+                                $match:{category:category}
+                            },
+                            {
+                                $lookup:{
+                                    from:collection.PRODUCT_VARIENTS,
+                                    localField:'_id',
+                                    foreignField:'productId',
+                                    as:'productvarient'
+                                }
+                            },
+                            {
+                                $unwind:"$productvarient"
+                            }
+                            
+                        
+                        ]).toArray()
+
+                        await items.map(async(product)=>{
+                                    
+                            let mrp = product.productvarient.mrp
+                            
+                            let off=(mrp/100)*offer;
+                                
+                            let offerPrice = mrp-off
+                            
+                            offerPrice = offerPrice.toFixed(2)
+    
+                            //console.log('mrp:'+mrp+"off:"+off+"offerPrice:"+offerPrice)
+                            
+                            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                            {$set:{catOfferPrice:offerPrice}})
+    
+                        })
+
+                        resolve()
+                    })
+        
+        })
+
+    },
+    deleteCatOffer:(category)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            await db.get().collection(collection.CATOFFERS).deleteOne({category:category}).then(async(result)=>{
+                
+                let items = await db.get().collection(collection.PRODUCTS).aggregate([
+                    {
+                        $match:{category:category}
+                    },
+                    {
+                        $lookup:{
+                            from:collection.PRODUCT_VARIENTS,
+                            localField:'_id',
+                            foreignField:'productId',
+                            as:'productvarient'
+                        }
+                    },
+                    {
+                        $unwind:"$productvarient"
+                    }
+                    
+                
+                ]).toArray()
+
+                
+
+                await items.map(async(product)=>{
+                    
+                    console.log(product)
+                    await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                        {$unset:{catOfferPrice:""}})
+
+                })
+
+                resolve()
+                
+
+            })
+
+        })
+
+    },
+    addNewProductOffer:(data)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let isProductAvailable = await db.get().collection(collection.PRODUCT_OFFERS).findOne({productName:data.product})
+
+            if(isProductAvailable){
+                
+                reject({isAvailable:true})
+
+            }else{
+                
+                let offer = parseInt(data.offer)
+                //console.log(data)
+                await db.get().collection(collection.PRODUCT_OFFERS).insertOne({productName:data.product,
+                                                                                offer:offer,
+                                                                                startingDate:data.startingDate,
+                                                                                expairyDate:data.expairyDate}).then(async(result)=>{
+                    
+                    let productId = await db.get().collection(collection.PRODUCTS).findOne({productName:data.product})
+                    let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})
+                    //console.log(proDetails)
+
+                    let off = (proDetails.mrp/100)*offer
+                    let offerPrice= proDetails.mrp-off
+
+                    offerPrice = offerPrice.toFixed(2)
+
+                    console.log(off)
+
+                    await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
+                                                                        {$set:{productOfferPrice:offerPrice}})
+
+                    resolve()
+
+                })
+                
+            }
+
+        })
+
+    },
+    getAllProductOffer:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+
+            let offers = await db.get().collection(collection.PRODUCT_OFFERS)
+                                .find()
+                                .toArray()
+            if(offers){
+                
+                resolve(offers)
+
+            }else{
+                
+                reject()
+
+            }
+
+        })
+        
+    },
+    editProductOffer:(offerId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let offer = await db.get().collection(collection.PRODUCT_OFFERS).findOne({_id:objectId(offerId)})
+            
+            //console.log(offer)
+            resolve(offer)
+
+        })
+
+    },
+    updateProductOffer:(offerId,newData)=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let isProductAvailable = await db.get().collection(collection.PRODUCT_OFFERS).findOne({productName:data.product})
+
+            if(isProductAvailable){
+                
+                reject({isAvailable:true})
+
+            }else{
+
+
+                offer = parseInt(newData.offer)
+    
+                await db.get().collection(collection.PRODUCT_OFFERS)
+                .updateOne({_id:objectId(offerId)},{$set:{productName:newData.product,
+                                                            startingDate:newData.startingDate,
+                                                            expairyDate:newData.expairyDate,
+                                                            offer:offer}}).then(async(result)=>{
+                                                                
+                        let productId = await db.get().collection(collection.PRODUCTS).findOne({productName:newData.product})
+                        let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})                                           
+                        let off = (proDetails.mrp/100)*offer
+                        let offerPrice= proDetails.mrp-off
+                        offerPrice = offerPrice.toFixed(2)
+                        //console.log(off)
+    
+                        await db.get().collection(collection.PRODUCT_VARIENTS).updateMany({_id:objectId(proDetails._id)},
+                                                                            {$set:{productOfferPrice:offerPrice}}).then((response)=>{
+                                                                                
+                                                                                resolve() 
+    
+                                                                            })
+                })
+
+            }
+            
+             
+
+        })
+
+    },
+    
+    deleteProductOffer:(offerData)=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            console.log(offerData.productOffer)
+            await db.get().collection(collection.PRODUCT_OFFERS).deleteOne({_id:objectId(offerData.productOffer) }).then(async(result)=>{
+                
+                let productId = await db.get().collection(collection.PRODUCTS).findOne({productName:offerData.productName})
+                let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})
+
+                await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
+                                                                            {$unset:{productOfferPrice:''}}).then((response)=>{
+                                                                                
+                                                                                resolve() 
+    
+                                                                            })
+
+
+
+            })
+
+
+
+        })
+
     }
 
 
@@ -873,13 +1333,7 @@ module.exports = {
 
 
 
-            
 
-           
-
-
-
-    
 }
                 
             

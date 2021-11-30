@@ -9,5 +9,6 @@ module.exports = {
     CART :'cart',
     ADDRESS:'address',
     ORDERS:'orders',
-    CATOFFERS:'categoryoffers'
+    CATOFFERS:'categoryoffers',
+    PRODUCT_OFFERS:'productoffers'
 }

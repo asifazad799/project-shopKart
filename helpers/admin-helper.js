@@ -105,12 +105,35 @@ module.exports = {
         })
 
     },
+    getOrderMethodsCount:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let data = await db.get().collection(collection.ORDERS).aggregate([
+                
+                {
+                    $group:{
+                            _id:"$paymentMethod",
+                            count:{$sum:1}
+                    }
+                },
+                {
+                    $sort:{_id:1}
+                }
+
+            ]).toArray()
+
+            //console.log(data)
+            resolve(data)
+        })
+
+    },
     getPerDaySalesData:()=>{
 
         return new Promise(async(resolve,reject)=>{
             
             let data = await db.get().collection(collection.ORDERS).aggregate([
-               
+                
                 {
                     $project:{
                         date:{$dateToString: { format: "%Y-%m-%d", date: "$date" } },cartItems:1
@@ -124,15 +147,251 @@ module.exports = {
                         _id:"$date",
                         count:{$sum:"$cartItems.quantity"}
                     }
+                },
+                {
+                    $sort:{_id:-1}
+                },
+                {
+                    $limit:7
                 }
+                
             ]).toArray()
 
-            console.log(data)
+            //console.log(data)
             resolve(data)
         })
 
     },
+    topSellingProductInPercentage:()=>{
 
+        return new Promise(async(resolve,reject)=>{
+            
+            let percentage = await db.get().collection(collection.ORDERS).aggregate([
+                
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $group:{
+                        _id:"$cartItems.product",
+                        count:{$sum:"$cartItems.quantity"}
+                    }
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'_id',
+                        foreignField:'_id',
+                        as:'productVarient'
+                    }
+                },
+                {
+                    $unwind:"$productVarient"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCTS,
+                        localField:'productVarient.productId',
+                        foreignField:'_id',
+                        as:'coreProduct'
+                    }
+                },
+                {
+                    $unwind:"$coreProduct"
+                },
+                {
+                    $group:{
+                        _id:null,
+                        totalSale:{$sum:"$count"},
+                        products:{$push:{productVarient:"$productVarient",coreProduct:"$coreProduct",count:"$count"}}
+                    }
+                },
+                {
+                    $unwind:"$products"
+                },
+                {
+                    $project:{
+                        count:'$products.count',
+                        productVarient:'$products.productVarient',
+                        coreProduct:'$products.coreProduct',
+                        //totalSale:"$totalSale",
+                        "percentage":{$multiply:[{$divide:["$products.count","$totalSale"]},100]}
+                    }
+                },
+                {
+                    $match:{"percentage":{"$gte":20}}
+                },
+                
+                {
+                    $project:{count:1,productVarient:1,coreProduct:1,
+                    
+                        percentage:{ $trunc: [ "$percentage", 0 ] }
+                       
+                    }
+                },
+                {
+                    $sort:{percentage:-1}
+                }
+               
+            ]).toArray()
+
+            console.log(percentage)
+            resolve(percentage)
+
+        })
+
+    },
+    topSellingProducts:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let topSellingProducts = await db.get().collection(collection.ORDERS).aggregate([
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $group:{
+                        _id:"$cartItems.product",
+                        count:{$sum:"$cartItems.quantity"}
+                    }
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'_id',
+                        foreignField:'_id',
+                        as:'productVarient'
+                    }
+                },
+                {
+                    $unwind:"$productVarient"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCTS,
+                        localField:'productVarient.productId',
+                        foreignField:'_id',
+                        as:'coreProduct'
+                    }
+                },
+                {
+                    $unwind:"$coreProduct"
+                },
+                {
+                    $sort:{count:-1}
+                },
+                {
+                    $limit:5
+                }
+            ]).toArray()
+
+            //console.log(topSellingProducts)
+            resolve(topSellingProducts)
+        })
+
+    },
+    currentDaySale:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let yourDate = new Date()
+            yourDate=yourDate.toISOString().split('T')[0]
+
+            let todaySale = await db.get().collection(collection.ORDERS).aggregate([
+                
+                {
+                    $project:{
+                        date:{$dateToString: { format: "%Y-%m-%d", date: "$date" } },cartItems:1
+                    }
+                },
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $match:{date:yourDate}
+                },
+                {
+                    $group:{
+                        _id:"$date",
+                        total:{$sum:"$cartItems.subTotal"}
+                    }
+                }
+
+            ]).toArray()
+            
+            let data = 0;
+            todaySale.map(val=> data=val.total)
+            //console.log(data)
+
+            resolve(data)
+
+        })
+
+    },
+    getBestSellingCat:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+
+            let  currentDate = new Date()
+            let bestCat = await db.get().collection(collection.ORDERS).aggregate([
+
+               
+                
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'cartItems.product',
+                        foreignField:'_id',
+                        as:'productVarient'
+                    }
+                },
+                {
+                    $unwind:"$productVarient"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCTS,
+                        localField:'productVarient.productId',
+                        foreignField:'_id',
+                        as:'coreProduct'
+                    }
+                },
+                {
+                    $unwind:"$coreProduct"
+                },
+                {
+                    $project:{
+
+                        PreviousDate: { $subtract: [  currentDate , (1000*60*60*24*7) ] },date:1,
+                        category:"$coreProduct.category"
+                    
+                    }
+                },
+                {
+                    $group: {
+                      _id: {
+                        category : "$category" },
+                        FDate: { $first : currentDate },
+                        LDate: { $first : "$PreviousDate" },
+                        count: { $sum: 1 }       
+                    }
+                },
+                {
+                    $sort:{"_id.category":1}
+                }
+
+            ]).toArray()
+
+            //console.log(currentDate)
+            //console.log(bestCat)
+            resolve(bestCat)
+
+        })
+
+    },
     getAllUsers:()=>{
 
         return new Promise(async(resolve,reject)=>{
@@ -457,31 +716,6 @@ module.exports = {
             let cc = await db.get().collection(collection.PRODUCTS).
             aggregate([
             
-            // },
-            // {
-            //     $unwind:"$catOfferDetails"
-            // },
-            // {
-            //     $project:{catd:"$catOfferDetails.subcat",category:1,subcategory:1}
-            // },
-            // {
-            //     $unwind:"$catd"
-            // },
-            // {
-            //     $match:{"subcategory":"catd.subcategory"}
-            // },
-            // {  
-            //     $project: {
-            //       result: {
-            //         $filter: {
-            //           input: "$catOfferDetails", 
-            //           as:"item", 
-            //           cond: { $eq: ["$subcategory", "$$catOfferDetails.subcategory"]}
-            //         }
-            //       }
-            //     }
-            // },
-            
             {
                 $lookup: {
                 from: collection.PRODUCT_VARIENTS,
@@ -490,71 +724,7 @@ module.exports = {
                 as: "productVarients"
                 }
             },
-            // {
-            //     $lookup:{
-                    
-            //         from:collection.CATOFFERS,
-            //         localField:'categoryOfferId',
-            //         foreignField:'subcat.offerId',
-            //         as:'offer'  
-                   
-
-            //     }
-            // },
-            // {
-            //     $project:{
-
-            //        productName:1,category:1,subcategory:1,
-            //        offer:{
-            //            $filter:{
-            //                input:"$offer",
-            //                as:'offer',
-            //                cond: { $in: ["$subcategory","$$offer.subcat.subcategory"]}
-            //            }
-            //        }
-                    
-            //     }
-            // },
-            // {
-            //     $unwind:"$offer"
-            // }
             
-            // {
-            //     $unwind:"$offer.subcat"
-            // },
-            // {  
-            //     $project: {
-            //         result: {
-            //         $filter: {
-            //             input: "$offer", 
-            //             as:"item", 
-            //             cond: { $eq: ["$subcategory", "$$offer.subcategory"]}
-            //         }
-            //         }
-            //     }
-            // },
-            // {
-            //     $project:{
-            //         catd:"$offer.subcat",
-                    
-            //         category:1,subcategory:1}
-            // },
-            // {
-            //     $unwind:"$catd"
-            // }
-            // {
-            //     $project:{
-                    
-            //         "offer.subcat":{
-            //             $filter:{
-            //                 input:"$offer.subcat",
-            //                 as:'catoffer',
-            //                 cond:{$eq:['$$offer.subcat.subcategory',"subcategory"]}
-            //             }
-            //         }
-
-            //     }
-            // }
 
             ]).toArray()
 
@@ -735,31 +905,7 @@ module.exports = {
                 {
                     $unwind:'$address' 
                 }
-                // {
-                //     "$lookup": {
-                //       "from": collection.ADDRESS,
-                //       "let": {"addressId": "$address"},
-                //       pipeline: [
-                //         {
-                //           "$match": {
-                //             "$expr": {
-
-                //                 "$eq":["userId","$userId"],
-                //                 "$in": ["$$addressId","$address.addressId" ],
-                                
-                //             },
-                //           },
-                //         },
-                //       ],
-                //       as:'jAddress'
-                //     }
-                //   },
-                  
-                  
-            
-                
-               
-                
+                    
             ]).toArray()
 
             console.log(data)
@@ -907,74 +1053,13 @@ module.exports = {
             if(offerExist){
 
                 resolve({sameExist:true})
-                //sub cat offer integration//
-                // let arr = offerExist.subcat
                 
-                // let currentStatus = arr.findIndex((ele)=>ele.subcategory==data.subcategory)
-                               
-                // console.log(currentStatus)
-
-                // if(currentStatus==-1){
-                    
-                //     let offer = parseInt(data.offer)
-                //     await db.get().collection(collection.CATOFFERS).updateOne(
-                //         {category:data.category},
-                //         {$push:{subcat:{
-                //             offerId:new objectId(),
-                //             subcategory:data.subcategory,
-                //             offer:offer,
-                //             startingDate:data.startingDate,
-                //             expairyDate:data.startingDate}}}).then(async(result)=>{
-
-                //                 let df = await db.get().collection(collection.CATOFFERS).
-                //                     aggregate([
-                //                     {
-                //                         $match:{category:data.category}
-                //                     },
-                //                     {
-                //                         $unwind:"$subcat"
-                //                     },
-                //                     {
-                //                         $match:{"subcat.subcategory":data.subcategory}
-                //                     }
-                                    
-                //                     ]).toArray()
-
-                //                    let offerId = df[0].subcat.offerId
-
-                //                    console.log(offerId)
-
-                //                    await db.get().collection(collection.PRODUCTS).updateMany(
-                //                         {$and:[{category:data.category},{subcategory:data.subcategory}]},
-                //                         {$set:{categoryOfferId:objectId(offerId),categoryOffer:true}}).then((res)=>{
-        
-                                        
-                //                             resolve({sameExist:false})
-        
-                //                         })
-                                
-
-                //             })
-                    
-                // }else{
-                    
-                //     resolve({sameExist:true})
-                    
-                // }
-                
-                
-
             }else{
 
                 //console.log(offerExist)
-                let offer = parseInt(data.offer)
-                await db.get().collection(collection.CATOFFERS).insertOne(
-                    {category:data.category,
-                        offer:offer,
-                        startingDate:data.startingDate,
-                        expairyDate:data.startingDate}).then(async(result)=>{
+               
 
-                           
+                            let offer = parseInt(data.offer)
                             //console.log(offerId)
 
                             let items = await db.get().collection(collection.PRODUCTS).aggregate([
@@ -996,50 +1081,81 @@ module.exports = {
                             
                             ]).toArray()
 
-                            // console.log(items)
-
+                            //console.log(items)
+                            
+                            
                             await items.map(async(product)=>{
                                 
-                                let mrp = product.productvarient.mrp
                                 
-                                let off=(mrp/100)*offer;
-                                    
-                                let offerPrice = mrp-off;
+                                offer = parseInt(data.offer)
                                 
-                                offerPrice = offerPrice.toFixed(2)
+                                
 
                                 //console.log('mrp:'+mrp+"off:"+off+"offerPrice:"+offerPrice)
+                                if(product.productvarient.oldProPrice){
+                                    
+                                   
+
+                                    let mrp = parseInt(product.productvarient.oldProPrice)
                                 
-                                await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
-                                                                                                {$set:{catOfferPrice:offerPrice,catOffer:true}})
+                                    let off = (mrp/100)*offer;
+                                        
+                                    let offerPrice = mrp-off;
+                                    
+                                    offerPrice = offerPrice.toFixed(2)
+
+                                    offerPrice = parseInt(offerPrice)
+                                    
+                                    if(offerPrice<product.productvarient.mrp){
+                                        
+                                        await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                                        {$set:{mrp:offerPrice,oldCatPrice:mrp},
+                                                                                                          $unset:{oldProPrice:""}})
+
+                                    }else{
+                                        
+                                        Console.log('better in Pro Offer')
+                                        //continue;
+
+                                    }
+
+                                }else{
+
+                                  
+                                    console.log('adding')
+                                    offer = parseInt(data.offer)
+                                    let mrp = parseInt(product.productvarient.mrp)
+                                
+                                    let off = (mrp/100)*offer;
+                                        
+                                    let offerPrice = mrp-off;
+                                    
+                                    offerPrice = offerPrice.toFixed(2)
+
+                                    offerPrice = parseInt(offerPrice)
+
+                                    await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                                    {$set:{mrp:offerPrice,oldCatPrice:mrp}})
+
+                                }
 
                             })
                             
                             
-                            resolve({sameExist:false})
-                                //resolve({sameExist:false})
-
-                            
-
-                                // let df = await db.get().collection(collection.CATOFFERS).
-                                // aggregate([
-                                // {
-                                //     $match:{category:data.category}
-                                // },
-                                // {
-                                //     $unwind:"$subcat"
-                                // },
-                                // {
-                                //     $match:{"subcat.subcategory":data.subcategory}
-                                // }
-                                
-                                // ]).toArray()
-
-                               //let offerId = df[0].subcat.offerId
+                            await db.get().collection(collection.CATOFFERS).insertOne(
+                                {category:data.category,
+                                    offer:offer,
+                                    startingDate:data.startingDate,
+                                    expairyDate:data.startingDate}).then(async(result)=>{
+                                    
+                                        resolve({sameExist:false})
+                                    
+                                    })
+                               
 
 
 
-                        })
+                        
 
             }
         })
@@ -1117,21 +1233,110 @@ module.exports = {
                         
                         ]).toArray()
 
+                       
+                        
                         await items.map(async(product)=>{
+                           
+
+
+                                if(product.productvarient.oldProPrice){
                                     
-                            let mrp = product.productvarient.mrp
-                            
-                            let off=(mrp/100)*offer;
-                                
-                            let offerPrice = mrp-off
-                            
-                            offerPrice = offerPrice.toFixed(2)
+                                    let mrp = parseInt(product.productvarient.oldProPrice)
+                                    
+                                    let off = (mrp/100)*offer;
+                                        
+                                    let offerPrice = mrp-off;
+                                    
+                                    offerPrice = offerPrice.toFixed(2)
     
-                            //console.log('mrp:'+mrp+"off:"+off+"offerPrice:"+offerPrice)
-                            
-                            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
-                                                                                            {$set:{catOfferPrice:offerPrice}})
+                                    offerPrice = parseInt(offerPrice)
+                                    
+                                    if(offerPrice<product.productvarient.mrp){
+                                        
+                                        await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                                        {$set:{mrp:offerPrice,oldCatPrice:mrp},
+                                                                                                          $unset:{oldProPrice:""}})
     
+                                    }else{
+                                        
+                                        console.log('better in Pro Offer')
+                                        //continue;
+    
+                                    }
+    
+    
+                                }
+                                else{
+
+                                    let proOffer = await db.get().collection(collection.PRODUCT_OFFERS).findOne({productName:product.productName})
+
+                                    if(proOffer){
+
+                                        console.log(proOffer.offer,offer)
+                                        if(proOffer.offer>offer){
+                                            
+                                            //console.log('asif')
+                                            let mrp = parseInt(product.productvarient.oldCatPrice)
+                                    
+                                            let off=(mrp/100)*proOffer.offer;
+                                                
+                                            let offerPrice = mrp-off
+                                            
+                                            offerPrice = offerPrice.toFixed(2)
+                
+                                            offerPrice = parseInt(offerPrice)
+                    
+                                            //console.log('mrp:'+mrp+"off:"+off+"offerPrice:"+offerPrice)
+                                            
+                                            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                                                {$set:{mrp:offerPrice,oldProPrice:mrp},
+                                                                                                                 $unset:{oldCatPrice:""}})  
+
+                                        }else{
+                                            
+                                            //console.log('not asif')
+                                            let mrp = parseInt(product.productvarient.oldCatPrice)
+                                    
+                                            let off=(mrp/100)*offer;
+                                                
+                                            let offerPrice = mrp-off
+                                            
+                                            offerPrice = offerPrice.toFixed(2)
+                
+                                            offerPrice = parseInt(offerPrice)
+                    
+                                            //console.log('mrp:'+mrp+"off:"+off+"offerPrice:"+offerPrice)
+                                            
+                                            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                                                {$set:{mrp:offerPrice}})
+
+                                        }
+                                        
+                                    }else{
+
+                                        
+                                        //console.log('hai asif')
+                                        let mrp = parseInt(product.productvarient.oldCatPrice)
+                                    
+                                        let off=(mrp/100)*offer;
+                                            
+                                        let offerPrice = mrp-off
+                                        
+                                        offerPrice = offerPrice.toFixed(2)
+            
+                                        offerPrice = parseInt(offerPrice)
+                
+                                        //console.log('mrp:'+mrp+"off:"+off+"offerPrice:"+offerPrice)
+                                        
+                                        await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
+                                                                                                            {$set:{mrp:offerPrice}})
+
+                                    }
+                          
+                                    
+                                    
+    
+                                }
                         })
 
                         resolve()
@@ -1165,13 +1370,55 @@ module.exports = {
                 
                 ]).toArray()
 
-                
+                //console.log(items)
 
                 await items.map(async(product)=>{
                     
-                    console.log(product)
-                    await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:product.productvarient._id},
-                                                                                        {$unset:{catOfferPrice:""}})
+
+                    if(product.productvarient.oldCatPrice){
+
+                        let proOfferCheck = await db.get().collection(collection.PRODUCT_OFFERS).findOne({productName:product.productName})
+
+                        if(proOfferCheck){
+
+                            console.log(proOfferCheck)
+
+                            let offer = parseInt(proOfferCheck.offer)
+                        
+                            let off = (product.productvarient.oldCatPrice/100)*offer
+
+                            let offerPrice= product.productvarient.oldCatPrice-off
+
+                            offerPrice = offerPrice.toFixed(2)
+
+                            offerPrice = parseInt(offerPrice)
+                            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(product.productvarient._id)},
+                                                                                                    {$set:{mrp:offerPrice,oldProPrice:product.productvarient.oldCatPrice},
+                                                                                                        $unset:{
+                                                                                                            oldCatPrice:""
+                                                                                                        }})
+                        
+                        }else{
+
+                            //console.log(product)
+    
+                            let mrp = parseInt(product.productvarient.oldCatPrice)
+                            await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId( product.productvarient._id)},
+                                                                                                {
+                                                                                                    $unset:{
+                                                                                                        oldCatPrice:""
+                                                                                                    },
+                                                                                                    $set:{
+                                                                                                        mrp:mrp
+                                                                                                    }
+                                                                                                })
+
+                        }
+                    }else{
+                        
+                        console.log('not cat offer')
+
+                    }
 
                 })
 
@@ -1195,30 +1442,88 @@ module.exports = {
 
             }else{
                 
-                let offer = parseInt(data.offer)
                 //console.log(data)
-                await db.get().collection(collection.PRODUCT_OFFERS).insertOne({productName:data.product,
-                                                                                offer:offer,
-                                                                                startingDate:data.startingDate,
-                                                                                expairyDate:data.expairyDate}).then(async(result)=>{
+                
+                
+                let productId = await db.get().collection(collection.PRODUCTS).findOne({productName:data.product})
+                let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})
+                console.log(proDetails)
+                
+                
+                
+                //console.log(off)
+                
+                if(proDetails.oldCatPrice){
+                        let offer = parseInt(data.offer)
                     
-                    let productId = await db.get().collection(collection.PRODUCTS).findOne({productName:data.product})
-                    let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})
-                    //console.log(proDetails)
+                        let off = (proDetails.oldCatPrice/100)*offer
 
-                    let off = (proDetails.mrp/100)*offer
-                    let offerPrice= proDetails.mrp-off
+                        let offerPrice= proDetails.oldCatPrice-off
 
-                    offerPrice = offerPrice.toFixed(2)
+                        offerPrice = offerPrice.toFixed(2)
 
-                    console.log(off)
+                        offerPrice = parseInt(offerPrice)
 
-                    await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
-                                                                        {$set:{productOfferPrice:offerPrice}})
+                        if(offerPrice<proDetails.mrp){
 
-                    resolve()
+                            await db.get().collection(collection.PRODUCT_OFFERS).insertOne({productName:data.product,
+                                                                                            offer:offer,
+                                                                                            startingDate:data.startingDate,
+                                                                                            expairyDate:data.expairyDate}).then(async(result)=>{
 
-                })
+                                await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
+                                                                                                    {$set:{mrp:offerPrice,oldProPrice:proDetails.oldCatPrice},
+                                                                                                        $unset:{oldCatPrice:" "}}).then((result)=>{
+                                                                                                        
+                                                                                                        resolve()
+
+                                                                                                    })
+                                })
+
+                        }else{
+                            
+                            console.log('already in cat')
+                            reject({betterOfferInCatOffer:true})
+
+                        }
+
+                        
+                    }else{
+
+                        let offer = parseInt(data.offer)
+                        
+                        let off = (proDetails.mrp/100)*offer
+
+                        let offerPrice= proDetails.mrp-off
+
+                        offerPrice = offerPrice.toFixed(2)
+
+                        offerPrice = parseInt(offerPrice)
+
+
+                        
+                        await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
+                                                                                            {$set:{mrp:offerPrice,oldProPrice:proDetails.mrp}}).then(async(result)=>{
+
+                                                                                                await db.get().collection(collection.PRODUCT_OFFERS).insertOne({productName:data.product,
+                                                                                                    offer:offer,
+                                                                                                    startingDate:data.startingDate,
+                                                                                                    expairyDate:data.expairyDate}).then(async(result)=>{
+
+                                                                                                        
+                                                                                                        resolve()
+
+                                                                                                    })
+                                                                                                
+
+                                                                                            })
+
+                        
+                        
+                    }
+
+
+               
                 
             }
 
@@ -1261,41 +1566,89 @@ module.exports = {
 
         return new Promise(async(resolve,reject)=>{
             
-            let isProductAvailable = await db.get().collection(collection.PRODUCT_OFFERS).findOne({productName:data.product})
+            //let isProductAvailable = await db.get().collection(collection.PRODUCT_OFFERS).findOne({productName:newData.product})
 
-            if(isProductAvailable){
-                
-                reject({isAvailable:true})
-
-            }else{
+           
 
 
                 offer = parseInt(newData.offer)
     
-                await db.get().collection(collection.PRODUCT_OFFERS)
-                .updateOne({_id:objectId(offerId)},{$set:{productName:newData.product,
-                                                            startingDate:newData.startingDate,
-                                                            expairyDate:newData.expairyDate,
-                                                            offer:offer}}).then(async(result)=>{
+                
                                                                 
                         let productId = await db.get().collection(collection.PRODUCTS).findOne({productName:newData.product})
-                        let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})                                           
-                        let off = (proDetails.mrp/100)*offer
-                        let offerPrice= proDetails.mrp-off
-                        offerPrice = offerPrice.toFixed(2)
-                        //console.log(off)
-    
-                        await db.get().collection(collection.PRODUCT_VARIENTS).updateMany({_id:objectId(proDetails._id)},
-                                                                            {$set:{productOfferPrice:offerPrice}}).then((response)=>{
-                                                                                
-                                                                                resolve() 
+                        let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})
+                        let podductCatOfferDetails = await db.get().collection(collection.CATOFFERS).findOne({category:productId.category})
+                        console.log(podductCatOfferDetails)
+                        console.log(proDetails.oldCatPrice)
+                        if(podductCatOfferDetails){
+                            
+                            let catOff = (proDetails.oldCatPrice/100)*podductCatOfferDetails.offer
+                            let catOfferPrice= proDetails.oldCatPrice-catOff
+                            catOfferPrice = catOfferPrice.toFixed(2)
+                            catOfferPrice = parseInt(catOfferPrice)
+
+                            let off = (proDetails.oldCatPrice/100)*offer
+                            let offerPrice= proDetails.oldCatPrice-off
+                            offerPrice = offerPrice.toFixed(2)
+                            offerPrice = parseInt(offerPrice)
+                            console.log(catOfferPrice,offerPrice)
+
+                            if(catOfferPrice<offerPrice){
+
+                                await db.get().collection(collection.PRODUCT_VARIENTS).updateMany({_id:objectId(proDetails._id)},
+                                                                            {$set:{mrp:catOfferPrice,oldCatPrice:proDetails.oldCatPrice},
+                                                                                $unset:{oldProPrice:""}}).then(async(response)=>{
+                                                                                await db.get().collection(collection.PRODUCT_OFFERS).deleteOne({_id:objectId(offerId)})
+                                                                                resolve({betterOfferInCatOffer:true}) 
     
                                                                             })
-                })
+                                
+                            }else{
 
-            }
-            
-             
+                                await db.get().collection(collection.PRODUCT_VARIENTS).updateMany({_id:objectId(proDetails._id)},
+                                                                            {$set:{mrp:offerPrice,oldProPrice:proDetails.oldCatPrice},
+                                                                            $unset:{oldCatPrice:""}}).then(async(response)=>{
+                                                                                
+                                                                                await db.get().collection(collection.PRODUCT_OFFERS)
+                                                                                .updateOne({_id:objectId(offerId)},{$set:{productName:newData.product,
+                                                                                startingDate:newData.startingDate,
+                                                                                expairyDate:newData.expairyDate,
+                                                                                offer:offer}}).then(async(result)=>{
+                                                                                    
+                                                                                    resolve() 
+
+                                                                                })
+    
+                                                                            })
+
+
+                            }
+
+                        }else{
+
+                            let off = (proDetails.oldProPrice/100)*offer
+                            let offerPrice= proDetails.oldProPrice-off
+                            offerPrice = offerPrice.toFixed(2)
+                            offerPrice = parseInt(offerPrice)
+                            await db.get().collection(collection.PRODUCT_VARIENTS).updateMany({_id:objectId(proDetails._id)},
+                                                                                {$set:{mrp:offerPrice,oldProPrice:proDetails.oldCatPrice},
+                                                                                  $unset:{oldCatPrice:""}  }).then(async(response)=>{
+
+                                                                                    await db.get().collection(collection.PRODUCT_OFFERS)
+                                                                                    .updateOne({_id:objectId(offerId)},{$set:{productName:newData.product,
+                                                                                    startingDate:newData.startingDate,
+                                                                                    expairyDate:newData.expairyDate,
+                                                                                    offer:offer}}).then(async(result)=>{
+
+                                                                                        resolve() 
+
+                                                                                    })
+                                                                                    
+        
+                                                                                 })
+                                                                                
+                        }
+                
 
         })
 
@@ -1311,12 +1664,43 @@ module.exports = {
                 let productId = await db.get().collection(collection.PRODUCTS).findOne({productName:offerData.productName})
                 let proDetails = await db.get().collection(collection.PRODUCT_VARIENTS).findOne({productId:productId._id})
 
-                await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
-                                                                            {$unset:{productOfferPrice:''}}).then((response)=>{
+                let catOfferCheck = await db.get().collection(collection.CATOFFERS).findOne({category:productId.category})
+
+                if(catOfferCheck){
+                    
+                    console.log(catOfferCheck)
+
+                    let offer = parseInt(catOfferCheck.offer)
+                        
+                    let off = (proDetails.oldProPrice/100)*offer
+
+                    let offerPrice= proDetails.oldProPrice-off
+
+                    offerPrice = offerPrice.toFixed(2)
+
+                    offerPrice = parseInt(offerPrice)
+                    await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
+                                                                            {$unset:{oldProPrice:''},
+                                                                            $set:{mrp:offerPrice,oldCatPrice:proDetails.oldProPrice}}).then((response)=>{
                                                                                 
                                                                                 resolve() 
     
                                                                             })
+
+
+                }else{
+
+
+                    await db.get().collection(collection.PRODUCT_VARIENTS).updateOne({_id:objectId(proDetails._id)},
+                                                                                {$unset:{oldProPrice:''},
+                                                                                $set:{mrp:proDetails.oldProPrice}}).then((response)=>{
+                                                                                    
+                                                                                    resolve() 
+        
+                                                                                })
+
+                }
+
 
 
 

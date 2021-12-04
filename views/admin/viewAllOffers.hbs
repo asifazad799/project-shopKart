@@ -11,7 +11,11 @@
     {{/if}}
 
 <div class="col-7 p-4 mt-4  " style="background-color: #f9f9fa; border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
-    <h4 class="text-center">View All offers</h4>
+    <h4 class="text-center ms-4">View all category offers</h4>
+    <div class="d-flex  pb-3">
+
+    <a href="/admin/addNewOffer" class="btn btn-primary text-white" style="background-color: blue;" >Add new cateory Offer</a>
+    </div>
 
     <table id="categoryTable1" class="display text-center" style="width:100%; font-size:15px !important;">
         <thead style="font-size: 15px;">
@@ -32,22 +36,7 @@
             
             <td>{{this.category}}</td>
             <td>{{this.offer}}</td>
-            {{!-- <td>
-
-                {{#each subcat}}
-                
-                    <dl style="font-weight: 500;">Subcategory:{{this.subcategory}}</dl>
-                    <dl style="color: red;">Offer:{{this.offer}}%</dl>
-                    <dl>Starting date:{{this.startingDate}}</dl>
-                    <dl>Expiry date:{{this.expairyDate}}</dl>
-                    <dl class="">
-
-                    <a href="/admin/editCatOffer?subcategory={{this.subcategory}}" ><i class="far fa-edit "></i></a>
-                    <a href="/admin/deleteCatOffer?subcategory={{this.subcategory}}" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
-                    </dl>
-
-                {{/each}}
-            </td> --}}
+            
             <td>
                 {{this.startingDate}}
             </td>

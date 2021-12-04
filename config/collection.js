@@ -10,5 +10,6 @@ module.exports = {
     ADDRESS:'address',
     ORDERS:'orders',
     CATOFFERS:'categoryoffers',
-    PRODUCT_OFFERS:'productoffers'
+    PRODUCT_OFFERS:'productoffers',
+    WISHLIST:'wishlist'
 }

@@ -135,7 +135,7 @@
               <!-- End .title-desc -->
             </div>
             <!-- End .heading -->
-<div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
                         data-owl-options='{
                             "nav": false, 
                             "dots": true,
@@ -162,26 +162,30 @@
                             }
                         }'>
                         {{#each products}}
-                        <div class="product product-7 text-center">
+                        <div class="product product-7 text-center" style="background-color: #f9f9fa; border-radius:2px; box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
                             <figure class="product-media">
 
                                 {{#each productVarients}}
-                                  {{#if this.productOfferPrice}}
+                                  {{#if this.oldProPrice}}
                                   <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">Special Offer</span>
                                   {{else}}
-                                  {{#if this.catOfferPrice}}
+                                  {{#if this.oldCatPrice}}
                                   <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New Offer</span>
                                   {{/if}}
                                 {{/if}}
                                 <a href="/productDetails?productVerientId={{this._id}}">
                                     <img src="/images/product/productvarients/{{this._id}}_1.png" alt="Product image" class="product-image">
                                 </a>
-                                 {{/each}}
                                 <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
+                                   
+                                      <a  onclick="addToWishlist('{{this._id}}')" class="btn-product-icon btn-wishlist btn-expandable"><span style="background-color: blue !important;">Add to wishlist</span></a>
+
+
+                                   
+                                    {{!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
+                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> --}}
                                 </div><!-- End .product-action-vertical -->
+                                {{/each}}
 
                                 <div class="product-action">
                                   {{#if ../currentUser}}
@@ -196,7 +200,7 @@
                                 </div><!-- End .product-action -->
                             </figure><!-- End .product-media -->
 
-                            <div class="product-body">
+                            <div class="product-body" style="background-color: #f9f9fa; ">
                                 <div class="product-cat">
                                     <a href="#">{{this.brand}}</a>
                                 </div><!-- End .product-cat -->
@@ -205,21 +209,21 @@
                                 </div>
                                 <h3 class="product-title"><a href="product.html">{{this.category}}</a></h3><!-- End .product-title -->
                                 {{#each productVarients}}
-                                  {{#if this.productOfferPrice}}
-                                   <div class="product-price" style="color: blue;">
-                                      ₹{{this.productOfferPrice}}
+                                  {{#if this.oldProPrice}}
+                                  <div class="product-price" style="color: blue;">
+                                      ₹{{this.mrp}}
                                   </div>
                                   <div class="product-price" style="color: blue;">
-                                      <s style="text-decoration-thickness: 2px;">₹{{this.mrp}}</s>
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.oldProPrice}}</s>
                                   </div><!-- End .product-price -->
 
                                   {{else}}
-                                  {{#if this.catOfferPrice}}
+                                  {{#if this.oldCatPrice}}
                                   <div class="product-price" style="color: blue;">
-                                      ₹{{this.catOfferPrice}}
+                                      ₹{{this.mrp}}
                                   </div>
                                   <div class="product-price" style="color: blue;">
-                                      <s style="text-decoration-thickness: 2px;">₹{{this.mrp}}</s>
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.oldCatPrice}}</s>
                                   </div><!-- End .product-price -->
                                   {{else}}
                                   <div class="product-price" style="color: blue;">
@@ -628,6 +632,6 @@
       <i class="icon-arrow-up btn-round"></i>
     </button>
 
-    
+ 
 
   

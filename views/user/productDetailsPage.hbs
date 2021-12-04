@@ -11,7 +11,15 @@
     padding-top: 3px;
     background-color: rgb(3, 3, 156);
 }
+.swal2-popup {
+font-size: 1.6rem;
+}
+.swal2-popup .icon{
+    color: red;
+}
+
 </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <main class="main">
             {{!-- <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                 <div class="container d-flex align-items-center">
@@ -85,10 +93,27 @@
                                         <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
                                     </div><!-- End .rating-container --> --}}
 
-                                    <div class="product-price">
+                                    {{!-- <div class="product-price">
                                        ₹{{this.mrp}}
                                         
-                                    </div><!-- End .product-price -->
+                                    </div><!-- End .product-price --> --}}
+                                    {{#if this.oldProPrice}}
+                                    <div class="product-price" style="color: blue;">
+                                        ₹{{this.mrp}} <s class="ms-3 text-danger" style="text-decoration-thickness: 2px;">₹{{this.oldProPrice}}</s>
+                                    </div>
+                  
+                                    {{else}}
+                                    {{#if this.oldCatPrice}}
+                                        <div class="product-price" style="color: blue;">
+                                            ₹{{this.mrp}}<s class="ms-3 text-danger" style="text-decoration-thickness: 2px;">₹{{this.oldCatPrice}}</s>
+                                        </div>
+                                        
+                                    {{else}}
+                                        <div class="product-price" style="color: blue;">
+                                            ₹{{this.mrp}}
+                                        </div>
+                                    {{/if}}
+                                    {{/if}}
                                     <p class="text-success">All tax is included</p>
 
                                     {{!-- <div class="product-content">
@@ -138,6 +163,7 @@
                                              <span class="fs-1 sizes">L</span>
                                         </label> --}}
                                     </div>
+                                    
                                     {{!-- end of size selection --}}
                                     {{!-- <div class="details-filter-row details-row-size">
                                         <label for="size">Size:</label>
@@ -169,10 +195,114 @@
 
                                     <div class="product-details-action">
                                         <div class="row">
-                                            <a onclick="addToCart('{{this._id}}','{{this.mrp}}')" class="cartButton text-center ms-3" style="color: white; cursor: pointer;"><span style="margin-top: 435px;">Add to cart</span></a>
-                                            <a  class="cartButton text-center ms-3" style="color: white; cursor: pointer;"><span>Buy</span></a>
+                                            {{#if ../currentUser}}
+                                            <a onclick="addToCart('{{this._id}}','{{this.mrp}}')" class="cartButton text-center ms-3" style="color: white; cursor: pointer; marigin"><span style="margin-top: 545px; font-weight: 500;">Add to cart</span></a>
+                                              <!-- Button trigger modal -->
+                                            <a  class="cartButton text-center ms-3" data-toggle="modal" data-target="#exampleModalCenter" style="color: white; cursor: pointer;"><span style="font-weight: 500;">Buy</span></a>
                                             <a  class="cartButton text-center ms-3" style="padding: 0px; width: 47px !important;"> <i class="icon-heart-o wishlistIcon" style="font-size: 24px; color:white"></i></a>
+                                            
+                                            {{else}}
+                                            <a href="/userLogin" class="cartButton text-center ms-3"><span style="font-weight: 500;">Add to cart</span></a>
+                                            <a  onclick="pleaseLogin()" class="cartButton text-center ms-3" style="color: white; cursor: pointer;"><span style="font-weight: 500;">Buy</span></a>
+                                            <a  onclick="pleaseLogin()" class="cartButton text-center ms-3" style="padding: 0px; width: 47px !important;"> <i class="icon-heart-o wishlistIcon" style="font-size: 24px; color:white"></i></a>
+
+                                            {{/if}}
                                         </div>
+
+                                                                          
+                                   
+    
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="p-5">
+                                        <div class="text-center" >
+
+                                            <h5 class="modal-title" id="exampleModalCenterTitle">Select quantity</h5>
+                                           
+                                        </div>
+                                             
+                                            <div class=" details-row-size mt-2 Psizes text-center">
+                                                <label class="label_sizeselector1 text-center"  for="qty1">
+                                                    <input onclick="buyButton('1')" class="sizeselector1" id="qty1" name="sizeselector" hidden type="radio" value="1">
+                                                    <span class="fs-1 sizes">1</span>
+                                                </label>
+                                                 <label class="label_sizeselector1 text-center"  for="qty2">
+                                                    <input onclick="buyButton('2')" class="sizeselector1" id="qty2" name="sizeselector" hidden type="radio" value="2">
+                                                    <span class="fs-1 sizes">2</span>
+                                                </label>
+                                                <label class="label_sizeselector1 text-center"  for="qty3">
+                                                    <input onclick="buyButton('3')" class="sizeselector1" id="qty3" name="sizeselector" hidden type="radio" value="3">
+                                                    <span class="fs-1 sizes">3</span>
+                                                </label>
+                                                 <label class="label_sizeselector1 text-center"  for="qty4">
+                                                    <input onclick="buyButton('4')" class="sizeselector1" id="qty4" name="sizeselector" hidden type="radio" value="4">
+                                                    <span class="fs-1 sizes">4</span>
+                                                </label>
+                                                <label class="label_sizeselector1 text-center"  for="qty5">
+                                                    <input onclick="buyButton('5')" class="sizeselector1" id="qty5" name="sizeselector" hidden type="radio" value="5">
+                                                    <span class="fs-1 sizes">5</span>
+                                                </label>
+                                                
+                                            </div>
+                                            <div class=" details-row-size mt-2 Psizes text-center">
+                                                <label class="label_sizeselector1 text-center"  for="qty6">
+                                                    <input onclick="buyButton('6')" class="sizeselector1" id="qty6" name="sizeselector" hidden type="radio" value="6">
+                                                    <span class="fs-1 sizes">6</span>
+                                                </label>
+                                                 <label class="label_sizeselector1 text-center"  for="qty7">
+                                                    <input onclick="buyButton('7')" class="sizeselector1" id="qty7" name="sizeselector" hidden type="radio" value="7">
+                                                    <span class="fs-1 sizes">7</span>
+                                                </label>
+                                                <label class="label_sizeselector1 text-center"  for="qty8">
+                                                    <input onclick="buyButton('8')" class="sizeselector1" id="qty8" name="sizeselector" hidden type="radio" value="8">
+                                                    <span class="fs-1 sizes">8</span>
+                                                </label>
+                                                 <label class="label_sizeselector1 text-center"  for="qty9">
+                                                    <input onclick="buyButton('9')" class="sizeselector1" id="qty9" name="sizeselector" hidden type="radio" value="9">
+                                                    <span class="fs-1 sizes">9</span>
+                                                </label>
+                                                <label class="label_sizeselector1 text-center"  for="qty10">
+                                                    <input onclick="buyButton('10')" class="sizeselector1" id="qty10" name="sizeselector" hidden type="radio" value="10">
+                                                    <span class="fs-1 sizes">10</span>
+                                                </label>
+                                               
+                                            </div>
+
+                                            <div class=" details-row-size mt-2 Psizes text-center">
+                                                <h5 class="modal-title mb-3" id="exampleModalCenterTitle ">Select Delivery</h5>
+                                            <div style="display: flex;padding-left: 170px; padding-right: 170px; justify-content: space-around;">
+
+                                                <div>
+
+                                                    <h6>Normal</h6> 
+                                                    <p>₹0</p>
+                                                    <label class="label_sizeselector1 text-center "  for="normalDel">
+                                                        <input onclick="delButton('normal')" class="sizeselector1" id="normalDel" name="delivery" hidden type="radio" value="normal">
+                                                        <span class="fs-1 sizes">N</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <h6>Express</h6> 
+                                                    <p>₹40</p>
+                                                    <label class="label_sizeselector1 text-center"  for="expressDel">
+                                                        <input onclick="delButton('express')" class="sizeselector1" id="expressDel" name="delivery" hidden type="radio" value="express">
+                                                        <span class="fs-1 sizes">E</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            </div> 
+                                           
+                                        <div class="text-center" >
+                                            <button type="button" class="btn  cartButton text-center ms-3" data-dismiss="modal">Close</button>
+                                            <button onclick="buy('{{this._id}}')" type="button" class="btn cartButton text-center ms-3">Buy</button>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
                                         
 
                                         {{!-- <div class="details-action-wrapper">
@@ -204,62 +334,7 @@
                                         </div><!-- End .product-desc-content -->
                                     </div><!-- .End .tab-pane -->
                                 {{!-- product review section --}}
-                                {{!-- <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link"> --}}
-                                {{!-- <div class="reviews">
-                                    <h3>Reviews (2)</h3>
-                                    <div class="review">
-                                        <div class="row no-gutters">
-                                            <div class="col-auto">
-                                                <h4><a href="#">Samanta J.</a></h4>
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                </div><!-- End .rating-container -->
-                                                <span class="review-date">6 days ago</span>
-                                            </div><!-- End .col -->
-                                            <div class="col">
-                                                <h4>Good, perfect size</h4>
-
-                                                <div class="review-content">
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus cum dolores assumenda asperiores facilis porro reprehenderit animi culpa atque blanditiis commodi perspiciatis doloremque, possimus, explicabo, autem fugit beatae quae voluptas!</p>
-                                                </div><!-- End .review-content -->
-
-                                                <div class="review-action">
-                                                    <a href="#"><i class="icon-thumbs-up"></i>Helpful (2)</a>
-                                                    <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
-                                                </div><!-- End .review-action -->
-                                            </div><!-- End .col-auto -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .review -->
-
-                                    <div class="review">
-                                        <div class="row no-gutters">
-                                            <div class="col-auto">
-                                                <h4><a href="#">John Doe</a></h4>
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                </div><!-- End .rating-container -->
-                                                <span class="review-date">5 days ago</span>
-                                            </div><!-- End .col -->
-                                            <div class="col">
-                                                <h4>Very good</h4>
-
-                                                <div class="review-content">
-                                                    <p>Sed, molestias, tempore? Ex dolor esse iure hic veniam laborum blanditiis laudantium iste amet. Cum non voluptate eos enim, ab cumque nam, modi, quas iure illum repellendus, blanditiis perspiciatis beatae!</p>
-                                                </div><!-- End .review-content -->
-
-                                                <div class="review-action">
-                                                    <a href="#"><i class="icon-thumbs-up"></i>Helpful (0)</a>
-                                                    <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
-                                                </div><!-- End .review-action -->
-                                            </div><!-- End .col-auto -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .review -->
-                                </div><!-- End .reviews --> --}}
-                            {{!-- </div><!-- .End .tab-pane --> --}}
+                              
 
                                         {{!-- <div class="social-icons social-icons-sm">
                                             <span class="social-label">Share:</span>
@@ -274,7 +349,7 @@
                         </div><!-- End .row -->
                     </div><!-- End .product-details-top -->
                     {{/each}}
-                    
+                   
 
                     <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
 
@@ -353,156 +428,7 @@
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                         {{/each}}
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <span class="product-label label-out">Out of Stock</span>
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-6.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jackets</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Khaki utility boiler jumpsuit</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    <span class="out-price">$120.00</span>
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 6 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
-
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <span class="product-label label-top">Top</span>
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-11.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Shoes</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Light brown studded Wide fit wedges</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $110.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 1 Reviews )</span>
-                                </div><!-- End .rating-container -->
-
-                                <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
-                                        <img src="assets/images/products/product-11-thumb.jpg" alt="product desc">
-                                    </a>
-                                    <a href="#">
-                                        <img src="assets/images/products/product-11-2-thumb.jpg" alt="product desc">
-                                    </a>
-
-                                    <a href="#">
-                                        <img src="assets/images/products/product-11-3-thumb.jpg" alt="product desc">
-                                    </a>
-                                </div><!-- End .product-nav -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
-
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-10.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jumpers</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Yellow button front tea top</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $56.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 0 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
-
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-7.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jeans</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Blue utility pinafore denim dress</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $76.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
+        
                     </div><!-- End .owl-carousel -->
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
@@ -514,7 +440,94 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {{!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
 <script>
+   
+    let selectedQuantity = 0;
+    function buyButton(value){
         
+        //alert(value)
+        selectedQuantity = value
+
+    }
+    let deliveryType = 0;
+    function delButton(delType){
+        
+        deliveryType = delType
+
+    }
+    
+    function buy(productId){
+        //alert(productId)
+        if(selectedQuantity!=0){
+
+            if(deliveryType!=0){
+
+                $.ajax({
+
+                    url:'/directBuy',
+                    method:'post',
+                    data:{productId:productId,
+                          deliveryType:deliveryType,
+                          quantity:selectedQuantity  },
+                    success:(response)=>{
+                        
+                        if(response.buy){
+
+                            window.location.href='/dirCheckout?productId='+productId+'&deliveryType='+deliveryType+'&quantity='+selectedQuantity;
+
+                        }
+
+                    }
+
+                })
+                
+
+
+            }else{
+                
+                const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+                })
+
+                Toast.fire({
+                icon: 'error',
+                title: 'Please a delivery type'
+                })
+
+            }
+
+
+        }else{
+            
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+                })
+
+                Toast.fire({
+                icon: 'error',
+                title: 'Please select quantity'
+                })
+            
+
+        }
+
+    }
+            
     function addToCart(productId,mrp){
 
         //console.log(productId)

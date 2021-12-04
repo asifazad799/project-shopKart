@@ -9,6 +9,14 @@
                     <p class="text-danger">Offer already available for this Product</p>
                 </div>
 
+                {{else}}
+                {{#if betterOfferInCatOffer}}
+                <div class="d-flex justify-content-center">
+
+                    <p class="text-danger">Better Offer already available In Category Offer</p>
+                </div>
+
+                {{/if}}
                 {{/if}}
                 <div class="row">
 

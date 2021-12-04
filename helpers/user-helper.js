@@ -6,7 +6,8 @@ var objectId = require("mongodb").ObjectId;
 const { response } = require("express");
 const { ObjectId } = require("bson");
 const { PRODUCTS } = require("../config/collection");
-const Razorpay = require('razorpay')
+const Razorpay = require('razorpay');
+const { get } = require("http");
 var instance = new Razorpay({
     key_id: 'rzp_test_17oewiAfnFqdfq',
     key_secret: 'SzzvQxAz29SV4KHsHz4M2pOH',
@@ -188,7 +189,7 @@ module.exports = {
                 }
               },
               {
-                $project:{product:{$arrayElemAt:['$product',0]},size:1,color:1,mrp:1,quantity:1}
+                $project:{product:{$arrayElemAt:['$product',0]},size:1,color:1,mrp:1,quantity:1,oldProPrice:1,oldCatPrice:1}
               }
           ]).toArray()
 
@@ -653,11 +654,14 @@ module.exports = {
             ]).toArray()
 
             console.log(cartItem[0])
+            console.log('asif address')
+
 
             let address = await db.get().collection(collection.ADDRESS)
             .aggregate([
               {$match: {'address.addressId': objectId(orderData.address)}},
-              {$project: {
+              {
+                $project: {
                   _id:0,
                   address: {$filter: {
 
@@ -696,9 +700,69 @@ module.exports = {
                                                                       resolve(result)
                                                                     })
                                          
-                                                                    
-           
+          })
+
+        },
+        dirOrder:(payId,data,userId)=>{
+          
+          return new Promise(async(resolve,reject)=>{
             
+            let address = await db.get().collection(collection.ADDRESS)
+            .aggregate([
+              {$match: {'address.addressId': objectId(data.address)}},
+              {
+                $project: {
+                  _id:0,
+                  address: {$filter: {
+
+                    input: '$address',
+                    as: 'address',
+                    cond: {$eq: ['$$address.addressId', objectId(data.address)]}
+
+                  }}
+                }
+              },
+              {
+                $project:{
+                  address:{$arrayElemAt:['$address',0]},_id:0
+                }
+              },
+              
+          
+            ]).toArray()
+
+            
+            let cartItem=[{
+              cartItems:[{
+
+                product:objectId(data.productId),
+                quantity:parseInt(data.quantity),
+                subTotal:parseInt(data.finalTotal),
+                orderStatus:"placed",
+              }]
+
+
+
+            }]
+            
+            console.log(cartItem[0])
+
+              await db.get().collection(collection.ORDERS).insertOne({userId:objectId(userId),
+                  finalTotal:data.finalTotal,
+                  deliveryType:data.deliveryType,
+                  paymentMethod:data.paymentMethod,
+                  address:address,
+                  paymentId:payId,
+                  orderStatus:'Ordered',
+                  date:new Date(),
+                  cartItems:cartItem[0].cartItems,
+                  }).then(async(result)=>{
+                    
+
+                    resolve()
+
+                  })
+
 
           })
 
@@ -903,82 +967,299 @@ module.exports = {
 
           })
 
+        },
+        generateRazorPayDir:(orderId,finalTotal)=>{
+
+          return new Promise(async(resolve,reject)=>{
+            
+            //orderId = toString(orderId)
+
+            instance.orders.create({
+              amount: finalTotal*100,
+              currency: "INR",
+              receipt: ""+orderId 
+            },(err,order)=>{
+              //console.log("New Order :",order);
+              resolve(order)
+            });
+            
+            
+
+          })
+
+        },
+        addToWishlist:(productId,userId)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+            
+            // console.log(productId)
+            let userExist = await db.get().collection(collection.WISHLIST).findOne({userId:objectId(userId)})
+            
+            if(userExist){ 
+
+              let isProductAvailable = userExist.products.findIndex(value => value.productId==productId)
+              
+              //console.log(isProductAvailable)
+
+              if(isProductAvailable != -1){
+                
+                reject({proExist:true})
+
+              }else{
+                
+                await db.get().collection(collection.WISHLIST)
+                .updateOne({userId:objectId(userId)},{$push:{products:{productId:objectId(productId)}}})
+                .then((result)=>{
+                  
+                  resolve({adde:true})
+
+                })
+
+              }
+            }else{
+              
+              
+              await db.get().collection(collection.WISHLIST)
+              .insertOne({userId:objectId(userId),products:[{productId:objectId(productId)}]})
+              .then((result)=>{
+                
+                resolve()
+  
+              })
+
+            }
+
+          })
+
+        },
+        getWishlistItems:(userId)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+            
+            let wishlistItems = await db.get().collection(collection.WISHLIST)
+                                .findOne({userId:objectId(userId)})
+            if(wishlistItems){
+              
+              let products = await db.get().collection(collection.WISHLIST)
+              .aggregate([
+
+                {
+                  $match:{userId:objectId(userId)}
+                },
+                {
+                  $unwind:"$products"
+                },
+                {
+                  $project:{products:"$products.productId",userId:1}
+                },
+                {
+                  $lookup:{
+                    from:collection.PRODUCT_VARIENTS,
+                    localField:'products',
+                    foreignField:'_id',
+                    as:'productVarient'
+                  }
+                },
+                {
+                  $unwind:"$productVarient"
+                },
+                {
+                  $lookup:{
+                    from:collection.PRODUCTS,
+                    localField:'productVarient.productId',
+                    foreignField:'_id',
+                    as:'coreProducts'
+                  }
+                },
+                {
+                  $unwind:"$coreProducts"
+                }
+              ]).toArray()
+              //console.log(products)
+
+              resolve(products)
+
+            }else{
+              
+              reject()
+
+            }
+
+
+          })
+
+        },
+        removeFromWishlist:(productId,userId)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+
+            await db.get().collection(collection.WISHLIST)
+            .updateOne({userId:objectId(userId)},{$pull:{products:{productId:objectId(productId)}}})
+            .then((result)=>{
+              
+              resolve()
+
+            })
+            
+          })
+
+        },
+        getWishlistCount:(userId)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+
+            let wishlist = await db.get().collection(collection.WISHLIST).findOne({userId:objectId(userId)})
+
+            if(wishlist){
+              
+              let count = wishlist.products.length
+              //console.log(count)
+              resolve(count)
+
+            }else{
+              
+              reject()
+
+            }
+
+            
+
+          })
+
+        },
+        catWiseProdutcPicker:(category)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+            
+            let products = await db.get().collection(collection.PRODUCTS)
+                          .aggregate([
+                            {
+                              $match:{category:category}
+                            },
+                            {
+                              $lookup:{
+                                from:collection.PRODUCT_VARIENTS,
+                                localField:'_id',
+                                foreignField:'productId',
+                                as:'productVarient'
+                              }
+                            },
+                            {
+                              $project:{
+                                productVarient:{$arrayElemAt:["$productVarient",0]}
+                                ,productName:1
+                                ,brand:1
+                                ,category:1
+                                ,subcategory:1
+                                ,discription:1
+                                
+                              }
+                            },
+                            
+                            
+                          ]).toArray()
+            //console.log(products)
+            let categoryData = await db.get().collection(collection.CATEGORY).findOne({category:category})
+            // await products.forEach((val)=>{
+
+            //   if(!categoryData.includes(val.subcategory)){
+
+            //     categoryData.push(val.subcategory)
+
+            //   }
+              
+            // })
+            categoryData = categoryData.subcategory
+            //console.log(categoryData)
+            resolve({products,categoryData})
+
+          })
+
+        },
+        catWiswSubCatWiseProductPicker:(category,subCategory)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+            
+            // console.log(category,subCategory)
+            let products = await db.get().collection(collection.PRODUCTS)
+            .aggregate([
+              {
+                $match:{category:category,subcategory:subCategory}
+              },
+              {
+                $lookup:{
+                  from:collection.PRODUCT_VARIENTS,
+                  localField:'_id',
+                  foreignField:'productId',
+                  as:'productVarient'
+                }
+              },
+              {
+                $project:{
+                  productVarient:{$arrayElemAt:["$productVarient",0]}
+                  ,productName:1
+                  ,brand:1
+                  ,category:1
+                  ,subcategory:1
+                  ,discription:1
+                  
+                }
+              },
+              
+              
+            ]).toArray()
+            //console.log(products)
+            let categoryData = await db.get().collection(collection.CATEGORY).findOne({category:category})
+            categoryData = categoryData.subcategory
+            if(products!=""){
+              
+              resolve({products,categoryData})
+
+            }else{
+              
+              resolve({noData:true,categoryData})
+              
+            }
+
+
+          })
+
+        },
+        getProduct:(productId)=>{
+
+          return new Promise(async(resolve,reject)=>{
+            
+            let product = await db.get().collection(collection.PRODUCT_VARIENTS)
+            .aggregate([
+              {
+
+                $match:{_id:objectId(productId)}
+
+              },
+              {
+                $lookup:{
+                  from:collection.PRODUCTS,
+                  localField:'productId',
+                  foreignField:'_id',
+                  as:'product'
+                }
+              },
+              {
+                $unwind:"$product"
+              }
+              
+            ]).toArray()
+
+            console.log(product)
+            resolve(product)
+
+          })
+
         }
+
+
+
               
-
-
-              
-            
-
-        // verifyCartStatus:(userId)=>{
-
-        //   return new Promise(async(resolve,reject)=>{
-            
-        //     let findUser = await db.get().collection(collection.PRODUCT_VARIENTS).aggregate([
-        //      {
-        //        $lookup:{
-        //           from:collection.CART,
-        //           localField:'_id',
-        //           foreignField:'cartItems.product',
-        //           as:'cartedProducts'
-        //        }
-        //      },
-        //      {
-        //        $unwind:'$cartedProducts'
-        //      },
-        //      {
-        //        $unwind:'$cartedProducts.cartItems'
-        //      },
-        //      {
-        //        $match:{cartedProducts:{userId:userId}}
-        //      }
-              
-
-        //     //  {
-
-        //     //   $project:{
-        //     //     quantity:1,cartedProducts:{$arrayElemAt:['$cartedProducts',0]}
-        //     //   }
-
-        //     //  }
-               
-
-
-
-        //     ]).toArray()
-
-            
-        //     // products.map(value => console.log(value))
-
-        //     findUser.map(value => console.log(value))
-           
-
-        //     resolve(findUser)
-
-        //   })
-          
-
-        // }
-
-
-
-
-          
-          
-          
-
-    // otpLogInUserVerification:(data)=>{
-      
-    //   return new Promise(async(resolve,reject)=>{
-        
-
-    //     let user = await db.get().collection(collection.USER_COLLECTION).findOne({})
-
-
-
-    //   })
-
-    // }
 
   
   

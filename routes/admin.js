@@ -56,27 +56,36 @@ router.get('/adminDashBoard',async(req,res)=>{
   let totalProfit = await adminHelper.totalProfit()
   let UserCount = await adminHelper.getAllUsers();
   UserCount = UserCount.length;
-  
+  let topSellingProducts = await adminHelper.topSellingProducts()
+  let currentDaySale=await adminHelper.currentDaySale()
+  let percentage = await adminHelper.topSellingProductInPercentage()
+  //console.log(percentage)
  
-  //console.log(asif)
- 
-  res.render('admin/adminDashboard',{admin:true,currentAdmin,orderCound,totalProfit,UserCount});
+  res.render('admin/adminDashboard',{admin:true,currentAdmin,orderCound,totalProfit,UserCount,topSellingProducts,currentDaySale,percentage});
 
 })
 
 router.get('/getSalesTable',async(req,res)=>{
   
-  await adminHelper.getPerDaySalesData().then(async(response)=>{
+  await adminHelper.getPerDaySalesData().then(async(perDaySales)=>{
+    
+    await adminHelper.getOrderMethodsCount().then(async(paymentMethod)=>{
+      
+      await adminHelper.getBestSellingCat().then((catData)=>{
+
+        res.json({perDaySales,paymentMethod,catData})
+        
+      })
+     
+      
+
+    })
     
     // console.log(response)
-
-   
-
     //console.log(response)
     // asifdate = response.dateArray;
     // count = response.salesCount;
 
-    res.json(response)
 
   })
 
@@ -960,12 +969,12 @@ router.post('/updateCatOffer1',(req,res)=>{
 })
 
 let sameProductOfferErr = false;
-
+let betterOfferInCatOffer = false;
 router.get('/addNewProductOffer',(req,res)=>{
   
   adminHelper.viewAllProducts().then((response)=>{
     
-    res.render('admin/AddNewProductOffer',{admin:true,currentAdmin,response,sameProductOfferErr})
+    res.render('admin/AddNewProductOffer',{admin:true,currentAdmin,response,sameProductOfferErr,betterOfferInCatOffer})
     sameOfferErr = false; 
 
   })
@@ -979,10 +988,19 @@ router.post('/addNewProductOffer',(req,res)=>{
 
     res.redirect('/admin/viewAllProductOffers')
 
-  }).catch(()=>{
+  }).catch((response)=>{
     
-    sameProductOfferErr = true;
-    res.redirect('/admin/addNewProductOffer')
+    if(response.isAvailable){
+
+      sameProductOfferErr = true;
+      res.redirect('/admin/addNewProductOffer')
+
+    }else if(response.betterOfferInCatOffer){
+      
+      betterOfferInCatOffer = true;
+      res.redirect('/admin/addNewProductOffer')
+
+    }
 
   })
 
@@ -1051,6 +1069,20 @@ router.get('/deleteProductOffer',(req,res)=>{
 
 })
 // console.log(req.files)
+
+//banner management
+
+router.get('/viewBanners',(req,res)=>{
+  
+  res.render('admin/viewBanner',{admin:true})
+
+})
+
+router.get('/addNewBanner',(req,res)=>{
+  
+  res.render('admin/addNewBanner',{admin:true})
+
+})
 
 
 

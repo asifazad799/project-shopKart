@@ -1,6 +1,6 @@
 var db = require("../config/connection");
 var collection = require("../config/collection");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 var objectId = require("mongodb").ObjectId;
 const { response } = require("express");
 const { PRODUCT_VARIENTS, PRODUCTS } = require("../config/collection");

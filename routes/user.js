@@ -9,7 +9,6 @@ var paypal = require('paypal-rest-sdk')
 
 
 
-
 let verifyLogin =(req,res,next)=>{
 
 

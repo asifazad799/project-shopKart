@@ -198,7 +198,7 @@ router.get('/categoryManagement',adminLoginVerify,(req,res)=>{
 
     
 
-      res.render('admin/categorymanagement',{admin:true,currentAdmin,Err,catData:response})
+      res.render('admin/categoryManagement',{admin:true,currentAdmin,Err,catData:response})
       Err = null;
 
 

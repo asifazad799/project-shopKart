@@ -8,6 +8,11 @@
 
 <div class="col-12 p-4 mt-4" style=" background-color:#f9f9fa ; border-radius:3px;  border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
 <h4 class="text-center">All products</h4>
+    <div class="d-flex  pb-3">
+        <a href="/admin/viewproducts" class="btn btn-primary text-white me-3" style="background-color: blue; border: none;" ><i class="fal fa-angle-left"></i></a>
+
+        <a href="/admin/addNewVarient?product={{product}}" class="btn btn-primary text-white" style="background-color: blue; border: none;" >Add new varient</a>
+    </div>
                 {{#if productErr}}
 
                 <p class="text-danger">{{productErr}}</p>

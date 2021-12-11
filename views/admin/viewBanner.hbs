@@ -1,1 +1,178 @@
-<h1>banners</h1>
+
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.jqueryui.min.css">
+
+<div class="" >
+            
+<div class="col-12 p-4 mt-4" style=" background-color:#f9f9fa ; border-radius:3px;  border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+<h4 class="text-center">All Banners</h4>
+    <div class="d-flex  pb-3">
+
+    <a href="/admin/addNewBanner" class="btn btn-primary text-white" style="background-color: blue;" >Add new banner</a>
+    </div>
+    {{#if productErr}}
+
+    <p class="text-danger">{{productErr}}</p>
+
+    {{/if}}
+    <table id="categoryTable1" class="display text-center" style="width:100%; font-size:15px !important;">
+        <thead style="font-size: 15px;">
+            <tr >
+                <th>Index</th>
+                <th>Banner tag</th>
+                <th>Banner posiotion</th>
+                <th>Where to navigate</th>
+                <th>Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        
+       {{#each bannerResponse}}
+       {{#if this.mainbanner}}
+        <tr>
+            <td>1</td>
+            
+            <td>{{mainbanner.bannreHeading}}
+            </td>
+           
+            <td>{{mainbanner.bannerPosition}}</td>
+            <td>{{mainbanner.whererToNavigate}}</td>
+           
+            <td>
+               
+                <dl class="" style="margin-left: -9px;">
+
+                    <a href="/admin/editBanner?bannerId={{this._id}}" ><i class="far fa-edit "></i></a>
+                    <a onclick="deletebanner12('{{this._id}}')" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                </dl>
+
+            </td>
+            
+            
+        </tr>
+        {{/if}}
+        {{#if this.bodybanner1}}
+        <tr>
+            <td>2</td>
+            
+            <td>{{bodybanner1.bannreHeading}}
+            </td>
+           
+            <td>{{bodybanner1.bannerPosition}}</td>
+            <td>{{bodybanner1.whererToNavigate}}</td>
+           
+            <td>
+               
+                <dl class="" style="margin-left: -9px;">
+
+                    <a href="/admin/editBanner?bannerId={{this._id}}" ><i class="far fa-edit "></i></a>
+                    <a onclick="deletebanner12('{{this._id}}')" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                </dl>
+
+            </td>
+            
+            
+        </tr>
+        {{/if}}
+        {{#if this.bodybanner2}}
+        <tr>
+            <td>3</td>
+            
+            <td>{{bodybanner2.bannreHeading}}
+            </td>
+           
+            <td>{{bodybanner2.bannerPosition}}</td>
+            <td>{{bodybanner2.whererToNavigate}}</td>
+           
+            <td>
+               
+                <dl class="" style="margin-left: -9px;">
+
+                    <a href="/admin/editBanner?bannerId={{this._id}}" ><i class="far fa-edit "></i></a>
+                    <a onclick="deletebanner12('{{this._id}}')" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                    
+                </dl>
+
+            </td>
+            
+            
+        </tr>
+        {{/if}}
+        {{#if this.bodybanner3}}
+        <tr>
+            <td>4</td>
+            
+            <td>{{bodybanner3.bannreHeading}}
+            </td>
+           
+            <td>{{bodybanner3.bannerPosition}}</td>
+            <td>{{bodybanner3.whererToNavigate}}</td>
+           
+            <td>
+               
+                <dl class="" style="margin-left: -9px;">
+
+                    <a href="/admin/editBanner?bannerId={{this._id}}" ><i class="far fa-edit "></i></a>
+                    <a onclick="deletebanner12('{{this._id}}')" ><i class="far fa-trash-alt text-danger ms-3"></i></a>
+                </dl>
+
+            </td>
+            
+            
+        </tr>
+        {{/if}}
+        
+        {{/each}}
+        </tbody>
+        
+    </table>
+    </div>
+    </div>
+    </div>
+</main>
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+      $(document).ready(function() {
+
+      $('#categoryTable1').DataTable(); 
+
+    } )
+
+    function deletebanner12(id){
+    console.log(id)
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url:"/admin/deleteBanner",
+                method:"post",
+                data:{bannerId:id},
+                success:(result)=>{
+                    if(result.status){
+                    swal("product deleted!", {
+                         icon: "success",
+                    })
+
+                       location.href="/admin/viewBanners"
+                      
+                    }
+                }
+                
+            })
+      }
+})};
+
+</script>

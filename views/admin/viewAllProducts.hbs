@@ -8,6 +8,10 @@
 
 <div class="col-12 p-4 mt-4" style=" background-color:#f9f9fa ; border-radius:3px;  border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
 <h4 class="text-center">All products</h4>
+    <div class="d-flex  pb-3">
+
+    <a href="/admin/addNewProduct" class="btn btn-primary text-white" style="background-color: blue;" >Add new product</a>
+    </div>
                 {{#if productErr}}
 
                 <p class="text-danger">{{productErr}}</p>
@@ -39,7 +43,7 @@
            
             <td>{{this.category}}</td>
             <td>{{this.subcategory}}</td>
-            <td><a class="btn btn-success text-white" href="/admin/getVarients?productId={{this._id}}">Varients</a></td>
+            <td><a class="btn btn-success text-white" href="/admin/getVarients?product={{this._id}}">Varients</a></td>
            
             <td>
                

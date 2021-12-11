@@ -1,6 +1,8 @@
 <style>
-    .swal2-popup {
-font-size: 1.1rem;
+.swal2-popup {
+
+    font-size: 1.1rem;
+    
 }
 </style>
 <body>
@@ -105,7 +107,11 @@ font-size: 1.1rem;
 		                		<aside class="col-lg-5">
                                             <form action="#">
                                                 <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-                                                <input type="text" class="form-control" required id="checkout-discount-input">
+                                                <input type="text" class="form-control" id="CouponInput">
+                                                <p class="text-danger mb-1" id="cpNot"></p>
+                                                <p class="text-success mb-1" id="cpYes"></p>
+                                                <a class="btn btn-primary rounded mb-2" onclick="applyCoupon('{{data.grandTotal}}')" style="width: 50px !importent; color: white; background-color: rgb(3, 3, 156); border:none;" >Apply Coupon</a>
+
                                             </form>
 		                			<div class="summary" style="border: none !important; background-color: #eeeeee;">
                                         <div class="checkout-discount">
@@ -137,11 +143,17 @@ font-size: 1.1rem;
                                                     <td></td>
 		                							<td>₹{{delCharge}}</td>
 		                						</tr>
+                                                <tr>
+                                                    <td id="cpCode" class="text-success"></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td id="cpDiscount" class="text-success"></td> 
+                                                </tr>
 		                						<tr class="summary-total" >
 		                							<td style="color: blue;">Total:</td>
                                                     <td></td>
                                                     <td></td>
-		                							<td style="color: blue;">₹{{data.grandTotal}}</td>
+		                							<td style="color: blue;">₹<span id="curretnTotal">{{data.grandTotal}}</span></td>
 		                						</tr><!-- End .summary-total -->
 		                					</tbody>
 		                				</table><!-- End .table table-summary -->
@@ -205,7 +217,7 @@ font-size: 1.1rem;
 										    <!-- End .accordion -->
 
                                         {{#each response}} 
-                                        <a   onclick="placeOrder('{{../data.grandTotal}}','{{../data.delivery}}','{{../this.quantity}}','{{this._id}}')" class="btn btn-primary loginFormButton btn-order btn-block text-white">Place Order</a>
+                                        <a   onclick="placeOrder('{{../data.delivery}}','{{../this.quantity}}','{{this._id}}')" class="btn btn-primary loginFormButton btn-order btn-block text-white">Place Order</a>
                                         {{/each}}
 		                				{{!-- <button type="submit" class="btn  btn-order btn-block">
 		                					 <a  href="/checkOut" class="btn btn-primary loginFormButton btn-order btn-block text-white">Proceed To Checkout</a>
@@ -283,6 +295,53 @@ font-size: 1.1rem;
         //console.log(paymentMethod)
     }
 
+    function applyCoupon(currentTotal){
+
+    let coupon = document.getElementById('CouponInput').value
+        //document.getElementById('curretnTotal').innerText
+
+        if(coupon){
+            
+            $.ajax({
+
+                url:'/checkCoupon12',
+                method:'post',
+                data:{coupon:coupon},
+                success:(response)=>{
+                    
+                    if(response.statusGood){
+                        
+                        let offer = parseInt(response.offer)
+                        let total = parseInt(currentTotal)
+                        let off = (total/100)*offer;
+                        off = off.toFixed(2)
+                        let offerPrice = total-off
+
+                        document.getElementById('cpYes').innerHTML='Coupon applyed successfully'
+                        document.getElementById('cpCode').innerText ="Coupon discount"
+                        document.getElementById('cpDiscount').innerText ="₹"+off
+                        document.getElementById('curretnTotal').innerText=offerPrice
+
+                    }else if(response.useOnlyOnce){
+
+                        document.getElementById('cpNot').innerHTML='Sorry coupon is only valid for single use'
+                    
+                    }
+                    else{
+                        
+                        document.getElementById('cpNot').innerHTML='Sorry Coupon is invalid'
+
+                    }
+                }
+            })
+
+        }else{
+            
+           document.getElementById('cpNot').innerHTML='Please enter valid input'
+
+        }
+
+    }
     
                 
 
@@ -293,9 +352,12 @@ font-size: 1.1rem;
                 
 
 
-    function placeOrder(finalTotal,deliveryType,orderQuantity,productId){
+    function placeOrder(deliveryType,orderQuantity,productId){
 
         //console.log(productId)
+        let finalTotal = document.getElementById('curretnTotal').innerText 
+        let coupon = document.getElementById('CouponInput').value
+
 
         if(address){
             
@@ -310,7 +372,8 @@ font-size: 1.1rem;
                             paymentMethod:paymentMethod,
                             address:address,
                             quantity:orderQuantity,
-                            productId:productId},
+                            productId:productId,
+                            coupon:coupon},
                     success:(response)=>{
                         
                         if(response.cod){

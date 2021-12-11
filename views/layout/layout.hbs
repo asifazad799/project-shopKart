@@ -21,18 +21,7 @@
     <meta name="theme-color" content="#ffffff">
     <!-- Plugins CSS File -->
    
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
-    <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-  
-
-     <!-- Main CSS File -->
     
-    <link rel="stylesheet" href="assets/css/demos/demo-12.css">
-    <link rel="stylesheet" href="/stylesheets/userlogin.css">
-    <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
 
     {{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css"> --}}
 
@@ -79,6 +68,8 @@
     <link rel="stylesheet" href="/stylesheets/userlogin.css">
         {{>admin-header}}
         <link rel="stylesheet" href="/stylesheets/userlogin.css">
+                <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
         <style>
           .error{
             font-family:sans-serif ;
@@ -88,6 +79,17 @@
         
         {{else}}
         {{>user-header}}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
+        <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+      
+
+        <!-- Main CSS File -->
+        
+        <link rel="stylesheet" href="assets/css/demos/demo-12.css">
+        <link rel="stylesheet" href="/stylesheets/userlogin.css">
+        <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
         <link rel="stylesheet" href="assets/css/style.css">
         <link rel="stylesheet" href="/stylesheets/userlogin.css">
 
@@ -131,6 +133,12 @@
   src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"
 
 ></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
 {{!-- <script
 
   type="text/javascript"
@@ -169,302 +177,20 @@
 
 <script src="/javascripts/deleteProductOffer.js"></script>
 
-<script>
 
-$("#addNewAddress").validate({
-    
-    rules:{
-      houseNumber:{
-        required:true,
-      },
-      locality:{
-        required:true,
-      },
-      district:{
-        required:true,
-      },
-      state:{
-        required:true,
-      },
-      pincode:{
-        required:true,
-      },
-    }
-})
- function setInputFilter(textbox, inputFilter) {
-  ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
-    textbox.addEventListener(event, function() {
-      if (inputFilter(this.value)) {
-        this.oldValue = this.value;
-        this.oldSelectionStart = this.selectionStart;
-        this.oldSelectionEnd = this.selectionEnd;
-      } else if (this.hasOwnProperty("oldValue")) {
-        this.value = this.oldValue;
-        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-      } else {
-        this.value = "";
-      }
-    });
-  });
-}
-setInputFilter(document.getElementById("pincode"), function(value) {
-  return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 9999999999); });
-
-</script>
 
 
 <script>
 
   
 
-  $("#editProduct").validate({
-
-    rules:{
-
-      sizes:{
-        required:true
-      },
-      color:{
-        required:true
-      },
-      landingcost:{
-        required:true
-      },
-      mrp:{
-        required:true
-      },
-      quantity:{
-        required:true
-      }
-    }
-  })
-
-  $("#updateVarientProduct").validate({
-    rules:{
-      productName:{
-        required:true
-      },
-      brand:{
-        required:true
-      },
-      category:{
-        required:true
-      },
-      subcategory:{
-        required:true
-      },
-      discription:{
-        required:true
-      },
-      sizes:{
-        required:true
-      },
-      color:{
-        required:true
-      },
-      landingcost:{
-        required:true,
-        digits:true
-      },
-      mrp:{
-        required:true,
-        digits:true
-      },
-      quantity:{
-        required:true,
-        min:1,
-        digits:true
-      }
-
-    }
-  })
-  
 
 
-  $("#addProduct").validate({
-    
-    rules:{
-      productName:{
-        required:true
-      },
-      brand:{
-        required:true
-      },
-      category:{
-        required:true
-      },
-      subcategory:{
-        required:true
-      },
-      discription:{
-        required:true
-      },
-      sizes:{
-        required:true
-      },
-      color:{
-        required:true
-      },
-      landingcost:{
-        required:true,
-        digits:true
-      },
-      mrp:{
-        required:true,
-        digits:true
-      },
-      quantity:{
-        required:true,
-        min:1,
-        digits:true
-      },
-      image1:{
-        required:true
-      },
-      image2:{
-        required:true
-      },
-      image3:{
-        required:true
-      },
-      image4:{
-        required:true
-      },
-    }
-
-  })
-
-$('#add-Barnd').validate({
-  
-  rules:{
-
-    brandName:{
-      required:true,
-    },
-    image1:{
-      required:true,
-    }
+ 
+ 
 
 
-  }
-})
 
-$("#updateAddress").validate({
-  
-  rules:{
-      houseNumber:{
-        required:true,
-      },
-      locality:{
-        required:true,
-      },
-      district:{
-        required:true,
-      },
-      state:{
-        required:true,
-      },
-      pincode:{
-        required:true,
-      },
-    },submitHandler:function submitForm(form) {
-            swal({
-                title: "Are you sure?",
-                text: "This Address will be updated",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((isOkay) => {
-                if (isOkay) {
-                    form.submit();
-                }
-            });
-            return false;
-        }
-
-
-})
-
-$('#editform').validate({
-
-rules:{
-  size:{
-    required:true
-  }
-},submitHandler:function submitForm(form) {
-            swal({
-                title: "Are you sure?",
-                text: "This form will be submitted",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((isOkay) => {
-                if (isOkay) {
-                    form.submit();
-                }
-            });
-            return false;
-        }
-
-})
-   $.validator.addMethod("Email", function (value, element) {
-    return this.optional(element) || value == value.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i);},'Enter a valid email'
-    );
-$.validator.addMethod("customName", function(value, element) { 
-    return this.optional( element ) || /^([a-zA-Z])+([a-zA-Z])+$/.test( value ); 
-  },'Enter a valid name');
-     
-		$("#user-signup").validate({       
-      rules: {
-        first_name: {
-          required: true,
-          minlength: 4,
-          customName:true
-        },
-        lastname:{
-          required:true,
-          minlength:4,
-          customName:true
-        }
-        ,
-        email: {
-          required: true,
-          Email: true,
-        },
-        mobile:{
-          required:true,
-          minlength:10,
-          
-        },
-        
-        password:{
-          required:true,
-          minlength:8,
-        } ,
-        confirmPassword:{
-          required:true,
-          equalTo:'#password'
-           
-        }  
-      },
-      messages: {
-        first_name: {
-          required: "Enter atleast 8 characters"
-        },
-        email:{
-          required: "Enter your email properly "
-        },
-        mobile:{
-          required:"Enter atleast 10 characters"
-        },
-        password:{
-         required: "Enter alteast 8 characters"
-        }
-      },
-	
-    })
 
     $('#otpLogin').validate({
 
@@ -498,6 +224,23 @@ setInputFilter(document.getElementById("mobile"), function(value) {
 
     
 </script>
+<script language="javascript">
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    $('#startingDate').attr('min',today);
+
+    function hai(){
+
+      let startingDate = document.getElementById('startingDate').value
+      //alert(startingDate)
+      $('#expairyDate').attr('min',startingDate);
+   
+    }
+</script>
 
 
 
@@ -506,19 +249,9 @@ setInputFilter(document.getElementById("mobile"), function(value) {
         
 <script>
 
-       
-
-
-        
-
-        function catChange(){
-
+function catChange(){
           var currentCategory = document.getElementById('category').value;
-
-         
-
-
-          $.ajax({
+       $.ajax({
 
             url:'/admin/find-subcategory?category='+currentCategory,
             method:'get',
@@ -543,11 +276,11 @@ setInputFilter(document.getElementById("mobile"), function(value) {
             }
 
           })
+} 
 
 
-        } 
 
-        function sizeget(){
+function sizeget(){
 
         let currentSubCat = document.getElementById('subcategory').value;
         if(currentSubCat=='shirt'){
@@ -583,7 +316,7 @@ setInputFilter(document.getElementById("mobile"), function(value) {
 
 
         }
-        }
+}
         
 
 

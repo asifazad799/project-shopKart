@@ -11,5 +11,7 @@ module.exports = {
     ORDERS:'orders',
     CATOFFERS:'categoryoffers',
     PRODUCT_OFFERS:'productoffers',
-    WISHLIST:'wishlist'
+    WISHLIST:'wishlist',
+    BANNERS:'banners',
+    COUPONS:'coupons'
 }

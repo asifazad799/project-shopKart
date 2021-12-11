@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 var objectId = require("mongodb").ObjectId;
 const { response } = require("express");
 const { PRODUCT_VARIENTS, PRODUCTS } = require("../config/collection");
+const { use } = require("../routes/user");
+const { Timestamp } = require("bson");
 
 module.exports = {
 
@@ -686,7 +688,7 @@ module.exports = {
         return new Promise (async(resolve,reject)=>{
 
 
-            // console.log(varient);
+            //console.log();
             await db.get().collection(collection.PRODUCT_VARIENTS).insertOne({productId:objectId(product),
                                                                                         size:data.sizes,
                                                                                         color:data.color,
@@ -695,6 +697,7 @@ module.exports = {
                                                                                         quantity:data.quantity}).then((result)=>{
 
                                                                                             console.log(result);
+                                                                                            resolve()
 
                                                                                         })
             
@@ -724,11 +727,20 @@ module.exports = {
                 as: "productVarients"
                 }
             },
-            
+            {
+                $project:{
+                    productName:1,
+                    brand:1,
+                    category:1,
+                    subcategory:1,
+                    discription:1,
+                    productVarients:{$arrayElemAt:["$productVarients",0]}
+                } 
+            }
 
             ]).toArray()
 
-            //console.log(cc)
+            console.log(cc)
                                                                         
             resolve(cc)
         
@@ -1146,7 +1158,7 @@ module.exports = {
                                 {category:data.category,
                                     offer:offer,
                                     startingDate:data.startingDate,
-                                    expairyDate:data.startingDate}).then(async(result)=>{
+                                    expairyDate:data.expairyDate}).then(async(result)=>{
                                     
                                         resolve({sameExist:false})
                                     
@@ -1205,7 +1217,7 @@ module.exports = {
                             
                             offer:offer,
                             startingDate:data.startingDate,
-                            expairyDate:data.startingDate
+                            expairyDate:data.expairyDate
 
                         }
                     })
@@ -1701,18 +1713,911 @@ module.exports = {
 
                 }
 
+            })
 
+        })
 
+    },
+    findProductList:()=>{
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let proList = await db.get().collection(collection.PRODUCTS)
+            .aggregate([
+                {
+                    $group:{_id:"$productName"}
+                }
+            ]).toArray()
+            
+            let list = [];
+            proList.forEach((val)=>{
+                
+                list.push(val._id)
+                
+            })
+            //console.log(list)
+
+            
+            resolve(list)
+        })
+
+    },
+    findCategoryList:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let catLIst = await db.get().collection(collection.CATEGORY)
+            .aggregate([
+                {
+                    $group:{_id:"$category"}
+                }
+            ]).toArray()
+
+            let list = []
+
+            catLIst.forEach((val)=>{
+                
+                list.push(val._id)
+
+            })
+            console.log(list)
+
+            resolve(list)
+
+        })
+
+    },
+    getOffers:(mainSelect,subSelect)=>{
+        
+        //console.log(mainSelect,subSelect)
+
+        return new Promise(async(resolve,reject)=>{
+            
+            let today = new Date()
+            
+            if(mainSelect == 'product'){
+                
+                let offer = await db.get().collection(collection.PRODUCT_OFFERS)
+                .aggregate([
+                    {
+                        $match:{productName:subSelect}
+                    },
+                    {
+                        $project:{ 
+                            expairyDate:{$dateFromString:{dateString:'$expairyDate'}},
+                            offer:1,productName:1}
+                    },
+                    { $project: { 
+                        offer:1, 
+                        productName:1,
+                        ok: { $cond: [ { $lte: [ today,'$expairyDate' ] }, 1, 0 ] } 
+                        } 
+                    },
+                    {
+                        $match:{ok:1}
+                    }
+
+                ]).toArray()
+
+                //console.log(offer)
+                if(offer.length!=0){
+                    
+                    resolve(offer)
+
+                }else{
+                    
+                    reject()
+
+                }
+    
+            }else if(mainSelect == 'category'){
+                
+                let offer = await db.get().collection(collection.CATOFFERS)
+                .aggregate([
+                    {
+                        $match:{category:subSelect}
+                    },
+                    {
+                        $project:{ 
+                            expairyDate:{$dateFromString:{dateString:'$expairyDate'}},
+                            offer:1,category:1}
+                    },
+                    { $project: { 
+                        offer:1, 
+                        category:1,
+                        ok: { $cond: [ { $lte: [ today,'$expairyDate' ] }, 1, 0 ] } 
+                        } 
+                    },
+                    {
+                        $match:{ok:1}
+                    }
+
+                ]).toArray()
+                
+                console.log(offer)
+
+                if(offer.length!=0){
+                    
+                    resolve(offer)
+
+                }else{
+                    
+                    reject()
+
+                }
+
+    
+            }else{
+                
+                reject()
+    
+            }
+            
+        })
+
+    },
+    addNewBanner:(data)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let bannerExist = await db.get().collection(collection.BANNERS).find().toArray()
+
+            
+            let found = false
+            await bannerExist.map((val)=>{
+                
+                if(data.bannerPosition=='mainbanner'){
+
+                    if(val.mainbanner){
+                
+                        //console.log('found mainbanner')
+                        found = true
+                    }else{
+                        //console.log('not mian')
+                    }
+
+                }else if(data.bannerPosition=='bodybanner1'){
+
+                    if(val.bodybanner1){
+                        //console.log('found bodybanner1')
+                        found = true
+                    }else{
+                        //console.log('not bodybanner1')
+                    }
+
+                }else if(data.bannerPosition=='bodybanner2'){
+
+                    if(val.bodybanner2){
+                        //console.log('found bodybanner2')
+                        found = true
+                    }else{
+                        //console.log('not bodybanner2')
+                    }
+
+                }else if(data.bannerPosition=='bodybanner3'){
+
+                    if(val.bodybanner3){
+                        //console.log('found bodybanner3')
+                        found = true
+                    }else{
+                        //console.log('not bodybanner3')
+                    }
+
+                }
+                else{
+
+                    //console.log('asif did not found banner')
+                    reject({exist:true})
+                    
+                }
 
             })
 
+            if(found){
+
+                    reject({exist:true})
+
+            }else{
+                
+                if(data.bannerPosition == 'mainbanner'){
+                
+                    let mainbanner = data
+                    if(mainbanner.navigate=="product"){
+                        
+                        let prId = await db.get().collection(collection.PRODUCTS)
+                        .aggregate([
+                            {
+                                $match:{productName:mainbanner.whererToNavigate}
+                            },
+                            {
+                                $lookup:{
+                                    from:collection.PRODUCT_VARIENTS,
+                                    localField:'_id',
+                                    foreignField:'productId',
+                                    as:'product'
+                                }
+                            },
+                            {
+                                $project:{
+                                    product:{$arrayElemAt:['$product',0]},
+                                }
+                            },
+                            {
+                                $unwind:"$product"
+                            }
+                            
+                        ]).toArray()
+                        
+                        console.log(prId[0].product._id)
+                        
+                        mainbanner.product = prId[0].product._id+"" 
+                        // console.log(mainbanner)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({mainbanner}).then((result)=>{
+                            resolve(result)
+                        })
+    
+                    }else if(data.navigate=="category"){
+                        
+                        
+                        mainbanner.category = mainbanner.navigate
+                        delete mainbanner.navigate
+                        console.log(mainbanner)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({mainbanner}).then((result)=>{
+                            resolve(result)
+                        })
+                        
+                    }
+                    
+                //mainbanner end
+                }else if(data.bannerPosition == 'bodybanner1'){
+                    
+                    let bodybanner1 = data
+                    
+                    if(bodybanner1.navigate=="product"){
+                        
+                        let prId = await db.get().collection(collection.PRODUCTS)
+                        .aggregate([
+                            {
+                                $match:{productName:bodybanner1.whererToNavigate}
+                            },
+                            {
+                                $lookup:{
+                                    from:collection.PRODUCT_VARIENTS,
+                                    localField:'_id',
+                                    foreignField:'productId',
+                                    as:'product'
+                                }
+                            },
+                            {
+                                $project:{
+                                    product:{$arrayElemAt:['$product',0]},
+                                }
+                            },
+                            {
+                                $unwind:"$product"
+                            }
+                            
+                        ]).toArray()
+                        
+                        console.log(prId[0].product._id)
+                        
+                        bodybanner1.product = prId[0].product._id+"" 
+                        // console.log(bodybanner1)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({bodybanner1}).then((result)=>{
+                            resolve(result)
+                        })
+    
+                    }else if(bodybanner1.navigate=="category"){
+    
+                        bodybanner1.category = bodybanner1.navigate
+                        delete bodybanner1.navigate
+                        console.log(bodybanner1)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({bodybanner1}).then((result)=>{
+                            resolve(result)
+                        })
+    
+                    }
+    
+                    
+                    //bodybanner1 end
+                }else if(data.bannerPosition == 'bodybanner2'){
+                    
+                    let bodybanner2 = data
+    
+                    if(bodybanner2.navigate=="product"){
+                        
+                        let prId = await db.get().collection(collection.PRODUCTS)
+                        .aggregate([
+                            {
+                                $match:{productName:bodybanner2.whererToNavigate}
+                            },
+                            {
+                                $lookup:{
+                                    from:collection.PRODUCT_VARIENTS,
+                                    localField:'_id',
+                                    foreignField:'productId',
+                                    as:'product'
+                                }
+                            },
+                            {
+                                $project:{
+                                    product:{$arrayElemAt:['$product',0]},
+                                }
+                            },
+                            {
+                                $unwind:"$product"
+                            }
+                            
+                        ]).toArray()
+                        
+                        //console.log(prId[0].product._id)
+                        
+                        bodybanner2.product = prId[0].product._id+"" 
+                        // console.log(bodybanner2)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({bodybanner2}).then((result)=>{
+                            resolve(result)
+                        })
+    
+                    }else if(bodybanner2.navigate=="category"){
+    
+                        bodybanner2.category = bodybanner2.navigate
+                        delete bodybanner2.navigate
+                        //console.log(bodybanner2)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({bodybanner2}).then((result)=>{
+                            resolve(result)
+                        })
+    
+                    }
+    
+                    //bodybanner2 end
+                }else if(data.bannerPosition == 'bodybanner3'){
+                    
+                    let bodybanner3 = data
+                    if(bodybanner3.navigate=="product"){
+                        
+                        let prId = await db.get().collection(collection.PRODUCTS)
+                        .aggregate([
+                            {
+                                $match:{productName:bodybanner3.whererToNavigate}
+                            },
+                            {
+                                $lookup:{
+                                    from:collection.PRODUCT_VARIENTS,
+                                    localField:'_id',
+                                    foreignField:'productId',
+                                    as:'product'
+                                }
+                            },
+                            {
+                                $project:{
+                                    product:{$arrayElemAt:['$product',0]},
+                                }
+                            },
+                            {
+                                $unwind:"$product"
+                            }
+                            
+                        ]).toArray()
+                        
+                        //console.log(prId[0].product._id)
+                        
+                        bodybanner3.product = prId[0].product._id+"" 
+                        // console.log(bodybanner2)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({bodybanner3}).then((result)=>{
+                            resolve(result)
+                        })
+    
+                    }else if(bodybanner3.navigate=="category"){
+    
+                        bodybanner3.category = bodybanner3.navigate
+                        delete bodybanner3.navigate
+                        //console.log(bodybanner3)
+    
+                        await db.get().collection(collection.BANNERS)
+                        .insertOne({bodybanner3}).then((result)=>{
+                            resolve(result)
+                        })
+    
+                    }
+    
+                    //bodybanner3
+                }else{
+                    
+                    reject()
+    
+                }
+
+            }
 
 
         })
 
+    },
+    getAllBanners:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let banners = await db.get().collection(collection.BANNERS)
+            .find().toArray()
+
+            //console.log(banners)
+
+            let arr = []
+
+            // banners.forEach((val)=>{
+                
+            //     console.log(val.mainbanner.whererToNavigate)
+            //     let name1 = val.mainbanner.whererToNavigate
+            //     name1.push(val.mainbanner) 
+            // })
+
+            // console.log(name1)
+
+            resolve(banners)
+
+        })
+
+    },
+    deleteBanner:(bannerId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            // console.log(bannerId)
+            let banner  =  await db.get().collection(collection.BANNERS)
+            .findOne({_id:objectId(bannerId)})
+            // .then(async(result)=>{
+                
+                //     await db.get().collection(collection.BANNERS)
+                // .deleteOne({_id:objectId(bannerId)})
+                    
+
+                
+                
+                
+                
+            // })
+            
+            if(banner.mainbanner){
+                
+                //console.log('asif')
+                await db.get().collection(collection.BANNERS)
+                .deleteOne({_id:objectId(bannerId)})
+                resolve('mainbanner')
+
+            }else if(banner.bodybanner1){
+
+                //console.log('bodybanner1')
+                await db.get().collection(collection.BANNERS)
+                .deleteOne({_id:objectId(bannerId)})
+                resolve('bodybanner1')
+
+            }else if(banner.bodybanner2){
+
+                //console.log('bodybanner2')
+                await db.get().collection(collection.BANNERS)
+                .deleteOne({_id:objectId(bannerId)})
+                resolve('bodybanner2')
+
+
+            }else if(banner.bodybanner3){
+
+                //console.log('bodybanner3')
+                await db.get().collection(collection.BANNERS)
+                .deleteOne({_id:objectId(bannerId)})
+                resolve('bodybanner3')
+
+            }
+            else{
+                
+                //console.log('not asif')
+                resolve({notFound:true})
+
+            }
+           
+        })
+
+    },
+    editBanner:(bannerId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let bannerData = await db.get().collection(collection.BANNERS)
+            .findOne({_id:objectId(bannerId)})
+    
+            //console.log(bannerData)
+            resolve(bannerData)
+
+        })
+
+
+    },
+    updateBanner:(bannerId,data)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+
+
+            console.log(data)
+            if(data.navigate=="product"){
+                    
+                let prId = await db.get().collection(collection.PRODUCTS)
+                .aggregate([
+                    {
+                        $match:{productName:data.whererToNavigate}
+                    },
+                    {
+                        $lookup:{
+                            from:collection.PRODUCT_VARIENTS,
+                            localField:'_id',
+                            foreignField:'productId',
+                            as:'product'
+                        }
+                    },
+                    {
+                        $project:{
+                            product:{$arrayElemAt:['$product',0]},
+                        }
+                    },
+                    {
+                        $unwind:"$product"
+                    }
+                    
+                ]).toArray()
+                
+                //console.log(prId[0].product._id)
+                
+                data.product = prId[0].product._id+"" 
+                // console.log(mainbanner)
+
+                
+
+            }else if(data.navigate=="category"){
+                
+                
+                data.category = data.navigate
+                delete data.navigate
+                
+            }
+
+
+
+
+            if(data.bannerPosition == 'mainbanner'){
+                
+                let mainbanner = data
+                
+                await db.get().collection(collection.BANNERS)
+                .updateOne({_id:objectId(bannerId)},{$set:{mainbanner:mainbanner}}).then((result)=>{
+                    resolve(result)
+                }).then((reult)=>{
+                    
+                    resolve()
+
+                })
+                
+            //mainbanner end
+            }else if(data.bannerPosition == 'bodybanner1'){
+                
+                let bodybanner1 = data
+                
+                await db.get().collection(collection.BANNERS)
+                .updateOne({_id:objectId(bannerId)},{$set:{bodybanner1:bodybanner1}}).then((result)=>{
+                    resolve(result)
+                }).then((reult)=>{
+                    
+                    resolve()
+
+                })
+                
+            //bodybanner1 end
+            }else if(data.bannerPosition == 'bodybanner2'){
+                
+                let bodybanner2 = data
+                
+                await db.get().collection(collection.BANNERS)
+                .updateOne({_id:objectId(bannerId)},{$set:{bodybanner2:bodybanner2}}).then((result)=>{
+                    resolve(result)
+                }).then((reult)=>{
+                    
+                    resolve()
+
+                })
+                
+            //bodybanner2 end
+            }else if(data.bannerPosition == 'bodybanner3'){
+                
+                let bodybanner3 = data
+                
+                await db.get().collection(collection.BANNERS)
+                .updateOne({_id:objectId(bannerId)},{$set:{bodybanner3:bodybanner3}}).then((result)=>{
+                    resolve(result)
+                }).then((reult)=>{
+                    
+                    resolve()
+
+                })
+                
+            //bodybanner3 end
+            }
+            
+            // console.log(bannerId,data)
+            // db.get().collection(collection.BANNERS)
+            // .updateOne({})
+
+
+        })
+
+    },
+    addNewCoupon:(data)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+
+            await db.get().collection(collection.COUPONS).insertOne(data).then((result)=>{
+                
+                resolve()
+
+            })
+
+        })
+
+    },
+    getAllCoupons:()=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let coupons = await db.get().collection(collection.COUPONS).find().toArray()
+
+            resolve(coupons)
+
+        })
+
+    },
+    editCoupopn:(couponId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let data =await db.get().collection(collection.COUPONS)
+            .findOne({_id:objectId(couponId)})
+
+            console.log(data)
+            resolve(data)
+
+        })
+
+    },
+    updateCoupon:(updateCouponData,couponId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            //console.log(updateCouponData)
+            await db.get().collection(collection.COUPONS)
+            .updateOne({_id:objectId(couponId)},{$set:{couponCode:updateCouponData.couponCode,
+                                                        startingDate:updateCouponData.startingDate,
+                                                        expairyDate:updateCouponData.expairyDate,
+                                                        offer:updateCouponData.offer
+            
+            }}).then((result)=>{
+                
+                resolve()
+
+            })
+
+        })
+
+    },
+    checkCoupon:(data,userId)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let status = await db.get().collection(collection.COUPONS)
+            .findOne({couponCode:data.coupon})
+
+            //console.log(status.offer)
+            if(status){
+                
+                if(status.usedBy){
+
+                    let usedBy = status.usedBy
+                    
+                    let user = usedBy.includes(userId)
+                    
+    
+                    console.log(user)
+                    if(user){
+                        reject({useOnlyOnce:true})
+                    }else{
+
+                        resolve({statusGood:true,offer:status.offer})
+                    }
+
+                }else{
+                    
+                    resolve({statusGood:true,offer:status.offer})
+
+                }
+
+
+            }else{
+                resolve({statusGood:false})
+            }
+
+        })
+
+    },
+    getOrderReport:(data1)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let from = new Date(data1.fromDate)
+            let till = new Date(data1.tillDate)
+            
+            let data = await db.get().collection(collection.ORDERS)
+            .aggregate([
+                {
+                    $match:{
+                        date:{
+                            $gte:from,
+                            $lte:till
+                        }
+                    }
+                },
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'cartItems.product',
+                        foreignField:'_id',
+                        as:'productVarient'
+                    }
+                },
+                {
+                    $unwind:"$productVarient"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCTS,
+                        localField:'productVarient.productId',
+                        foreignField:'_id',
+                        as:'coreProduct'
+                    }
+                },
+                {
+                    $unwind:"$coreProduct"
+                },
+                {
+                    $group:{
+                        _id:{
+                        user:"$userId",
+                        date:{$dateToString:{format: '%Y-%m-%d',
+                                            date: '$date'}}},
+                        Total:{$sum:"$cartItems.subTotal"},
+                        landingcost:{$sum:"$productVarient.landingcost"},
+                        products:{$push:{productVarient:"$productVarient",coreProduct:"$coreProduct"}},
+                        count:{$sum:1}
+
+                    }
+                },
+                {
+                    $project:{
+                        user:"$_id.user",date:"$_id.date",Total:1,landingcost:1,_id:0,
+                        profit:{$subtract:["$Total","$landingcost"]},
+                        products:1,count:1
+                    }
+                },
+                {
+                    $lookup:{
+                        from:collection.USER_COLLECTION,
+                        localField:"user",
+                        foreignField:"_id",
+                        as:'user'
+                    }
+                },
+                {
+                    $unwind:"$user"
+                },
+                {
+                    $sort:{"date":1}
+                }
+                
+            ]).toArray()
+
+            console.log(data)
+            resolve(data)
+
+        })
+
+    },
+    getStock:(data1)=>{
+        
+        return new Promise(async(resolve,reject)=>{
+            
+            let from = new Date(data1.fromDate)
+            let till = new Date(data1.tillDate)
+
+            let data =await db.get().collection(collection.ORDERS)
+            .aggregate([
+                {
+                    $match:{
+                        date:{
+                            $gte:from,
+                            $lte:till
+                        }
+                    }
+                },
+                {
+                    $unwind:"$cartItems"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_VARIENTS,
+                        localField:'cartItems.product',
+                        foreignField:'_id',
+                        as:'productVarient'
+                    }
+                },
+                {
+                    $unwind:"$productVarient"
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCTS,
+                        localField:'productVarient.productId',
+                        foreignField:'_id',
+                        as:'coreProduct'
+                    }
+                },
+                {
+                    $unwind:"$coreProduct"
+                },
+                
+                {
+                    $group:{
+                        _id:{
+                        productName:"$coreProduct.productName",
+                        productSize:"$productVarient.size",
+                        productColor:"$productVarient.color",
+                        date:{$dateToString:{format: '%Y-%m-%d',
+                                            date: '$date'}}},
+                        totalStock:{$sum:"$productVarient.quantity"},
+                        totalSold:{$sum:"$cartItems.quantity"},
+                        count:{$sum:1}
+
+                    }
+                },
+                {
+                    $project:{
+                        productName:"$_id.productName",
+                        productSize:"$_id.productSize",
+                        productColor:"$_id.productColor",
+                        date:"$_id.date",
+                        totalStock:1,
+                        totalSold:1,
+                        count:1,
+                        _id:0
+                    }
+                }
+
+            ]).toArray()
+
+            console.log(data)
+            resolve(data)
+        })
+
     }
-
-
 
 
 

@@ -1,3 +1,9 @@
+<style>
+    .swal2-popup {
+font-size: 1.6rem;
+}
+
+</style>
 
 <body>
     <div class="page-wrapper">
@@ -9,16 +15,7 @@
         			<h1 class="page-title">Checkout</h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
-            {{!-- <nav aria-label="breadcrumb" class="breadcrumb-nav">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav --> --}}
-
+     
             <div class="page-content">
             	<div class="checkout">
 	                <div class="container">
@@ -30,7 +27,7 @@
             			</div><!-- End .checkout-discount -->
             			<form action="#">
 		                	<div class="row">
-                                <div class="col-lg-7 p-5" style="background-color: #eeeeee; border-radius: 4px;">
+                                <div class="col-lg-7 p-5 " style="background-color: #f7f7f7; border-radius: 2px; padding: 18px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187)">
                                     <div class="row pb-5">
 
                                     {{#each address.address}}
@@ -99,11 +96,14 @@
                                 </div>
 		                	
 		                		<aside class="col-lg-5">
-                                            <form action="#">
-                                                <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-                                                <input type="text" class="form-control" required id="checkout-discount-input">
-                                            </form>
-		                			<div class="summary" style="border: none !important; background-color: #eeeeee;">
+		                			<div class="summary" style="border: none !important; background-color: #f7f7f7; border-radius: 2px; padding: 18px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187)">
+                                            
+                                            <label for="CouponInput" style="font-weight: 600;">Have a coupon? <span>Click here to enter your code</span></label>
+                                            <input type="text" class="form-control" id="CouponInput">
+                                            <p class="text-danger mb-1" id="cpNot"></p>
+                                            <p class="text-success mb-1" id="cpYes"></p>
+                                            <a class="btn btn-primary rounded mb-2" onclick="applyCoupon('{{data.grandTotal}}')" style="width: 50px !importent; color: white; background-color: rgb(3, 3, 156); border:none;" >Apply Coupon</a>
+
                                         <div class="checkout-discount">
                                         </div>
 		                				<h4 class="">Your Order</h4><!-- End .summary-title -->
@@ -133,11 +133,19 @@
                                                     <td></td>
 		                							<td>₹{{delCharge}}</td>
 		                						</tr>
+
+                                                <tr>
+                                                    <td id="cpCode" class="text-success"></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td id="cpDiscount" class="text-success"></td> 
+                                                </tr>
+
 		                						<tr class="summary-total" >
 		                							<td style="color: blue;">Total:</td>
                                                     <td></td>
                                                     <td></td>
-		                							<td style="color: blue;">₹{{data.grandTotal}}</td>
+		                							<td style="color: blue;">₹<span id="curretnTotal">{{data.grandTotal}}</span></td>
 		                						</tr><!-- End .summary-total -->
 		                					</tbody>
 		                				</table><!-- End .table table-summary -->
@@ -201,7 +209,7 @@
 										    <!-- End .accordion -->
 
                                            
-                                         <a   onclick="placeOrder('{{data.grandTotal}}','{{data.delivery}}')" class="btn btn-primary loginFormButton btn-order btn-block text-white">Place Order</a>
+                                         <a   onclick="placeOrder('{{data.delivery}}')" class="btn btn-primary loginFormButton btn-order btn-block text-white">Place Order</a>
 		                				{{!-- <button type="submit" class="btn  btn-order btn-block">
 		                					 <a  href="/checkOut" class="btn btn-primary loginFormButton btn-order btn-block text-white">Proceed To Checkout</a>
 		                					 <a  href="/checkOut" class="btn btn-primary loginFormButton btn-order btn-block text-white">Proceed To Checkout</a>
@@ -224,6 +232,7 @@
 
    
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 <script>
@@ -278,18 +287,60 @@
         //console.log(paymentMethod)
     }
 
-    
-                
+    function applyCoupon(currentTotal){
 
+    let coupon = document.getElementById('CouponInput').value
+        //document.getElementById('curretnTotal').innerText
+
+        if(coupon){
+            
+            $.ajax({
+
+                url:'/checkCoupon12',
+                method:'post',
+                data:{coupon:coupon},
+                success:(response)=>{
                     
+                    if(response.statusGood){
+                        
+                        let offer = parseInt(response.offer)
+                        let total = parseInt(currentTotal)
+                        let off = (total/100)*offer;
+                        off = off.toFixed(2)
+                        let offerPrice = total-off
 
+                        document.getElementById('cpYes').innerHTML='Coupon applyed successfully'
+                        document.getElementById('cpCode').innerText ="Coupon discount"
+                        document.getElementById('cpDiscount').innerText ="₹"+off
+                        document.getElementById('curretnTotal').innerText=offerPrice
+
+                    }else if(response.useOnlyOnce){
+
+                        document.getElementById('cpNot').innerHTML='Sorry coupon is only valid for single use'
                     
+                    }
+                    else{
+                        
+                        document.getElementById('cpNot').innerHTML='Sorry Coupon is invalid'
 
-                
+                    }
+                }
+            })
 
+        }else{
+            
+           document.getElementById('cpNot').innerHTML='Please enter valid input'
 
-    function placeOrder(finalTotal,deliveryType){
+        }
 
+    }
+
+    function placeOrder(deliveryType){
+
+        let coupon = document.getElementById('CouponInput').value
+
+        let finalTotal = document.getElementById('curretnTotal').innerText 
+       
         if(address){
             
             if(paymentMethod){
@@ -301,7 +352,8 @@
                     data:{finalTotal:finalTotal,
                             deliveryType:deliveryType,
                             paymentMethod:paymentMethod,
-                            address:address},
+                            address:address,
+                            coupon:coupon},
                     success:(response)=>{
                         
                         if(response.cod_valid){
@@ -393,7 +445,7 @@
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top',
-                    padding:'3em',
+                   
                     showConfirmButton: false,
                     showConfirmButton: false,
                     timer: 3000,
@@ -417,7 +469,7 @@
              const Toast = Swal.mixin({
                 toast: true,
                 position: 'top',
-                padding:'3em',
+               
                
                 showConfirmButton: false,
                 timer: 3000,

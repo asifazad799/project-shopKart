@@ -63,6 +63,7 @@ module.exports = {
         let response = {};
 
         let user = await db.get().collection(collection.USER_COLLECTION).findOne({email:userData.email});
+        console.log(userData)
         if(user.blocked){
 
           resolve({status:false,msg:"User Blocked"});
@@ -1250,17 +1251,25 @@ module.exports = {
               
             ]).toArray()
 
-            console.log(product)
+            //console.log(product)
             resolve(product)
+
+          })
+
+        },
+        updateCouponUsage:(userId,cpCode)=>{
+          
+          return new Promise(async(resolve,reject)=>{
+            
+            await db.get().collection(collection.COUPONS)
+            .updateOne({couponCode:cpCode},{$push:{usedBy:userId}}).then((result)=>{
+              
+              resolve()
+
+            })
 
           })
 
         }
 
-
-
-              
-
-  
-  
 }

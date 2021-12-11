@@ -1,4 +1,5 @@
-
+<link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="/stylesheets/userlogin.css">
     <main class="main">
         <div class="intro-slider-container mb-3 mb-lg-5">
           <div
@@ -9,25 +10,35 @@
             data-toggle="owl"
             data-owl-options='{"nav":false, "dots": false, "loop": false}'
           >
+          {{#each bannerResponse}}
+            {{#if this.mainbanner}}
             <div
               class="intro-slide"
               style="
-                background-image: url(assets/images/demos/demo-12/slider/slide-1.jpg);
+                background-image: url(/images/bannersKart/{{mainbanner.bannerPosition}}.webp);
               "
             >
               <div class="container intro-content text-center">
-                <h3 class="intro-subtitle text-white">SEASONAL PICKS</h3>
+                {{!-- <h3 class="intro-subtitle text-dark">{{mainbanner.bannreHeading}}</h3> --}}
                 <!-- End .h3 intro-subtitle -->
-                <h1 class="intro-title text-white">Get All The Good Stuff</h1>
+                <h1 class="intro-title text-white">{{mainbanner.bannreHeading}} <br>{{mainbanner.whererToNavigate}}</h1>
                 <!-- End .intro-title -->
-
-                <a href="category.html" class="btn btn-outline-white">
-                  <span>DISCOVER MORE</span>
+                {{#if mainbanner.product}}
+                <a href="/productDetails?productVerientId={{mainbanner.product}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none;">
+                  <span class="text-center" >DISCOVER MORE</span>
                   <i class="icon-long-arrow-right"></i>
                 </a>
+                {{else}}
+                <a href="/catProducts?category={{mainbanner.whererToNavigate}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none;">
+                  <span class="text-center" >DISCOVER MORE</span>
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+                {{/if}}
               </div>
               <!-- End .intro-content -->
             </div>
+            {{/if}}
+            {{/each}}
             <!-- End .intro-slide -->
           </div>
           <!-- End .intro-slider owl-carousel owl-simple -->
@@ -39,35 +50,51 @@
 
         <div class="container">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" style="">
+              {{#each bannerResponse}}
+              {{#if this.bodybanner1}}
               <div
                 class="
                   banner banner-display banner-link-anim banner-title-hidden
                 "
+                
               >
                 <a href="#">
                   <img
-                    src="assets/images/demos/demo-12/banners/banner-1.jpg"
+                    src="/images/bannersKart/{{bodybanner1.bannerPosition}}.webp"
                     alt="Banner"
+                    style="object-fit: cover !important; height: 500px; "
                   />
                 </a>
 
                 <div class="banner-content banner-content-center">
                   <h3 class="banner-title text-white">
-                    <a href="#">This Week's Most Wanted</a>
+                    <a href="#">{{bodybanner1.bannreHeading}} <br>{{bodybanner1.whererToNavigate}}</a>
                   </h3>
                   <!-- End .banner-title -->
-                  <a href="#" class="btn btn-outline-white banner-link"
-                    >Shop Now</a
-                  >
+                {{#if bodybanner1.product}}
+                <a href="/productDetails?productVerientId={{bodybanner1.product}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none; text-decoration: none;">
+                  <span class="text-center" >Shop Now</span>
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+                {{else}}
+                <a href="/catProducts?category={{bodybanner1.whererToNavigate}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none; text-decoration: none;">
+                  <span class="text-center" >Shop Now</span>
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+                {{/if}}
                 </div>
                 <!-- End .banner-content -->
               </div>
+              {{/if}}
+              {{/each}}
               <!-- End .banner -->
             </div>
             <!-- End .col-md-6 -->
-
+            
             <div class="col-md-6">
+            {{#each bannerResponse}}
+              {{#if this.bodybanner2}}
               <div
                 class="
                   banner banner-display banner-link-anim banner-title-hidden
@@ -75,23 +102,35 @@
               >
                 <a href="#">
                   <img
-                    src="assets/images/demos/demo-12/banners/banner-2.jpg"
+                    src="/images/bannersKart/{{bodybanner2.bannerPosition}}.webp"
                     alt="Banner"
+                    style="object-fit: cover !important; height: 241.1px; "
                   />
                 </a>
 
                 <div class="banner-content banner-content-center">
                   <h3 class="banner-title text-white">
-                    <a href="#">Bags by Mood</a>
+                    <a href="#">{{bodybanner2.bannreHeading}} <br>{{bodybanner2.whererToNavigate}}</a>
                   </h3>
                   <!-- End .banner-title -->
-                  <a href="#" class="btn btn-outline-white banner-link"
-                    >Discover Now</a
-                  >
+                {{#if bodybanner2.product}}
+                <a href="/productDetails?productVerientId={{bodybanner2.product}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none; text-decoration: none;">
+                  <span class="text-center" >Shop Now</span>
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+                {{else}}
+                <a href="/catProducts?category={{bodybanner2.whererToNavigate}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none; text-decoration: none;">
+                  <span class="text-center" >Shop Now</span>
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+                {{/if}}
                 </div>
                 <!-- End .banner-content -->
               </div>
+              {{/if}}
+              
               <!-- End .banner -->
+              {{#if bodybanner3}}
               <div
                 class="
                   banner banner-display banner-link-anim banner-title-hidden
@@ -99,24 +138,37 @@
               >
                 <a href="#">
                   <img
-                    src="assets/images/demos/demo-12/banners/banner-3.jpg"
+                    src="/images/bannersKart/{{bodybanner3.bannerPosition}}.webp"
                     alt="Banner"
+                    style="object-fit: cover !important; height: 241.1px; "
+
                   />
                 </a>
 
                 <div class="banner-content banner-content-center">
                   <h3 class="banner-title text-white">
-                    <a href="#">The Trend Story</a>
+                    <a href="#">{{bodybanner3.bannreHeading}} <br>{{bodybanner3.whererToNavigate}}</a>
                   </h3>
                   <!-- End .banner-title -->
-                  <a href="#" class="btn btn-outline-white banner-link"
-                    >Shop Now</a
-                  >
+                {{#if bodybanner3.product}}
+                <a href="/productDetails?productVerientId={{bodybanner3.product}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none; text-decoration: none;">
+                  <span class="text-center" >Shop Now</span>
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+                {{else}}
+                <a href="/catProducts?category={{bodybanner3.whererToNavigate}}" class="btn" style="border-radius: 3px !important;color:white; font-weight: 600; border: none; text-decoration: none;">
+                  <span class="text-center" >Shop Now</span>
+                  <i class="icon-long-arrow-right"></i>
+                </a>
+                {{/if}}
                 </div>
                 <!-- End .banner-content -->
               </div>
+              {{/if}}
+              {{/each}}
               <!-- End .banner -->
             </div>
+            
             <!-- End .col-md-6 -->
           </div>
           <!-- End .row -->
@@ -165,33 +217,32 @@
                         <div class="product product-7 text-center" style="background-color: #f9f9fa; border-radius:2px; box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
                             <figure class="product-media">
 
-                                {{#each productVarients}}
-                                  {{#if this.oldProPrice}}
+                                  {{#if this.productVarients.oldProPrice}}
                                   <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">Special Offer</span>
                                   {{else}}
-                                  {{#if this.oldCatPrice}}
+                                  {{#if this.productVarients.oldCatPrice}}
                                   <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New Offer</span>
                                   {{/if}}
                                 {{/if}}
-                                <a href="/productDetails?productVerientId={{this._id}}">
-                                    <img src="/images/product/productvarients/{{this._id}}_1.png" alt="Product image" class="product-image">
+                                <a href="/productDetails?productVerientId={{this.productVarients._id}}">
+                                    <img src="/images/product/productvarients/{{this.productVarients._id}}_1.png" alt="Product image" class="product-image">
                                 </a>
                                 <div class="product-action-vertical">
                                    
-                                      <a  onclick="addToWishlist('{{this._id}}')" class="btn-product-icon btn-wishlist btn-expandable"><span style="background-color: blue !important;">Add to wishlist</span></a>
+                                      <a  onclick="addToWishlist('{{this.productVarients._id}}')" class="btn-product-icon btn-wishlist btn-expandable"><span style="background-color: blue !important;">Add to wishlist</span></a>
 
 
                                    
                                     {{!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
                                     <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> --}}
                                 </div><!-- End .product-action-vertical -->
-                                {{/each}}
+                             
 
                                 <div class="product-action">
                                   {{#if ../currentUser}}
-                                  {{#each productVarients}}
-                                  <a  onclick="addToCart('{{this._id}}','{{this.mrp}}')" class="btn-product"><span>add to cart</span></a>
-                                  {{/each}}
+                                  
+                                  <a  onclick="addToCart('{{this.productVarients._id}}','{{this.productVarients.mrp}}')" class="btn-product"><span>add to cart</span></a>
+                                 
                                   {{else}}
                                   <a href="/userLogin" class="btn-product"><span>add to cart</span></a>
                                   {{/if}}
@@ -208,202 +259,35 @@
                                     <a href="#">{{this.productName}}</a>
                                 </div>
                                 <h3 class="product-title"><a href="product.html">{{this.category}}</a></h3><!-- End .product-title -->
-                                {{#each productVarients}}
-                                  {{#if this.oldProPrice}}
+                               
+                                  {{#if this.productVarients.oldProPrice}}
                                   <div class="product-price" style="color: blue;">
-                                      ₹{{this.mrp}}
+                                      ₹{{this.productVarients.mrp}}
                                   </div>
                                   <div class="product-price" style="color: blue;">
-                                      <s style="text-decoration-thickness: 2px;">₹{{this.oldProPrice}}</s>
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.productVarients.oldProPrice}}</s>
                                   </div><!-- End .product-price -->
 
                                   {{else}}
-                                  {{#if this.oldCatPrice}}
+                                  {{#if this.productVarients.oldCatPrice}}
                                   <div class="product-price" style="color: blue;">
-                                      ₹{{this.mrp}}
+                                      ₹{{this.productVarients.mrp}}
                                   </div>
                                   <div class="product-price" style="color: blue;">
-                                      <s style="text-decoration-thickness: 2px;">₹{{this.oldCatPrice}}</s>
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.productVarients.oldCatPrice}}</s>
                                   </div><!-- End .product-price -->
                                   {{else}}
                                   <div class="product-price" style="color: blue;">
-                                      ₹{{this.mrp}}
+                                      ₹{{this.productVarients.mrp}}
                                   </div>
                                   {{/if}}
                                   {{/if}}
-                                {{/each}}
-                                {{!-- <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container --> --}}
-
-                                {{!-- <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
-                                        <img src="assets/images/products/product-4-thumb.jpg" alt="product desc">
-                                    </a>
-                                    <a href="#">
-                                        <img src="assets/images/products/product-4-2-thumb.jpg" alt="product desc">
-                                    </a>
-
-                                    <a href="#">
-                                        <img src="assets/images/products/product-4-3-thumb.jpg" alt="product desc">
-                                    </a>
-                                </div><!-- End .product-nav --> --}}
+                             
+            
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                         {{/each}}
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <span class="product-label label-out">Out of Stock</span>
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-6.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jackets</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Khaki utility boiler jumpsuit</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    <span class="out-price">$120.00</span>
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 6 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
-
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <span class="product-label label-top">Top</span>
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-11.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Shoes</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Light brown studded Wide fit wedges</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $110.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 1 Reviews )</span>
-                                </div><!-- End .rating-container -->
-
-                                <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
-                                        <img src="assets/images/products/product-11-thumb.jpg" alt="product desc">
-                                    </a>
-                                    <a href="#">
-                                        <img src="assets/images/products/product-11-2-thumb.jpg" alt="product desc">
-                                    </a>
-
-                                    <a href="#">
-                                        <img src="assets/images/products/product-11-3-thumb.jpg" alt="product desc">
-                                    </a>
-                                </div><!-- End .product-nav -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
-
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-10.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jumpers</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Yellow button front tea top</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $56.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 0 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
-
-                        {{!-- <div class="product product-7 text-center">
-                            <figure class="product-media">
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-7.jpg" alt="Product image" class="product-image">
-                                </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">Jeans</a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Blue utility pinafore denim dress</a></h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    $76.00
-                                </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product --> --}}
+                     
                     </div>
             
 
@@ -414,212 +298,6 @@
         </div>
         <!-- End .bg-lighter pt-5 pb-5 -->
 
-        <div class="container">
-          <div class="heading text-center mb-4">
-            <h2 class="title">Popular Categories</h2>
-            <!-- End .title -->
-            <p class="title-desc">Vestibulum auctor dapibus neque</p>
-            <!-- End .title-desc -->
-          </div>
-          <!-- End .heading -->
-
-          <div class="row">
-            <div class="col-sm-6 col-lg-4">
-              <div class="banner banner-display banner-link-anim">
-                <a href="#">
-                  <img
-                    src="assets/images/demos/demo-12/banners/banner-4.jpg"
-                    alt="Banner"
-                  />
-                </a>
-
-                <div class="banner-content banner-content-center">
-                  <h3 class="banner-title text-white">
-                    <a href="#">Accessories</a>
-                  </h3>
-                  <!-- End .banner-title -->
-                  <h4 class="banner-subtitle text-white">
-                    <a href="#">16 Items</a>
-                  </h4>
-                  <!-- End .banner-subtitle -->
-                  <a href="#" class="btn btn-outline-white banner-link"
-                    >Shop Now</a
-                  >
-                </div>
-                <!-- End .banner-content -->
-              </div>
-              <!-- End .banner -->
-            </div>
-            <!-- End .col-sm-6 -->
-
-            <div class="col-sm-6 col-lg-4 order-lg-last">
-              <div class="banner banner-display banner-link-anim">
-                <a href="#">
-                  <img
-                    src="assets/images/demos/demo-12/banners/banner-5.jpg"
-                    alt="Banner"
-                  />
-                </a>
-
-                <div class="banner-content banner-content-center">
-                  <h3 class="banner-title text-white">
-                    <a href="#">Jewellery</a>
-                  </h3>
-                  <!-- End .banner-title -->
-                  <h4 class="banner-subtitle text-white">
-                    <a href="#">8 Items</a>
-                  </h4>
-                  <!-- End .banner-subtitle -->
-                  <a href="#" class="btn btn-outline-white banner-link"
-                    >Shop Now</a
-                  >
-                </div>
-                <!-- End .banner-content -->
-              </div>
-              <!-- End .banner -->
-            </div>
-            <!-- End .col-sm-6 -->
-
-            <div class="col-lg-4">
-              <div class="row">
-                <div class="col-sm-6 col-lg-12">
-                  <div class="banner banner-display banner-link-anim">
-                    <a href="#">
-                      <img
-                        src="assets/images/demos/demo-12/banners/banner-6.jpg"
-                        alt="Banner"
-                      />
-                    </a>
-
-                    <div class="banner-content banner-content-center">
-                      <h3 class="banner-title text-white">
-                        <a href="#">Clothing</a>
-                      </h3>
-                      <!-- End .banner-title -->
-                      <h4 class="banner-subtitle text-white">
-                        <a href="#">24 Items</a>
-                      </h4>
-                      <!-- End .banner-subtitle -->
-                      <a href="#" class="btn btn-outline-white banner-link"
-                        >Discover Now</a
-                      >
-                    </div>
-                    <!-- End .banner-content -->
-                  </div>
-                  <!-- End .banner -->
-                </div>
-                <!-- End .col-sm-6 -->
-
-                <div class="col-sm-6 col-lg-12">
-                  <div class="banner banner-display banner-link-anim">
-                    <a href="#">
-                      <img
-                        src="assets/images/demos/demo-12/banners/banner-7.jpg"
-                        alt="Banner"
-                      />
-                    </a>
-
-                    <div class="banner-content banner-content-center">
-                      <h3 class="banner-title text-white">
-                        <a href="#">Shoes</a>
-                      </h3>
-                      <!-- End .banner-title -->
-                      <h4 class="banner-subtitle text-white">
-                        <a href="#">6 Items</a>
-                      </h4>
-                      <!-- End .banner-subtitle -->
-                      <a href="#" class="btn btn-outline-white banner-link"
-                        >Shop Now</a
-                      >
-                    </div>
-                    <!-- End .banner-content -->
-                  </div>
-                  <!-- End .banner -->
-                </div>
-                <!-- End .col-sm-6 -->
-              </div>
-              <!-- End .row -->
-            </div>
-            <!-- End .col-lg-6 -->
-          </div>
-          <!-- End .row -->
-
-          <div class="icon-boxes-container bg-transparent">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-6 col-lg-3">
-                  <div class="icon-box icon-box-side">
-                    <span class="icon-box-icon">
-                      <i class="icon-rocket"></i>
-                    </span>
-                    <div class="icon-box-content">
-                      <h3 class="icon-box-title">Free Shipping</h3>
-                      <!-- End .icon-box-title -->
-                      <p>Orders $50 or more</p>
-                    </div>
-                    <!-- End .icon-box-content -->
-                  </div>
-                  <!-- End .icon-box -->
-                </div>
-                <!-- End .col-sm-6 col-lg-3 -->
-
-                <div class="col-sm-6 col-lg-3">
-                  <div class="icon-box icon-box-side">
-                    <span class="icon-box-icon">
-                      <i class="icon-rotate-left"></i>
-                    </span>
-
-                    <div class="icon-box-content">
-                      <h3 class="icon-box-title">Free Returns</h3>
-                      <!-- End .icon-box-title -->
-                      <p>Within 30 days</p>
-                    </div>
-                    <!-- End .icon-box-content -->
-                  </div>
-                  <!-- End .icon-box -->
-                </div>
-                <!-- End .col-sm-6 col-lg-3 -->
-
-                <div class="col-sm-6 col-lg-3">
-                  <div class="icon-box icon-box-side">
-                    <span class="icon-box-icon">
-                      <i class="icon-info-circle"></i>
-                    </span>
-
-                    <div class="icon-box-content">
-                      <h3 class="icon-box-title">Get 20% Off 1 Item</h3>
-                      <!-- End .icon-box-title -->
-                      <p>When you sign up</p>
-                    </div>
-                    <!-- End .icon-box-content -->
-                  </div>
-                  <!-- End .icon-box -->
-                </div>
-                <!-- End .col-sm-6 col-lg-3 -->
-
-                <div class="col-sm-6 col-lg-3">
-                  <div class="icon-box icon-box-side">
-                    <span class="icon-box-icon">
-                      <i class="icon-life-ring"></i>
-                    </span>
-
-                    <div class="icon-box-content">
-                      <h3 class="icon-box-title">We Support</h3>
-                      <!-- End .icon-box-title -->
-                      <p>24/7 amazing services</p>
-                    </div>
-                    <!-- End .icon-box-content -->
-                  </div>
-                  <!-- End .icon-box -->
-                </div>
-                <!-- End .col-sm-6 col-lg-3 -->
-              </div>
-              <!-- End .row -->
-            </div>
-            <!-- End .container -->
-          </div>
-          <!-- End .icon-boxes-container -->
-        </div>
         <!-- End .container -->
       </main>
       <!-- End .main -->

@@ -1,0 +1,160 @@
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
+<div class="" >
+<section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+    <div class="container cl-10 col-sm-8 col-md-6 col-lg-5 pt-0 mt-4 mb-4">
+        <div class="row pb-2 p-5" style="background-color: #eeeeee; border-radius: 6px;  box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187)">
+            <form class="pt-0" id="Order" action="/admin/getReport" method="POST">
+                <h3 class="text-center loginTitle">Report</h3>
+
+                <div class="row">
+
+                    <div class=" col-lg-12">
+
+                        <label class="">slect type of report</label>
+                        <select class="form-select" style="padding: 6px;" name="type" id="inputGroupSelect01">
+                                <option value="">Choose...</option>
+                                <option value="orders">Orders</option>
+                                <option value="stock">Stock</option>
+                        </select>
+
+                    </div>
+                   
+                </div>
+                <div class="row pt-1">
+
+                    <div class="col-6">
+
+                        <label for="fromDate">From</label>
+                        <input type="date" id="fromDate"  name="fromDate" onchange="order()" style="padding: 6px; border-radius: 4px; border: 1px solid #ced4da; width:100%">
+                        
+                    </div>
+                    <div class="col-6">
+
+                        <label for="tillDate">Till</label>
+                        <input type="date" id="tillDate" name="tillDate"  style="padding: 6px; border-radius: 4px; border: 1px solid #ced4da; width:100%">
+                        
+                    </div>
+                </div>
+                        
+                <div class="cl-lg-4 text-center mb-0 mt-4">
+
+                    <button type="submit" class="btn btn-primary loginFormButton" style="width: 90px;">Get</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</section>  
+{{#if Order}}
+<div class="col-12 p-4 mt-4 mb-3" style=" background-color:#f9f9fa ; border-radius:3px;  border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+<table id="example" class="display nowrap text-center" style="width:100%">
+    <h4 class="text-center">Order Report</h4>
+        <thead>
+            <tr>
+
+                <th>Sold on</th>
+                <th>Numbers Sold</th>
+                <th>Revenue</th>
+                <th>Profit</th>
+                <th>User</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {{#each orderRedport}}
+            <tr>
+
+                <td>{{this.date}}</td>
+                <td>{{this.count}}</td>
+                <td>{{this.Total}}</td>
+                <td>{{this.profit}}</td>
+                <td>{{this.user._id}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+</table>
+            </div>
+{{else}}
+{{#if stock}}
+<div class="col-12 p-4 mt-4 mb-3" style=" background-color:#f9f9fa ; border-radius:3px;  border-radius:4px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+<table id="example" class="display nowrap text-center" style="width:100%">
+    <h4 class="text-center">Stock Report</h4>
+        <thead>
+            <tr>
+
+                <th>Date</th>
+                <th>Product Name</th>
+                <th>product Size</th>
+                <th>productColor</th>
+                <th>Numbers Sold</th>
+                <th>Current Stock</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {{#each stockReport}}
+            <tr>
+
+                <td>{{this.date}}</td>
+                <td>{{this.productName}}</td>
+                <td>{{this.productSize}}</td>
+                <td>{{this.productColor}}</td>
+                <td>{{this.totalSold}}</td>
+                <td>{{this.totalStock}}</td>
+                
+            </tr>
+            {{/each}}
+        </tbody>
+</table>
+</div>
+{{/if}}
+{{/if}}
+        </div>
+    </div>
+</main>
+<script>
+
+    $(document).ready(function() {
+        $('#Order').validate({
+
+            rules:{
+                type:{
+                    required:true
+                },
+                fromDate:{
+                    required:true
+                },
+                tillDate:{
+                    required:true
+                }
+            }
+
+        })
+
+        $('#example').DataTable({ 
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+    });
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd ;
+        $('#fromDate').attr('max',today);
+
+        function order(){
+
+            let startingDate = document.getElementById('fromDate').value
+            //alert(startingDate)
+             $('#tillDate').attr('min',startingDate)
+            $('#tillDate').attr('max',today);
+        
+        }
+</script>

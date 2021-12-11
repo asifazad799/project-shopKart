@@ -1,0 +1,277 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+<div class="container" style="font-size: 14px;" >
+    <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+        <div class="container cl-10 col-sm-8 col-md-6 col-lg-10 pt-0 mt-4">
+            <div class="row pb-2 p-5" style="background-color:  #eeeeee; border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187);">
+                {{#each banner}}
+                <form class="pt-0" enctype="multipart/form-data" id="banner" action="/admin/updateBanner?bannerId={{this._id}}" method="POST">
+                
+                    <h3 class="text-center loginTitle mb-4">Edit banner : <span style="color: black; font-size: 25px ; ">{{this.bannerPosition}}</span></h3>
+                    {{#if bannerExixst}}
+                    <p  class="text-danger text-center mt-1">Banner already exist</p>
+                    {{/if}}
+                    <div class="row ">
+                    <input type="text" hidden name="bannerPosition" value="{{this.bannerPosition}}">
+                    <div class=" col-lg-12 d-flex justify-content-center">
+                        <div class="col-lg-6">
+
+                        <label class="" style="font-size: ;">Banner heading</label>
+                        <input type="text" class="form-control text" value="{{this.bannreHeading}}"  name="bannreHeading" >
+                        
+                        </div>
+                    </div>
+
+                   </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="">Type of navigation</label>
+                        {{#if this.category}}
+                            <select class="form-select" style="padding: 6px;" name="navigate" id="typeOfNavigation" onchange='navChange()'>
+                                <option selected value="{{this.category}}">{{this.category}}</option>
+                                <option value="Product">Product</option>
+                                <option value="category">Category</option>
+                            </select>
+                        {{else}}
+                            <select class="form-select" style="padding: 6px;" name="navigate" id="typeOfNavigation" onchange='navChange()'>
+                                <option selected value="{{this.product}}">{{this.product}}</option>
+                                <option value="Product">Product</option>
+                                <option value="category">Category</option>
+                            </select>
+                        {{/if}}
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="">Where to navigate</label>
+
+                            <input list="list" class="form-select" name="whererToNavigate" value="{{this.whererToNavigate}}" style="padding: 6px;" onchange="getOffers()"  id="lists">
+                                <datalist id="list">
+                                    
+                                    <option value="">
+                                    
+                                </datalist>
+                            
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <h5 class="text-center pt-3 text-success">Available Offers</h5>
+                        <div class="col-12  d-flex justify-content-center pt-2">
+                            <div class="text-center" style="background-color: white; padding: 20px;  border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187); ">
+
+                                <p style="font-weight: 600;">You can add this in banner</p>
+
+                                    <dl class="text-center text-danger" id="offerList">Selecet <span style="color: black; font-weight: 500;">Where to navigate</span> get Offers</dl>
+                                
+                                    <input name="offer" value="" id="offer" hidden>
+                             </div>
+
+                         </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-12  d-flex justify-content-center">
+
+                        <div class="col-4 text-center">
+
+                            <div class="mt-5">
+                                <label for="form-label" style="font-weight: 700;">Image 4</label>
+                                <div class="col-12">
+                                    <div id="bannerImage" style="width: 250px; height: 250px; display: none;"></div>
+                                    <button class="btn btn-primary mt-3" type="button" style="display: none;"
+                                        id="bannerCrop">Crop</button>
+                                </div>
+
+                                <img src="../images/bannersKart/{{this.bannerPosition}}.png" alt="" style="width: 100px; height: auto;" id="bannerImageView">
+                                {{!-- <div id="preview1"></div> --}}
+                                <input type="file" name="bannerImage" id="fileBanner"  style="padding-top: 5.7px;" class="form-control"
+                                    onchange="return bannerValidation()">
+                            </div>
+                            
+
+                        </div>
+                        </div>
+
+                            
+
+
+                    </div>
+                    <div class="row">
+
+                    <div class="cl-lg-4 text-center mb-0 d-flex justify-content-center">
+                        <button id="confirm-btn" type="submit" class="btn btn-primary " style="background-color: blue; margin-top:20px; width: 80px">Add</button>
+                    </div>
+                    </div>
+                </form>
+                {{/each}}
+                
+            </div>
+        </div>
+    </section>
+
+   
+   
+    </div>
+    </div>
+    
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+
+<script>
+
+$(document).ready(function(){
+    
+    $("#banner").validate({
+        
+        rules:{
+            bannreHeading:{
+                required:true
+            },
+            navigate:{
+                required:true
+            },
+            whererToNavigate:{
+                required:true
+            },
+
+        }
+
+    })
+
+})
+
+function navChange(){
+
+    var currentValue = document.getElementById('typeOfNavigation').value;
+        $.ajax({
+
+            url:'/admin/find-banner-nav?navigate='+currentValue,
+            method:'get',
+            success:(response)=>{
+
+              //console.log(response)
+
+              if(response){
+
+                let subCatCount = response.length;
+
+                var options = "<option value='0'>select</option>"
+
+                for(let i = 0 ; i < subCatCount ; i++ ){
+
+                    options += "<option value='"+response[i]+"'>"+response[i]+"</option>"
+
+                } document.getElementById('list').innerHTML = options;
+
+              }
+
+            }
+
+        })
+
+} 
+function getOffers(){
+     
+    let currentNav =  document.getElementById('typeOfNavigation').value
+     
+    let curetnValue = document.getElementById('lists').value
+
+    $.ajax({
+
+        url:'/admin/findOffer',
+        method:'post',
+        data:{
+            mainSelect:currentNav,
+            subSelect:curetnValue
+        },
+        success:(response)=>{
+            
+            if(!response.noOffer){
+                
+                console.log(response.offer)
+                document.getElementById('offerList').innerHTML = '<dl class="text-center text-danger" >'+'offer'+response.offer.offer+'%'+'</dl>'
+                document.getElementById('offer').innerHTML = '<input name="offer" value="'+response.offer.offer+'" id="offer" hidden>'
+
+
+            }else{
+                
+                document.getElementById('offerList').innerHTML = '<dl class="text-center text-danger" >'+'Sorry No offer Available for this one'+'</dl>'
+
+
+            }
+
+        }
+
+    })
+    
+
+
+}
+function bannerValidation(){
+
+    const imagebox = document.getElementById('bannerImage')
+    const crop_btn = document.getElementById('bannerCrop')
+    var fileInput = document.getElementById('fileBanner');
+
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.jpg)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+        alert('Please upload file having extensions .jpeg only.');
+        fileInput.value = '';
+        return false;
+    } else {
+        //Image preview
+        const img_data = fileInput.files[0]
+        const url = URL.createObjectURL(img_data)
+        imagebox.innerHTML = `<img src="${url}" id="banner4" style="width:100%">`
+        const image = document.getElementById('banner4')
+        document.getElementById('bannerImage').style.display = 'block'
+        document.getElementById('bannerCrop').style.display = 'block'
+        document.getElementById('confirm-btn').style.display = 'none'
+
+        const cropper = new Cropper(image, {
+            autoCropArea: 1,
+            viewMode: 1,
+            scalable: true,
+            zoomable: true,
+            movable: true,
+            aspectRatio: 16 / 19,
+            //  preview: '.preview',
+            minCropBoxWidth: 180,
+            minCropBoxHeight: 240,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'medium',
+        })
+        crop_btn.addEventListener('click', () => {
+            cropper.getCroppedCanvas().toBlob((blob) => {
+                let fileInputElement = document.getElementById('fileBanner');
+                let file = new File([blob], img_data.name, { type: "image/*", lastModified: new Date().getTime() });
+                let container = new DataTransfer();
+
+                container.items.add(file);
+                const img = container.files[0]
+                var url = URL.createObjectURL(img)
+                fileInputElement.files = container.files;
+                document.getElementById('bannerImageView').src = url
+                document.getElementById('bannerImage').style.display = 'none'
+                document.getElementById('bannerCrop').style.display = 'none'
+                document.getElementById('confirm-btn').style.display = 'block'
+            });
+        });
+    }
+}
+    
+</script>
+
+
+            
+
+            
+
+     
+        
+
+
+  
+  
+

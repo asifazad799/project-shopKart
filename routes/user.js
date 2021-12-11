@@ -83,7 +83,13 @@ router.get('/',whishListCount,async function( req, res, next) {
   
   adminHelper.viewAllProducts().then((response)=>{
     
-    res.render('user/home', { title:"shopKart" ,currentUser:req.session.user,user:true,products:response,userCartCount,whishListCount});
+    adminHelper.getAllBanners().then((bannerResponse=>{
+      
+
+      res.render('user/home', { title:"shopKart" ,currentUser:req.session.user,user:true,products:response,userCartCount,whishListCount,bannerResponse});
+
+    }))
+
 
   })
 
@@ -350,6 +356,8 @@ router.get('/otpConfirm',(req,res)=>{
 
 
 router.post('/login', function(req, res, next) {
+
+  
   userHelper.doLogin(req.body).then((response)=>{
     if(response.status){
 
@@ -883,7 +891,7 @@ router.get('/successdir',verifyLogin,whishListCount,(req,res)=>{
 
 router.post('/placeOrder',verifyLogin,async(req,res)=>{
   
-  // console.log(req.body)
+  console.log(req.body)
 
   let paymentMethod = req.body.paymentMethod
   let finalTotal = parseInt(req.body.finalTotal) 
@@ -896,10 +904,27 @@ router.post('/placeOrder',verifyLogin,async(req,res)=>{
       //let orderId = response.insertedId
   
       userHelper.stockUpdate(response.insertedId).then((response)=>{
+
+        if(req.body.coupon!=''){
+          
+          console.log('coupon is applyed')
+          userHelper.updateCouponUsage(req.session.user._id,req.body.coupon).then((response)=>{
+            
+            res.json({cod_valid:true})
+
+          })
+
+
+        }else{
+          
+          console.log('coupon is not applyed')
+          res.json({cod_valid:true})
+
+        }
         
         //console.log(paymentMethod)
         
-        res.json({cod_valid:true})
+        
   
   
       })
@@ -1313,7 +1338,36 @@ if(subCategory&&category){
   
   
 })
+
+router.post('/checkCoupon12',(req,res)=>{
   
+  
+  adminHelper.checkCoupon(req.body,req.session.user._id).then((response)=>{
+    
+    if(response.statusGood){
+      
+      res.json({statusGood:true,offer:response.offer})
+
+    
+
+    }else{
+      
+      res.json({statusGood:false})
+
+    }
+    
+
+  }).catch((response)=>{
+    
+    if(response.useOnlyOnce){
+      
+      res.json({useOnlyOnce:true})
+
+    }
+
+  })
+
+})
 
 
 

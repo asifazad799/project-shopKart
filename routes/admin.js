@@ -2,6 +2,7 @@ const { Console } = require('console');
 var express = require('express');
 var router = express.Router();
 var fs= require('fs');
+const { resolve } = require('path');
 const { order } = require('paypal-rest-sdk');
 const Taskrouter = require('twilio/lib/rest/Taskrouter');
 
@@ -478,7 +479,7 @@ router.get('/addNewProduct',adminLoginVerify,(req,res)=>{
 
 router.get('/addNewVarient',(req,res)=>{
 
-  // console.log(req.query.product);
+  console.log(req.query.product);
   let product = req.query.product;
 
   res.render('admin/addNewVarient',{admin:true,product,currentAdmin})
@@ -492,19 +493,20 @@ router.get('/addNewVarient',(req,res)=>{
 
 
 
-// router.post('/addNewVarient',(req,res)=>{
+router.post('/addNewVarient',(req,res)=>{
 
-//   // console.log(req.query.product);
-
-//   let product = req.query.product;
-
-//   let varient = req.body;
-
-//   adminHelper.AddNewVarient(product,varient)
   
+  let product = req.query.product;
+  
+  let varient = req.body;
+  console.log(req.query.product);
+
+  adminHelper.AddNewVarient(product,varient)
+  
+})
 
 
-// })
+
 
 router.post('/addNewProduct',adminLoginVerify,(req,res)=>{
 
@@ -583,10 +585,11 @@ router.post('/addNewProduct',adminLoginVerify,(req,res)=>{
 router.get('/getVarients',(req,res)=>{
 
   //console.log(req.query)
-  adminHelper.getVarients(req.query.productId).then((response)=>{
+  adminHelper.getVarients(req.query.product).then((response)=>{
 
     //console.log(response)
-    res.render('admin/allVarients',{admin:true,currentAdmin,response})
+    let product = req.query.product
+    res.render('admin/allVarients',{admin:true,currentAdmin,response,product})
 
   })
 
@@ -1074,16 +1077,365 @@ router.get('/deleteProductOffer',(req,res)=>{
 
 router.get('/viewBanners',(req,res)=>{
   
-  res.render('admin/viewBanner',{admin:true})
+  adminHelper.getAllBanners().then(async(bannerResponse)=>{
+    
+    let banner = []
+    
+    await bannerResponse.forEach((value)=>{
+        
+      //console.log(value.mainbanner)
+      if(value.mainbanner){
+        
+        banner.push({
+
+          bannreHeading:value.mainbanner.bannreHeading,
+          bannerPosition:value.mainbanner.bannerPosition,
+          whererToNavigate:value.mainbanner.whererToNavigate,
+          category:value.mainbanner.category,
+          product:value.mainbanner.product
+    
+        })
+
+      }else if(value.bodybanner1){
+
+        banner.push({
+
+          bannreHeading:value.bodybanner1.bannreHeading,
+          bannerPosition:value.bodybanner1.bannerPosition,
+          whererToNavigate:value.bodybanner1.whererToNavigate,
+          category:value.bodybanner1.category,
+          product:value.bodybanner1.product
+    
+        })
+
+      }else if(value.bodybanner2){
+
+        banner.push({
+
+          bannreHeading:value.bodybanner2.bannreHeading,
+          bannerPosition:value.bodybanner2.bannerPosition,
+          whererToNavigate:value.bodybanner2.whererToNavigate,
+          category:value.bodybanner2.category,
+          product:value.bodybanner2.product
+    
+        })
+
+      }else if(value.bodybanner3){
+
+        banner.push({
+
+          bannreHeading:value.bodybanner3.bannreHeading,
+          bannerPosition:value.bodybanner3.bannerPosition,
+          whererToNavigate:value.bodybanner3.whererToNavigate,
+          category:value.bodybanner3.category,
+          product:value.bodybanner3.product
+    
+        })
+
+      }
+
+    
+    })
+    
+    console.log(bannerResponse)
+    res.render('admin/viewBanner',{admin:true,bannerResponse})
+  })
+
+
 
 })
 
+let bannerExixst = false;
 router.get('/addNewBanner',(req,res)=>{
   
-  res.render('admin/addNewBanner',{admin:true})
+  res.render('admin/addNewBanner',{admin:true,bannerExixst})
+  bannerExixst = false
 
 })
 
+router.get('/find-banner-nav',(req,res)=>{
+
+  let navLocation = req.query.navigate;
+  
+  if(navLocation=='product'){
+    
+    adminHelper.findProductList().then((result)=>{
+      
+      res.json(result)
+
+    })
+    
+  }else if(navLocation=='category'){
+    
+    adminHelper.findCategoryList().then((result)=>{
+      
+      res.json(result)
+
+    })
+
+  }
+    
+})
+
+router.post('/findOffer',(req,res)=>{
+  
+  //console.log(req.body.subSelect)
+  adminHelper.getOffers(req.body.mainSelect,req.body.subSelect)
+  .then((result)=>{
+  // console.log(result[0])
+
+    res.json({offer:result[0]})
+
+  }).catch(()=>{
+    
+    console.log('no Offer')
+    res.json({noOffer:true})
+
+  })
+
+})    
+
+router.post('/addNewBanner',(req,res)=>{
+
+  // console.log(req.body)
+  // console.log(req.files)
+  adminHelper.addNewBanner(req.body).then((response)=>{
+    
+    if(!response.exist){
+      
+      let imgName = req.body.bannerPosition
+
+      let bnImg = req.files.bannerImage
+
+      bnImg.mv('./public/images/bannersKart/'+imgName+'.webp',(err,done)=>{
+        
+        if(!err){
+          
+          res.redirect('/admin/viewBanners')
+
+        }else{
+          
+          res.send('not added')
+
+        }
+
+      })
+
+    }else{
+      
+      res.send('add image')
+
+    }
+
+  }).catch((result)=>{
+    
+    if(result.exist){
+
+      bannerExixst = true;
+      res.redirect('/admin/addNewBanner')
+    }
+
+  })
+
+})
+
+router.post('/deleteBanner',(req,res)=>{
+  
+  adminHelper.deleteBanner(req.body.bannerId).then((response)=>{
+    
+    if(response.notFound){
+      
+      console.log('not found')
+
+    }else{
+
+      fs.unlink('./public/images/bannersKart/'+response+'.webp',(err)=>{
+        
+        if(err){
+
+          console.log(err)
+          res.json({status:true})
+
+        }else{
+
+          console.log('banner deleted succefully')
+          console.log(response)
+          res.json({status:true})
+
+        }
+
+      })
+
+    }
+    
+
+  })
+
+})
+
+router.get('/editBanner',(req,res)=>{
+  
+  adminHelper.editBanner(req.query.bannerId).then((response)=>{
+    
+    
+    let banner = []
+    
+      
+      if(response.bodybanner3){
+
+        banner.push({
+  
+          _id:response._id,
+          bannreHeading:response.bodybanner3.bannreHeading,
+          bannerPosition:response.bodybanner3.bannerPosition,
+          whererToNavigate:response.bodybanner3.whererToNavigate,
+          category:response.bodybanner3.category,
+          product:"product"
+        })
+
+      }else if(response.bodybanner2){
+
+        banner.push({
+  
+          _id:response._id,
+          bannreHeading:response.bodybanner2.bannreHeading,
+          bannerPosition:response.bodybanner2.bannerPosition,
+          whererToNavigate:response.bodybanner2.whererToNavigate,
+          category:response.bodybanner2.category,
+          product:"product"
+  
+        })
+
+      }else if(response.bodybanner1){
+
+        banner.push({
+  
+          _id:response._id,
+          bannreHeading:response.bodybanner1.bannreHeading,
+          bannerPosition:response.bodybanner1.bannerPosition,
+          whererToNavigate:response.bodybanner1.whererToNavigate,
+          category:response.bodybanner1.category,
+          product:"product"
+  
+        })
+
+      }else if(response.mainbanner){
+
+        banner.push({
+  
+          _id:response._id,
+          bannreHeading:response.mainbanner.bannreHeading,
+          bannerPosition:response.mainbanner.bannerPosition,
+          whererToNavigate:response.mainbanner.whererToNavigate,
+          category:response.mainbanner.category,
+          product:"product"
+  
+        })
+
+      }
+
+   
+    console.log(banner)
+
+    res.render('admin/editBanner',{admin:true,banner})
+
+  })
+
+})
+
+router.post('/updateBanner',(req,res)=>{
+  
+  adminHelper.updateBanner(req.query.bannerId,req.body).then((response)=>{
+    
+    
+    let bannerImg = req.files.bannerImage;
+    console.log(req.body,bannerImg)
+
+    res.redirect('/admin/viewBanners')
+
+  })
+
+})
+
+router.get('/coupons',(req,res)=>{
+  
+  adminHelper.getAllCoupons().then((response)=>{
+    
+    res.render('admin/coupons',{admin:true,response})
+
+  })
+
+})
+
+router.get('/editCoupon',(req,res)=>{
+  
+  adminHelper.editCoupopn(req.query.couponId).then((response)=>{
+    
+    res.render('admin/editCoupon',{admin:true,response})
+
+  })
+
+})
+
+router.post('/addNewCoupon',(req,res)=>{
+  
+  adminHelper.addNewCoupon(req.body).then((result)=>{
+    
+    res.redirect('/admin/coupons')
+
+  })
+
+})
+
+router.post('/updateCoupon',(req,res)=>{
+  
+  adminHelper.updateCoupon(req.body,req.query.couponId).then((response)=>{
+    
+    res.redirect('/admin/coupons')
+
+  })
+
+})
+
+let orderRedport = null;
+let stockReport = null ;
+let Order = false;
+let stock = false;
+router.get('/report',(req,res)=>{
+  
+  res.render('admin/reports',{admin:true,orderRedport,Order,stock,stockReport})
+  Order = false
+  stock = false
+})
+
+router.post('/getReport',(req,res)=>{
+  
+  console.log(req.body)
+  if(req.body.type=='orders'){
+    
+    adminHelper.getOrderReport(req.body).then((response)=>{
+      
+      orderRedport = response
+      Order = true
+      res.redirect('/admin/report')
+
+    })
+
+  }else if(req.body.type=='stock'){
+    
+    adminHelper.getStock(req.body).then((response)=>{
+      
+      stock=true
+      stockReport = response
+      res.redirect('/admin/report')
+
+    })
+    
+
+  }
+  // res.send('asif')
+
+})
 
 
 router.get('/adminLogout',(req,res)=>{

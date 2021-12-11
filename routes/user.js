@@ -6,16 +6,7 @@ var userHelper = require('../helpers/user-helper')
 var router = express.Router();
 var paypal = require('paypal-rest-sdk')
 
-paypal.configure({
-  'mode': 'sandbox', //sandbox or live
-  'client_id': 'ASf5s28V1l9WXA2nZ6mMErnlVhn3_yjIo6oY-5d0rl_2ogfBmMlmKygp3cIv_vsnB6HD16etXkg9WYPK',
-  'client_secret': 'EE3VrE-G24wQ58zw1CjRkj4F3jdVLE_P4-WoDG_oVSDiF6qc6oJ9Kummh3BIZyPu3zoUNOT3X7ze3i5Q'
-});
 
-const accountSid = "AC48200c28f276bf292ea3ef29b68b1893";
-const authToken = "797a3c392e86440777800c55a9a960ad";
-const serviceId = "VAa2c4371d3e3374d291bbf4af1e5a0310";
-const client = require("twilio")(accountSid, authToken);
 
 
 

@@ -1,5 +1,24 @@
-<h3 class="text-center" style="color: blue;">Men</h3>
-<div class="container">
+<h3 class="text-center" style="color: blue;">{{cat}}</h3>
+<div class="container mt-5 pt-5">
+    {{#if noPro}}
+
+    <div class="row d-flex justify-content-center mt-4">
+
+        <div class="col-lg-4" >
+            <div style="background-color: #f9f9fa; height: 50vh; width: 100%; border-radius:px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+                <h3 class="text-center pt-2" style="font-weight: 300 !important;"></h3>
+                <div class="px-5 mt-2 text-center">
+                    
+                    <i class="fal fa-sad-tear mt-2" style="font-size: 180px; color: rgba(186, 186, 182, 0.435);"></i>
+                    <h4 class="mt-3" style="font-weight: 300; color: rgba(255, 0, 0, 0.51);">Sorry products will be added soon</h4>
+                   
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    {{else}}
     <div class="row d-flex justify-content-center">
         <div class="col-lg-3 " >
             <div style="background-color: #f9f9fa; height: 100vh; width: 100%; border-radius:px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
@@ -15,7 +34,7 @@
             </div>
         </div>
         <div class="col-lg-9">
-            <div class="row d-flex justify-content-sm-center justify-content-md-start" style="height: 100%;background-color: #f9f9fa; border-radius:px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+            <div class="row d-flex justify-content-center justify-content-md-start" style="height: 100%;background-color: #f9f9fa; border-radius:px;box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
                 
                 {{#each product}}
                 <div class=" col-10 col-md-4 col-lg-4 " style=" padding: 1% !important; ">
@@ -221,4 +240,5 @@
             </div>
         </div>
     </div>
+    {{/if}}
 </div>

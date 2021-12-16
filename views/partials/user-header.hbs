@@ -1,11 +1,20 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="/stylesheets/userlogin.css">
+<style>
+  .show{
+    display: block;
+  }
 
-<header class="header header-9">
-  <div class="header-middle sticky-header">
+.stop-scrolling {
+            height: 100%;
+            overflow: hidden;
+        }
+</style>
+<header class="header header-9" style="position: fixed;">
+  <div class="header-middle sticky-header" >
     <div class="container">
       <div class="header-left" style="margin-left: -4px;">
-        <button class="mobile-menu-toggler">
+        <button class="mobile-menu-toggler" onclick="stopScroll()" id="mobile">
           <span class="sr-only">Toggle mobile menu</span>
           <i class="icon-bars" style="color: black;"></i>
         </button>
@@ -63,8 +72,8 @@
         </div><!-- End .header-search -->
           <div class="dropdown">
             {{!-- <button class="dropbtn">Dropdown</button> --}}
-            <a href="/profileShorcut" ><i class="far fa-user-circle profileShortcut"></i></a>
-            <div class="dropdown-content">
+            <a class="dropdown2" onclick="btnToggle()" id="dropdown1"><i class="far fa-user-circle profileShortcut" style="color: black;"></i></a>
+            <div class="dropdown-content" id="dropdown-content1">
               {{#if currentUser}}
               <a href="/profileShorcut" id="currentUser" class="text-dark text-center">{{currentUser.email}}</a>
               <a class="btn" href="/userLogout">Log Out</a>
@@ -76,17 +85,46 @@
               <a href="#">Link 3</a> --}}
             </div>
           </div>
-        
-        
-        <a href="/wishlist" style="font-weight: bolder;" class="wishlist-link">
-          <i class="icon-heart-o wishlistIcon" ></i>
-          <span class="wishlist-count" id="wishListCount">{{whishListCount}}</span>
-        </a>
+       
+       <div class=" cart-dropdown">
 
-        <a href="/cart" style="font-weight: bolder;" class="wishlist-link">
+        <a
+            href="/cart"
+            class="dropdown-toggle"
+            role="button"
+          
+          
+            aria-expanded="false"
+            data-display="static"
+            style="font-weight: bolder;"
+          >
             <i class="fal fa-shopping-cart fa-sm cartAll"></i>
-          <span class="wishlist-count" id="cartCount">{{userCartCount}}</span>
-        </a>
+            <span class="cart-count" id="cartCount">{{userCartCount}}</span>
+          
+          </a>
+
+       </div>
+      <div class=" cart-dropdown">
+            <a
+            href="/wishlist"
+            class="dropdown-toggle"
+            role="button"
+          
+          
+            aria-expanded="false"
+            data-display="static"
+            style="font-weight: bolder;"
+          >
+            <i class="icon-heart-o wishlistIcon" ></i>
+            <span class="cart-count" id="wishListCount">{{whishListCount}}</span>
+          
+          </a>
+
+       </div>
+        
+        
+
+       
 
        
       </div><!-- End .header-right -->
@@ -94,12 +132,11 @@
   </div><!-- End .header-middle -->
 </header><!-- End .header -->
   <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay"></div>
     <!-- End .mobil-menu-overlay -->
 
-    <div class="mobile-menu-container mobile-menu-light">
+    <div class="mobile-menu-container mobile-menu-light"  >
       <div class="mobile-menu-wrapper">
-        <span class="mobile-menu-close"><i class="icon-close"></i></span>
+        <span class="mobile-menu-close" onclick="enableScroll()"><i class="icon-close"></i></span>
 
         <form action="#" method="get" class="mobile-search">
           <label for="mobile-search" class="sr-only">Search</label>
@@ -117,95 +154,31 @@
         </form>
 
         <nav class="mobile-nav">
+    
           <ul class="mobile-menu">
             <li class="active">
-              <a href="index.html">Home</a>
+              <a href="/">Home</a>
 
               
             </li>
+           
             <li>
-              <a href="category.html">Shop</a>
+              <a  class="sf-with-ul">Product</a>
               <ul>
-                <li><a href="category-list.html">Shop List</a></li>
-                <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
-                <li><a href="category.html">Shop Grid 3 Columns</a></li>
-                <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
-                <li>
-                  <a href="category-boxed.html"
-                    ><span
-                      >Shop Boxed No Sidebar<span class="tip tip-hot"
-                        >Hot</span
-                      ></span
-                    ></a
-                  >
-                </li>
-                <li>
-                  <a href="category-fullwidth.html"
-                    >Shop Fullwidth No Sidebar</a
-                  >
-                </li>
-                <li>
-                  <a href="product-category-boxed.html"
-                    >Product Category Boxed</a
-                  >
-                </li>
-                <li>
-                  <a href="product-category-fullwidth.html"
-                    ><span
-                      >Product Category Fullwidth<span class="tip tip-new"
-                        >New</span
-                      ></span
-                    ></a
-                  >
-                </li>
-                <li><a href="cart.html">Cart</a></li>
-                <li><a href="checkout.html">Checkout</a></li>
-                <li><a href="wishlist.html">Wishlist</a></li>
-                <li><a href="#">Lookbook</a></li>
+                
+                <li><a href="/catProducts?category=men">Men</a></li>
+                <li><a href="/catProducts?category=women">Women</a></li>
+                <li><a href="/catProducts?category=kids">Kids</a></li>
+
               </ul>
             </li>
             <li>
-              <a href="product.html" class="sf-with-ul">Product</a>
+              <a>Profile</a>
               <ul>
-                <li><a href="product.html">Default</a></li>
-                <li><a href="product-centered.html">Centered</a></li>
-                <li>
-                  <a href="product-extended.html"
-                    ><span
-                      >Extended Info<span class="tip tip-new">New</span></span
-                    ></a
-                  >
-                </li>
-                <li><a href="product-gallery.html">Gallery</a></li>
-                <li><a href="product-sticky.html">Sticky Info</a></li>
-                <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
-                <li><a href="product-fullwidth.html">Full Width</a></li>
-                <li><a href="product-masonry.html">Masonry Sticky Info</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">Pages</a>
-              <ul>
-                <li>
-                  <a href="about.html">About</a>
 
-                  <ul>
-                    <li><a href="about.html">About 01</a></li>
-                    <li><a href="about-2.html">About 02</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <a href="contact.html">Contact</a>
+                <li><a href="/editUserProfile">Edit Profile</a></li>
+                <li><a href="/changePassword">Reset Password</a></li>
 
-                  <ul>
-                    <li><a href="contact.html">Contact 01</a></li>
-                    <li><a href="contact-2.html">Contact 02</a></li>
-                  </ul>
-                </li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="faq.html">FAQs</a></li>
-                <li><a href="404.html">Error 404</a></li>
-                <li><a href="coming-soon.html">Coming Soon</a></li>
               </ul>
             </li>
             <li>
@@ -311,8 +284,76 @@
     <!-- End .mobile-menu-container --> 
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="assets/js/jquery.min.js"></script>
 
 <script>
+
+function stopScroll(){
+  
+  document.body.classList.add("stop-scrolling");
+
+}
+
+function enableScroll(){
+  
+  document.body.classList.remove("stop-scrolling");
+
+}
+  
+
+let click = 0
+
+
+    function btnToggle() {
+
+      if(click == 0){
+
+        document.getElementById("dropdown-content1").style.display="block";
+        click=1;
+
+      }else if(click==1){
+        
+        document.getElementById("dropdown-content1").style.display="none";
+        click=0;
+
+      }
+        
+    }
+     
+
+
+
+        $(document).click((event) => {
+          if(click == 1){
+        if (!$(event.target).closest('.dropdown').length) {
+          // the click occured outside '#element'
+         
+          document.getElementById("dropdown-content1").style.display="none";
+        click=0;
+         
+        }  
+          }      
+       
+      
+      })
+
+
+
+          
+        // Prevents menu from closing when clicked inside
+      
+          
+        // Closes the menu in the event of outside click
+        
+
+
+  
+ 
+
+  
+  
+
+
 
      
 function addToCart(product,subTotal){

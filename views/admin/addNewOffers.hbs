@@ -1,6 +1,11 @@
 <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
     <div class="container cl-10 col-sm-8 col-md-6 col-lg-5 pt-0 mt-4 mb-4">
         <div class="row pb-2 p-5" style="background-color: #eeeeee; border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187);">
+            <div class="d-flex  pb-3">
+
+                <a href="/admin/viewAllOffers" class="btn btn-primary text-white me-3" style="background-color: blue; border: none;" ><i class="fal fa-angle-left me-2"></i>Category offers</a>
+
+            </div>
             <form class="pt-0" id="catOffer" action="/admin/addNewCatOffer" method="POST">
                 <h3 class="text-center loginTitle mb-4">Add new category offer</h3>
                 {{#if sameOfferErr}}
@@ -29,7 +34,7 @@
                     <div class="col-6">
 
                         <label for="startingDate">Starting date</label>
-                        <input type="date" id="startingDate" name="startingDate" style="padding: 6px; border-radius: 4px; border: 1px solid #ced4da; width:100%">
+                        <input type="date" id="startingDate" name="startingDate" onchange="hai()" style="padding: 6px; border-radius: 4px; border: 1px solid #ced4da; width:100%">
                         
                     </div>
 

@@ -1,7 +1,14 @@
+<style>
+.swal2-popup {
+
+  font-size: 1.4rem;
+    
+}
+</style>
 <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="/stylesheets/userlogin.css">
-    <main class="main">
-        <div class="intro-slider-container mb-3 mb-lg-5">
+    <main class="main mt-5 pt-4">
+        <div class="intro-slider-container mb-3 mb-lg-5" style="height: 350px !important;">
           <div
             class="
               intro-slider
@@ -9,6 +16,7 @@
             "
             data-toggle="owl"
             data-owl-options='{"nav":false, "dots": false, "loop": false}'
+            
           >
           {{#each bannerResponse}}
             {{#if this.mainbanner}}
@@ -16,10 +24,11 @@
               class="intro-slide"
               style="
                 background-image: url(/images/bannersKart/{{mainbanner.bannerPosition}}.webp);
+                height: 350px !important;
               "
             >
-              <div class="container intro-content text-center">
-                {{!-- <h3 class="intro-subtitle text-dark">{{mainbanner.bannreHeading}}</h3> --}}
+              <div class="container intro-content text-start">
+                
                 <!-- End .h3 intro-subtitle -->
                 <h1 class="intro-title text-white">{{mainbanner.bannreHeading}} <br>{{mainbanner.whererToNavigate}}</h1>
                 <!-- End .intro-title -->
@@ -46,6 +55,125 @@
           <span class="slider-loader text-white"></span
           ><!-- End .slider-loader -->
         </div>
+                <div class="bg-lighter pt-5 pb-5 mb-5">
+          <div class="container">
+            <div class="heading text-center mb-4">
+              <h2 class="title">Recent Arrivals</h2>
+              <!-- End .title -->
+              <p class="title-desc">Aliquam tincidunt mauris eurisus</p>
+              <!-- End .title-desc -->
+            </div>
+            <!-- End .heading -->
+            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                        data-owl-options='{
+                            "nav": false, 
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": {
+                                    "items":1
+                                },
+                                "480": {
+                                    "items":2
+                                },
+                                "768": {
+                                    "items":3
+                                },
+                                "992": {
+                                    "items":4
+                                },
+                                "1200": {
+                                    "items":4,
+                                    "nav": true,
+                                    "dots": false
+                                }
+                            }
+                        }'>
+                        {{#each products}}
+                        <div class="product product-7 text-center" style="background-color: #f9f9fa; border-radius:2px; box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
+                            <figure class="product-media">
+
+                                  {{#if this.productVarients.oldProPrice}}
+                                  <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">Special Offer</span>
+                                  {{else}}
+                                  {{#if this.productVarients.oldCatPrice}}
+                                  <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New Offer</span>
+                                  {{/if}}
+                                {{/if}}
+                                <a href="/productDetails?productVerientId={{this.productVarients._id}}">
+                                    <img src="http://18.216.136.74/images/product/productvarients/{{this.productVarients._id}}_1.png" alt="Product image" class="product-image">
+                                </a>
+                                <div class="product-action-vertical">
+                                   
+                                      <a  onclick="addToWishlist('{{this.productVarients._id}}')" class="btn-product-icon btn-wishlist btn-expandable"><span style="background-color: blue !important;">Add to wishlist</span></a>
+
+
+                                   
+                                    {{!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
+                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> --}}
+                                </div><!-- End .product-action-vertical -->
+                             
+
+                                <div class="product-action">
+                                  {{#if ../currentUser}}
+                                  
+                                  <a  onclick="addToCart('{{this.productVarients._id}}','{{this.productVarients.mrp}}')" class="btn-product"><span>add to cart</span></a>
+                                 
+                                  {{else}}
+                                  <a href="/userLogin" class="btn-product"><span>add to cart</span></a>
+                                  {{/if}}
+                                  
+                                  
+                                </div><!-- End .product-action -->
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body" style="background-color: #f9f9fa; ">
+                                <div class="product-cat">
+                                    <a href="#">{{this.brand}}</a>
+                                </div><!-- End .product-cat -->
+                                <div class="product-cat">
+                                    <a href="#">{{this.productName}}</a>
+                                </div>
+                                <h3 class="product-title"><a href="product.html">{{this.category}}</a></h3><!-- End .product-title -->
+                               
+                                  {{#if this.productVarients.oldProPrice}}
+                                  <div class="product-price" style="color: blue;">
+                                      ₹{{this.productVarients.mrp}}
+                                  </div>
+                                  <div class="product-price" style="color: blue;">
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.productVarients.oldProPrice}}</s>
+                                  </div><!-- End .product-price -->
+
+                                  {{else}}
+                                  {{#if this.productVarients.oldCatPrice}}
+                                  <div class="product-price" style="color: blue;">
+                                      ₹{{this.productVarients.mrp}}
+                                  </div>
+                                  <div class="product-price" style="color: blue;">
+                                      <s style="text-decoration-thickness: 2px;">₹{{this.productVarients.oldCatPrice}}</s>
+                                  </div><!-- End .product-price -->
+                                  {{else}}
+                                  <div class="product-price" style="color: blue;">
+                                      ₹{{this.productVarients.mrp}}
+                                  </div>
+                                  {{/if}}
+                                  {{/if}}
+                             
+            
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                        {{/each}}
+                     
+                    </div>
+            
+
+          
+            <!-- End .owl-carousel -->
+          </div>
+          <!-- End .container -->
+        </div>
+        <!-- End .bg-lighter pt-5 pb-5 -->
         <!-- End .intro-slider-container -->
 
         <div class="container">
@@ -178,125 +306,7 @@
         </div>
         <!-- End .container -->
 
-        <div class="bg-lighter pt-5 pb-5 mb-5">
-          <div class="container">
-            <div class="heading text-center mb-4">
-              <h2 class="title">Recent Arrivals</h2>
-              <!-- End .title -->
-              <p class="title-desc">Aliquam tincidunt mauris eurisus</p>
-              <!-- End .title-desc -->
-            </div>
-            <!-- End .heading -->
-            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
-                        data-owl-options='{
-                            "nav": false, 
-                            "dots": true,
-                            "margin": 20,
-                            "loop": false,
-                            "responsive": {
-                                "0": {
-                                    "items":1
-                                },
-                                "480": {
-                                    "items":2
-                                },
-                                "768": {
-                                    "items":3
-                                },
-                                "992": {
-                                    "items":4
-                                },
-                                "1200": {
-                                    "items":4,
-                                    "nav": true,
-                                    "dots": false
-                                }
-                            }
-                        }'>
-                        {{#each products}}
-                        <div class="product product-7 text-center" style="background-color: #f9f9fa; border-radius:2px; box-shadow:  0px 0px 19px 3px  rgb(220, 220, 220)">
-                            <figure class="product-media">
 
-                                  {{#if this.productVarients.oldProPrice}}
-                                  <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">Special Offer</span>
-                                  {{else}}
-                                  {{#if this.productVarients.oldCatPrice}}
-                                  <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New Offer</span>
-                                  {{/if}}
-                                {{/if}}
-                                <a href="/productDetails?productVerientId={{this.productVarients._id}}">
-                                    <img src="/images/product/productvarients/{{this.productVarients._id}}_1.png" alt="Product image" class="product-image">
-                                </a>
-                                <div class="product-action-vertical">
-                                   
-                                      <a  onclick="addToWishlist('{{this.productVarients._id}}')" class="btn-product-icon btn-wishlist btn-expandable"><span style="background-color: blue !important;">Add to wishlist</span></a>
-
-
-                                   
-                                    {{!-- <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> --}}
-                                </div><!-- End .product-action-vertical -->
-                             
-
-                                <div class="product-action">
-                                  {{#if ../currentUser}}
-                                  
-                                  <a  onclick="addToCart('{{this.productVarients._id}}','{{this.productVarients.mrp}}')" class="btn-product"><span>add to cart</span></a>
-                                 
-                                  {{else}}
-                                  <a href="/userLogin" class="btn-product"><span>add to cart</span></a>
-                                  {{/if}}
-                                  
-                                  
-                                </div><!-- End .product-action -->
-                            </figure><!-- End .product-media -->
-
-                            <div class="product-body" style="background-color: #f9f9fa; ">
-                                <div class="product-cat">
-                                    <a href="#">{{this.brand}}</a>
-                                </div><!-- End .product-cat -->
-                                <div class="product-cat">
-                                    <a href="#">{{this.productName}}</a>
-                                </div>
-                                <h3 class="product-title"><a href="product.html">{{this.category}}</a></h3><!-- End .product-title -->
-                               
-                                  {{#if this.productVarients.oldProPrice}}
-                                  <div class="product-price" style="color: blue;">
-                                      ₹{{this.productVarients.mrp}}
-                                  </div>
-                                  <div class="product-price" style="color: blue;">
-                                      <s style="text-decoration-thickness: 2px;">₹{{this.productVarients.oldProPrice}}</s>
-                                  </div><!-- End .product-price -->
-
-                                  {{else}}
-                                  {{#if this.productVarients.oldCatPrice}}
-                                  <div class="product-price" style="color: blue;">
-                                      ₹{{this.productVarients.mrp}}
-                                  </div>
-                                  <div class="product-price" style="color: blue;">
-                                      <s style="text-decoration-thickness: 2px;">₹{{this.productVarients.oldCatPrice}}</s>
-                                  </div><!-- End .product-price -->
-                                  {{else}}
-                                  <div class="product-price" style="color: blue;">
-                                      ₹{{this.productVarients.mrp}}
-                                  </div>
-                                  {{/if}}
-                                  {{/if}}
-                             
-            
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-                        {{/each}}
-                     
-                    </div>
-            
-
-          
-            <!-- End .owl-carousel -->
-          </div>
-          <!-- End .container -->
-        </div>
-        <!-- End .bg-lighter pt-5 pb-5 -->
 
         <!-- End .container -->
       </main>
@@ -304,7 +314,7 @@
 
       
       
-    </div>
+  
     <!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top">
       <i class="icon-arrow-up btn-round"></i>

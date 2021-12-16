@@ -48,9 +48,9 @@
     display: block;
   }
   
-  .dropdown-content a:hover {background-color: #ddd;}
+  .dropdown-content a:focus {background-color: #ddd;}
   
-  .dropdown:hover .dropdown-content {display: block;}
+  .dropdown1:focus .dropdown-content {display: block;}
   
   /* .dropdown:hover .dropbtn {background-color: #3e8e41;} */
 
@@ -70,28 +70,7 @@
     color: rgb(3, 3, 156);
 }
 
-.Pcolors label{
-    height: 30px;
-    width: 30px;
-    position: relative !important;
-    display: inline-block !important;
-    border-radius: 50%;
-    cursor: pointer;
-}
 
-.Psizes label{
-    height: 50px;
-    width: 50px;
-    position: relative !important;
-    display: inline-block !important;
-    border-radius: 50%;
-    border: 2px solid rgb(3, 3, 169) ;
-    cursor: pointer;
-    line-height: 46px;
-}
-.Psizes label:hover{
-    color: rgb(3, 3, 169);
-}
 .sizes{
     font-weight: 400;
 }

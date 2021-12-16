@@ -1,6 +1,11 @@
 <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
     <div class="container cl-10 col-sm-8 col-md-6 col-lg-5 pb-4 mt-4">
         <div class="row pb-2 p-5" style="background-color: #eeeeee; border-radius: 6px;  box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187)">
+            <div class="d-flex  pb-3">
+
+                <a href="/admin/viewAllProductOffers" class="btn btn-primary text-white me-3" style="background-color: blue; border: none;" ><i class="fal fa-angle-left me-2"></i>Product offers</a>
+
+            </div>
             {{#if result}}
             <form class="pt-0" id="catOffer" action="/admin/updateProductOffer?offerId={{result._id}}" method="POST">
                 <h3 class="text-center loginTitle">Edit product offer</h3>

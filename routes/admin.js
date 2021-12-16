@@ -525,18 +525,18 @@ router.post('/addNewProduct',adminLoginVerify,(req,res)=>{
       let prImg3 = req.files.image3;
       let prImg4 = req.files.image4;
 
-      prImg1.mv('./public/images/product/productvarients/'+prId+'_1'+'.png',(err,done)=>{
+      prImg1.mv('public/images/product/productvarients/'+prId+'_1'+'.jpg',(err,done)=>{
         if(!err){
 
-          prImg2.mv('./public/images/product/productvarients/'+prId+'_2'+'.png',(err,done)=>{
+          prImg2.mv('public/images/product/productvarients/'+prId+'_2'+'.jpg',(err,done)=>{
 
             if(!err){
 
-              prImg3.mv('./public/images/product/productvarients/'+prId+'_3'+'.png',(err,done)=>{
+              prImg3.mv('public/images/product/productvarients/'+prId+'_3'+'.jpg',(err,done)=>{
 
                 if(!err){
 
-                  prImg4.mv('./public/images/product/productvarients/'+prId+'_4'+'.png',(err,done)=>{
+                  prImg4.mv('public/images/product/productvarients/'+prId+'_4'+'.jpg',(err,done)=>{
 
                     if(!err){
 

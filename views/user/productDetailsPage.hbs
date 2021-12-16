@@ -72,7 +72,7 @@ font-size: 1.6rem;
                                 <div class="product-gallery product-gallery-vertical">
                                     <div class="row">
                                         <figure class="product-main-image">
-                                            <img id="product-zoom" src="/images/product/productvarients/{{this._id}}_1.png" data-zoom-image="/images/product/productvarients/{{this._id}}_1.png" alt="product image">
+                                            <img id="product-zoom" src="http://18.216.136.74/images/product/productvarients/{{this._id}}_1.jpg" data-zoom-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_1.jpg" alt="product image">
 
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                                 <i class="icon-arrows"></i>
@@ -80,20 +80,20 @@ font-size: 1.6rem;
                                         </figure><!-- End .product-main-image -->
 
                                         <div id="product-zoom-gallery" class="product-image-gallery">
-                                            <a class="product-gallery-item active" href="#" data-image="/images/product/productvarients/{{this._id}}_1.png" data-zoom-image="/images/product/productvarients/{{this._id}}_1.png">
-                                                <img src="/images/product/productvarients/{{this._id}}_1.png" alt="product side">
+                                            <a class="product-gallery-item active" href="#" data-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_1.jpg" data-zoom-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_1.jpg">
+                                                <img src="http://18.216.136.74/images/product/productvarients/{{this._id}}_1.jpg" alt="product side">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/images/product/productvarients/{{this._id}}_2.png" data-zoom-image="/images/product/productvarients/{{this._id}}_2.png">
-                                                <img src="/images/product/productvarients/{{this._id}}_2.png" alt="product cross">
+                                            <a class="product-gallery-item" href="#" data-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_2.jpg" data-zoom-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_2.jpg">
+                                                <img src="http://18.216.136.74/images/product/productvarients/{{this._id}}_2.jpg" alt="product cross">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/images/product/productvarients/{{this._id}}_3.png" data-zoom-image="/images/product/productvarients/{{this._id}}_3.png">
-                                                <img src="/images/product/productvarients/{{this._id}}_3.png" alt="product with model">
+                                            <a class="product-gallery-item" href="#" data-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_3.jpg" data-zoom-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_3.jpg">
+                                                <img src="http://18.216.136.74/images/product/productvarients/{{this._id}}_3.jpg" alt="product with model">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/images/product/productvarients/{{this._id}}_4.png" data-zoom-image="/images/product/productvarients/{{this._id}}_4.png">
-                                                <img src="/images/product/productvarients/{{this._id}}_4.png" alt="product back">
+                                            <a class="product-gallery-item" href="#" data-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_4.jpg" data-zoom-image="http://18.216.136.74/images/product/productvarients/{{this._id}}_4.jpg">
+                                                <img src="http://18.216.136.74/images/product/productvarients/{{this._id}}_4.jpg" alt="product back">
                                             </a>
                                         </div><!-- End .product-image-gallery -->
                                     </div><!-- End .row -->
@@ -136,81 +136,17 @@ font-size: 1.6rem;
                                     {{/if}}
                                     <p class="text-success">All tax is included</p>
 
-                                    {{!-- <div class="product-content">
-                                        <p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero, faucibus adipiscing. Sed lectus. </p>
-                                    </div><!-- End .product-content --> --}}
-
-                                    {{!-- <div class="details-filter-row details-row-size">
-                                        <label>Color:</label>
-
-                                        <div class="product-nav product-nav-thumbs">
-                                            <a href="#" class="active">
-                                                <img src="assets/images/products/single/1-thumb.jpg" alt="product desc">
-                                            </a>
-                                            <a href="#">
-                                                <img src="assets/images/products/single/2-thumb.jpg" alt="product desc">
-                                            </a>
-                                        </div><!-- End .product-nav -->
-                                    </div><!-- End .details-filter-row --> --}}
-                                    {{!-- color selection --}}
-                                    {{!-- <div class=" details-row-size mt-2 Pcolors">
-                                        <h6>Colors</h6>
-                                         <label class="label_colorselector1" style="background-color: blue;" for="colorselector1">
-                                             <input class="colorselector1" id="colorselector1" name="colorselector" hidden type="radio" value="blue">
-                                        </label>
-                                        <label class="label_colorselector2" style="background-color: green;" for="colorselector2"  >
-                                             <input class="colorselector2" id="colorselector2" name="colorselector" hidden type="radio" value="green">
-                                        </label>
-                                        <label class="label_colorselector3" style="background-color: yellow;" for="colorselector3">
-                                             <input class="colorselector3" id="colorselector3" name="colorselector" hidden type="radio" value="yellow">
-                                        </label>
-                                    </div> --}}
-                                    {{!-- end of color selection --}}
-                                    {{!-- size selection --}}
+               
                                     <div class=" details-row-size mt-2 Psizes">
                                         <h6>Sizes</h6>
                                          <label class="label_sizeselector1 text-center"  for="sizeselector1">
                                              <input class="sizeselector1" id="sizeselector1" name="sizeselector" hidden type="radio" value="small">
                                              <span class="fs-1 sizes">{{this.size}}</span>
                                         </label>
-                                        {{!-- <label class="label_colorselector2 text-center"  for="sizeselector2">
-                                            
-                                            <input class="sizeselector2" id="sizeselector2" name="sizeselector" hidden type="radio" value="medium">
-                                            <span class="fs-1 sizes">M</span>
-                                        </label>
-                                        <label class="label_sizeselector3 text-center"  for="sizeselector3">
-                                             <input class="sizeselector3" id="colorselector3" name="sizeselector" hidden type="radio" value="larg">
-                                             <span class="fs-1 sizes">L</span>
-                                        </label> --}}
+                                        
                                     </div>
                                     
-                                    {{!-- end of size selection --}}
-                                    {{!-- <div class="details-filter-row details-row-size">
-                                        <label for="size">Size:</label>
-                                        <div class="select-custom">
-                                            <select name="size" id="size" class="form-control">
-                                                <option value="#" selected="selected">Select a size</option>
-                                                <option value="s">Small</option>
-                                                <option value="m">Medium</option>
-                                                <option value="l">Large</option>
-                                                <option value="xl">Extra Large</option>
-                                            </select>
-                                        </div><!-- End .select-custom -->
-
-                                        <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
-                                    </div><!-- End .details-filter-row --> --}}
-
-                                    {{!-- <div class="details-filter-row details-row-size mt-3 mb-3">
-                                        <label for="qty"> <h6 class="pt-1">Qty</h6></label>
-                                        <div class="product-details-quantity" >
-                                            <input type="number" id="qty" class="Pquatity"  value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                        </div><!-- End .product-details-quantity -->
-                                    </div><!-- End .details-filter-row --> --}}
-                                     {{!-- <div class="cart-product-quantity ms-0 pt-3" style="margin-top:-14px"> --}}
-                                       
-                                        {{!-- <input type="number" class="cartCount" style="border-radius: 2px !important ; height:200px; padding:5px !important;"  value="{{this.quantity}}" min="0" max="10" step="1" data-decimals="0" required> --}}
-                                        
-                                    {{!-- </div> --}}
+        
 
 
                                     <div class="product-details-action">
@@ -325,21 +261,11 @@ font-size: 1.6rem;
                                     </div>
                                         
 
-                                        {{!-- <div class="details-action-wrapper">
-                                            <a href="#" class="btn-product btn-wishlist" title="Wishlist"></a> --}}
-                                            {{!-- <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to Compare</span></a> --}}
-                                        {{!-- </div> --}}
-                                        <!-- End .details-action-wrapper -->
+                                       
                                     </div><!-- End .product-details-action -->
 
                                     <div class="product-details-footer">
-                                        {{!-- <div class="product-cat">
-                                            <span>Category:</span>
-                                            <a href="#">Women</a>,
-                                            <a href="#">Dresses</a>,
-                                            <a href="#">Yellow</a>
-                                        </div><!-- End .product-cat --> --}}
-                                    {{!-- product info section --}}
+                                       
                                     <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
                                         <div class="product-desc-content">
                                             <h3>Product Information</h3>
@@ -353,16 +279,7 @@ font-size: 1.6rem;
                                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
                                         </div><!-- End .product-desc-content -->
                                     </div><!-- .End .tab-pane -->
-                                {{!-- product review section --}}
-                              
-
-                                        {{!-- <div class="social-icons social-icons-sm">
-                                            <span class="social-label">Share:</span>
-                                            <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                                            <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                                            <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                                            <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-                                        </div> --}}
+         
                                     </div><!-- End .product-details-footer -->
                                 </div><!-- End .product-details -->
                             </div><!-- End .col-md-6 -->
@@ -404,7 +321,7 @@ font-size: 1.6rem;
                             <figure class="product-media">
                                 <span class="product-label label-new" style="background-color: red !important; border-radius: 2px;">New</span>
                                 <a href="/productDetails?productVerientId={{this.productvarient._id}}">
-                                    <img src="/images/product/productvarients/{{this.productvarient._id}}_1.png" alt="Product image" class="product-image">
+                                    <img src="http://18.216.136.74/images/product/productvarients/{{this.productvarient._id}}_1.jpg" alt="Product image" class="product-image">
                                 </a>
 
                                 <div class="product-action-vertical">
@@ -426,25 +343,7 @@ font-size: 1.6rem;
                                 <div class="product-price">
                                     ₹{{this.productvarient.mrp}}
                                 </div><!-- End .product-price -->
-                                {{!-- <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container --> --}}
-
-                                {{!-- <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
-                                        <img src="assets/images/products/product-4-thumb.jpg" alt="product desc">
-                                    </a>
-                                    <a href="#">
-                                        <img src="assets/images/products/product-4-2-thumb.jpg" alt="product desc">
-                                    </a>
-
-                                    <a href="#">
-                                        <img src="assets/images/products/product-4-3-thumb.jpg" alt="product desc">
-                                    </a>
-                                </div><!-- End .product-nav --> --}}
+                              
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
                         {{/each}}

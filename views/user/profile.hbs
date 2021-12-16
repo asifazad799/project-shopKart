@@ -1,8 +1,13 @@
 <link rel="stylesheet" href="/stylesheets/userProfile.css">
 {{!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/3.6.95/css/materialdesignicons.css">
-<div class="page-content page-container " id="page-content">
-    <div class="padding d-flex justify-content-center">
+<style>
+.swal2-popup {
+font-size: 1.6rem;
+}
+</style>
+<div class="page-content page-container mt-5 pt-5" id="page-content">
+    <div class="padding d-flex justify-content-center mt-3">
         <div class="row container d-flex justify-content-center">
             <div class="col-xl-9 col-md-12">
                 
@@ -12,12 +17,23 @@
                         <div class="col-sm-4 bg-c-lite-green user-profile d-flex justify-content-center">
                             <div class="card-block text-center text-white">
                                 <div style="display: flex; flex-direction: column; ">
+                                    {{#if proUpdated}}
+                                        <p id="proUpdated"></p>
+                                    {{/if}}
+                                    {{#if noProPic}}
 
-                                    <div class="m-b-25"> <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image"> </div>
+                                        <img class="ms-auto me-auto mb-3 "  src="../images/abstract-user-flat-1.svg" alt="" style="border-radius: 50%; object-fit: cover;height: 90px; width: 90px; background-color: white;" id="proImageView">
+
+                                    {{/if}}
+                                    {{#if ProPic}}
+
+                                    <img class="ms-auto me-auto mb-3 image"  src="../images/userProfile/{{user1._id}}.jpg" alt="" style="border-radius: 50%; object-fit: cover;height: 90px; width: 90px;" id="proImageView">
+
+                                    {{/if}}
                                     <h6 class="f-w-600 text-white">{{user1.first_name}} <span>{{user1.lastname}}</span> </h6>
                                     <a href="/changePassword" class="text-white">Change Password</a>
                                     <a href="/myOrders" class="text-white">My Orders</a>
-                                    <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+                                    <a href="/editUserProfile"> <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10" style="font-size: 24px; color: white;"></i> </a> 
                                 </div>
                             </div>
                         </div>
@@ -117,6 +133,29 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    
+    if(document.getElementById('proUpdated')){
+        
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+
+            Toast.fire({
+            icon: 'success',
+            title: 'profile updated successfully'
+            })
+
+
+    }
+
     if(document.getElementById('Added')){
 
         Swal.fire({

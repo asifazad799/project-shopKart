@@ -2,6 +2,9 @@ $('#catOffer').validate({
 
     rules:{
         
+        product:{
+            required:true
+        },
         category:{
             required:true
         },
@@ -17,7 +20,8 @@ $('#catOffer').validate({
         offer:{
             required:true,
             digits:true,
-            max:100
+            max:85,
+            min:5
         }
 
     },

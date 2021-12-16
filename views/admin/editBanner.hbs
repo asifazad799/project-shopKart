@@ -4,7 +4,7 @@
         <div class="container cl-10 col-sm-8 col-md-6 col-lg-10 pt-0 mt-4">
             <div class="row pb-2 p-5" style="background-color:  #eeeeee; border-radius: 6px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187);">
                 {{#each banner}}
-                <form class="pt-0" enctype="multipart/form-data" id="banner" action="/admin/updateBanner?bannerId={{this._id}}" method="POST">
+                <form class="pt-0" enctype="multipart/form-data" id="banner" action="/admin/updateBanner?bannerId={{this._id}}&&bannerPosition={{this.bannerPosition}}" method="POST">
                 
                     <h3 class="text-center loginTitle mb-4">Edit banner : <span style="color: black; font-size: 25px ; ">{{this.bannerPosition}}</span></h3>
                     {{#if bannerExixst}}
@@ -81,7 +81,7 @@
                                         id="bannerCrop">Crop</button>
                                 </div>
 
-                                <img src="../images/bannersKart/{{this.bannerPosition}}.png" alt="" style="width: 100px; height: auto;" id="bannerImageView">
+                                <img src="../images/bannersKart/{{this.bannerPosition}}.webp" alt="" style="width: 100px; height: auto;" id="bannerImageView">
                                 {{!-- <div id="preview1"></div> --}}
                                 <input type="file" name="bannerImage" id="fileBanner"  style="padding-top: 5.7px;" class="form-control"
                                     onchange="return bannerValidation()">

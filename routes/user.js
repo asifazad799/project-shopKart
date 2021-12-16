@@ -4,10 +4,21 @@ const { response } = require('../app');
 const adminHelper = require('../helpers/admin-helper');
 var userHelper = require('../helpers/user-helper')
 var router = express.Router();
-var paypal = require('paypal-rest-sdk')
+const fs = require("fs");
+var paypal = require('paypal-rest-sdk');
+const collection = require('../config/collection');
+require('dotenv').config();
 
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': process.env.client_id,
+  'client_secret': process.env.client_secret
+});
 
-
+const accountSid = process.env.accountSid;
+const authToken = process.env.authToken ;
+const serviceId = process.env.serviceId;
+const client = require("twilio")(accountSid, authToken);
 
 
 let verifyLogin =(req,res,next)=>{
@@ -125,8 +136,6 @@ router.get('/userLogin', function(req, res, next) {
     
   }else{
 
-         
-
     res.render('user/userloginpage',{loginERR,userCartCount,whishListCount});
 
     loginERR = false;
@@ -136,6 +145,109 @@ router.get('/userLogin', function(req, res, next) {
   
   
 });
+
+//profile picture
+let imageDeleted = false;
+router.get('/editUserProfile',whishListCount,verifyLogin,async(req,res)=>{
+  
+  let whishListCount = req.whishlistCount;
+ 
+  let userCartCount = await userHelper.getCartCount(req.session.user._id)
+  let user1 = await userHelper.getUser(req.session.user._id);
+  let path  = "./public/images/userProfile/"+req.session.user._id+".jpg";
+  let noProPic = false;
+  let ProPic = false;
+
+  if(fs.existsSync(path)){
+    
+    ProPic = true
+    noProPic = false
+    
+  }else{
+    
+    ProPic = false
+    noProPic = true
+
+  }
+
+  res.render('user/editUserProfile',{user1,imageDeleted,noProPic,currentUser:req.session.user,ProPic,whishListCount,userCartCount})
+  imageDeleted = false;
+
+})
+
+router.get('/deleteProPic',(req,res)=>{
+  
+  fs.unlink('./public/images/userProfile/'+req.session.user._id+'.jpg',(err,done)=>{
+    
+    if(!err){
+
+      imageDeleted = true
+      res.redirect('/editUserProfile')
+
+    }else{
+
+      console.log('proPic not deleted')
+
+    }
+
+  })
+
+})
+
+router.post('/profileEdit',(req,res)=>{
+  
+  console.log(req.body)
+  userHelper.editProfile(req.body,req.session.user._id).then((response)=>{
+    
+    let proImage = req.files?.proImage;
+    
+    // console.log(proImage)
+    if(proImage){
+
+        let path  = "./public/images/userProfile/"+req.session.user._id+".jpg"
+        if(fs.existsSync(path)){
+
+          fs.unlink('./public/images/userProfile/'+req.session.user._id+'.jpg',(err,done)=>{
+
+            if(!err){
+              
+              proImage.mv('./public/images/userProfile/'+req.session.user._id+'.jpg',(err,done)=>{
+                proUpdated = true
+                console.log('image updated');
+                res.redirect('/profileShorcut')
+              })
+      
+            }else{
+              proUpdated = true
+              console.log('image not updated');
+              res.redirect('/editUserProfile')
+            }
+          })
+        }else{
+
+          proImage.mv('./public/images/userProfile/'+req.session.user._id+'.jpg',(err,done)=>{
+            console.log('image updated');
+            proUpdated = true
+            res.redirect('/profileShorcut')
+          })
+
+        }
+      
+    
+    
+      }else{
+
+        proUpdated = true
+        res.redirect('/profileShorcut')
+
+      }
+
+
+    
+
+  })
+
+})
 
 
 /* otp resend */
@@ -264,7 +376,51 @@ router.post('/ResetPassword',verifyLogin,(req,res)=>{
 
 })
   
+router.post('/checkoutEditAddress',(req,res)=>{
+  
+  userHelper.updateAddress(req.session.user._id,req.query.addressId,req.body).then((response)=>{
+    
+    if(response.sameAdressExist){
 
+      chAddressErr = true
+      res.redirect("/checkOut?grandTotal="+req.query.grandTotal+"&&delivery="+req.query.delivery+"&&oldTotal="+req.query.oldTotal+"")
+
+    }else{
+      
+      
+      addressEdited = true
+      res.redirect("/checkOut?grandTotal="+req.query.grandTotal+"&&delivery="+req.query.delivery+"&&oldTotal="+req.query.oldTotal+"")
+      
+      
+
+    }
+
+  })
+
+})
+
+router.post('/dirCheckoutEditAddress',(req,res)=>{
+  
+  userHelper.updateAddress(req.session.user._id,req.query.addressId,req.body).then((response)=>{
+    
+    if(response.sameAdressExist){
+
+      dirchAddressErr = true
+      res.redirect("/dirCheckout?productId="+req.query.productId+"&&deliveryType="+req.query.delivery+"&&quantity="+req.query.quantity+"")
+
+    }else{
+      
+      
+      diraddressEdited = true
+      res.redirect("/dirCheckout?productId="+req.query.productId+"&&deliveryType="+req.query.delivery+"&&quantity="+req.query.quantity+"")
+      
+      
+
+    }
+
+  })
+
+})
 
 
 
@@ -276,6 +432,7 @@ router.post('/loginOtp',(req,res)=>{
   let whishListCount = 0;
   let userCartCount = 0;
   //console.log('sdfghjk')
+ 
 
   userHelper.otpLogin(userMobile).then((response)=>{
 
@@ -306,6 +463,11 @@ router.post('/loginOtp',(req,res)=>{
 
     
       // console.log(userMobile)
+
+  }).catch(()=>{
+    
+    loginERR = "User Blocked"
+    res.redirect('/userLogin')
 
   })
    
@@ -490,6 +652,7 @@ router.get('/signOtpConfirm',(req,res)=>{
 let addressAdded = false;
 let adressUpdated = false;
 let passwordReseted = false;
+let proUpdated = false;
 
 router.get('/profileShorcut',verifyLogin,whishListCount,async(req,res)=>{
   
@@ -497,31 +660,53 @@ router.get('/profileShorcut',verifyLogin,whishListCount,async(req,res)=>{
     let userCartCount = 0;
     userCartCount = await userHelper.getCartCount(req.session.user._id)
     let address1 = await userHelper.getAddress(req.session.user._id)
-    let user1 = await userHelper.getUser(req.session.user._id)
+    let user1 = await userHelper.getUser(req.session.user._id);
+    let path  = "./public/images/userProfile/"+req.session.user._id+".jpg";
+    let noProPic = false;
+    let ProPic = false;
+    if(fs.existsSync(path)){
+    
+      ProPic = true
+      noProPic = false
+      
+    }else{
+      
+      ProPic = false
+      noProPic = true
+  
+    }
+
     // console.log(address1)
-    res.render('user/profile',{userCartCount,currentUser:req.session.user,addressAdded,address1:address1,user1,adressUpdated,passwordReseted,whishListCount})
+    res.render('user/profile',{userCartCount,noProPic,ProPic,currentUser:req.session.user,addressAdded,address1:address1,proUpdated,user1,adressUpdated,passwordReseted,whishListCount})
     addressAdded = false;
     adressUpdated = false;
     passwordReseted = false;
+    proUpdated = false;
   
 
 })
 
 let addressErr = null;
 
-router.get('/addNewAddress',verifyLogin,whishListCount,async(req,res)=>{
 
+router.get('/addNewAddress',verifyLogin,whishListCount,async(req,res)=>{
+  
   let whishListCount = req.whishlistCount;
   let userCartCount = await userHelper.getCartCount(req.session.user._id)
   
-  res.render('user/addNewAddress',{userCartCount,currentUser:req.session.user,addressErr,whishListCount})
-  addressErr = null;
+    
 
+    
+    res.render('user/addNewAddress',{userCartCount,currentUser:req.session.user,addressErr,whishListCount})
+    addressErr = null;
+    
+  
+  
 })
 
 router.post('/addNewAddress',verifyLogin,(req,res)=>{
-
- 
+  
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
   
   userHelper.addNewAddress(req.body,req.session.user._id).then((response)=>{
 
@@ -533,10 +718,67 @@ router.post('/addNewAddress',verifyLogin,(req,res)=>{
     }else{
       
       addressAdded = true;
-      res.redirect('/profileShorcut')
+     
+       
+
+          res.redirect('/profileShorcut');
+       
+      
 
   }
+  })
 })
+
+router.post('/checkoutAddNewAddress',(req,res)=>{
+  
+  // console.log(req.body)
+
+  userHelper.addNewAddress(req.body,req.session.user._id).then((response)=>{
+
+      if(response.sameAdressExist){
+
+        chAddressErr = true
+        res.redirect("/checkOut?grandTotal="+req.query.grandTotal+"&&delivery="+req.query.delivery+"&&oldTotal="+req.query.oldTotal+"")
+
+      }else{
+        
+        
+        noAddress = true
+        res.redirect("/checkOut?grandTotal="+req.query.grandTotal+"&&delivery="+req.query.delivery+"&&oldTotal="+req.query.oldTotal+"")
+        
+        
+
+      }
+  })
+  
+
+
+})
+
+router.post('/dirCheckoutAddNewAddress',(req,res)=>{
+  
+  // console.log(req.body)
+
+  userHelper.addNewAddress(req.body,req.session.user._id).then((response)=>{
+
+      if(response.sameAdressExist){
+
+        dirchAddressErr = true
+        res.redirect("/dirCheckout?productId="+req.query.productId+"&&deliveryType="+req.query.delivery+"&&quantity="+req.query.quantity+"")
+
+      }else{
+        
+        
+        dirnoAddress = true
+        res.redirect("/dirCheckout?productId="+req.query.productId+"&&deliveryType="+req.query.delivery+"&&quantity="+req.query.quantity+"")
+        
+        
+
+      }
+  })
+  
+
+
 })
 
       
@@ -670,7 +912,9 @@ router.get('/cart',verifyLogin,whishListCount,async(req,res)=>{
 
  
 })
-
+let chAddressErr = false;
+let noAddress = false;
+let addressEdited = false;
 router.get('/checkOut',verifyLogin,whishListCount,async(req,res)=>{
 
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -679,7 +923,12 @@ router.get('/checkOut',verifyLogin,whishListCount,async(req,res)=>{
   let data = req.query 
   let address = await userHelper.getAddress(req.session.user._id)
 
-  //console.log(address)
+  if(address.address==""){
+
+    address = false
+
+  }
+
   let delCharge = 0;
   if(data.delivery=='express'){
 
@@ -694,7 +943,10 @@ router.get('/checkOut',verifyLogin,whishListCount,async(req,res)=>{
   let userId = req.session.user._id
   userHelper.getCartItems(userId).then((response)=>{
 
-    res.render('user/checkout',{data,address,delCharge,response,userCartCount,currentUser:req.session.user,whishListCount})
+    res.render('user/checkout',{data,address,delCharge,response,addressEdited,userCartCount,currentUser:req.session.user,whishListCount,chAddressErr,noAddress})
+    chAddressErr = false
+    noAddress = false
+    addressEdited = false
 
   })
 
@@ -713,12 +965,25 @@ router.post('/directBuy',(req,res)=>{
 
 })
 
+
+let dirchAddressErr = false;
+let diraddressEdited = false;
+let dirnoAddress = false;
+
+
+
 router.get('/dirCheckout',verifyLogin,whishListCount,async(req,res)=>{
 
   let userCartCount = await userHelper.getCartCount(req.session.user._id)
   let whishListCount = req.whishlistCount;
   let address = await userHelper.getAddress(req.session.user._id)
  //console.log(req.query)
+ if(address.address==""){
+
+  address = false
+
+}
+
    
   let delCharge = 0;
   if(req.query.deliveryType=='express'){
@@ -743,7 +1008,10 @@ router.get('/dirCheckout',verifyLogin,whishListCount,async(req,res)=>{
   }
 
   console.log(response)
-  res.render('user/directCheckout',{whishListCount,response,data,userCartCount,oldTotal,quantity,delCharge,currentUser:req.session.user,address})
+  res.render('user/directCheckout',{whishListCount,address,dirnoAddress,diraddressEdited,dirchAddressErr,response,data,userCartCount,oldTotal,quantity,delCharge,productId:req.query.productId,currentUser:req.session.user,address})
+  dirchAddressErr = false;
+  diraddressEdited = false;
+  dirnoAddress = false
 
 })
 
@@ -929,6 +1197,10 @@ router.post('/placeOrder',verifyLogin,async(req,res)=>{
   
       })
   
+    }).catch(()=>{
+      
+      res.json({noPro:true})
+
     })
 
     
@@ -1260,10 +1532,23 @@ router.get('/myOrders',verifyLogin,whishListCount,async(req,res)=>{
   let whishListCount = req.whishlistCount
   userCartCount = await userHelper.getCartCount(req.session.user._id)
   userHelper.getMyOrers(req.session.user._id).then((response)=>{
+  let path  = "./public/images/userProfile/"+req.session.user._id+".jpg";
+  let noProPic = false;
+  let ProPic = false;
+  if(fs.existsSync(path)){
+  
+    ProPic = true
+    noProPic = false
     
+  }else{
+    
+    ProPic = false
+    noProPic = true
+
+  }
     // console.log(response)
     
-    res.render('user/myOrders',{response,userCartCount,currentUser:req.session.user,whishListCount})
+    res.render('user/myOrders',{response,noProPic,ProPic,userCartCount,currentUser:req.session.user,whishListCount})
 
   })
   
@@ -1300,7 +1585,7 @@ router.get('/catProducts',whishListCount,async(req,res)=>{
   let noData = false;
   let product = null;
   let catArray = null;
-  
+  let noPro = null;
 if(subCategory&&category){
 
     //console.log(subCategory)
@@ -1328,13 +1613,32 @@ if(subCategory&&category){
     catArray = result.categoryData;
     product = result.products;
     
+  }).catch(()=>{
+
+    noPro = true
+  
   })
+
+}
+let cat = null 
+if(category == "men"){
+
+  cat = "Men"
+
+}else if(category == "women"){
+
+  cat = "Women"
+  
+}else if(category == "kids"){
+  
+  cat = "Kids"
 
 }
 
 
+
   //console.log(category)
-  res.render('user/catProductPage',{whishListCount,userCartCount,catArray,product,category,noData,currentUser:req.session.user})
+  res.render('user/catProductPage',{whishListCount,userCartCount,catArray,cat,noPro,product,category,noData,currentUser:req.session.user})
   
   
 })

@@ -18,7 +18,7 @@ $("#addProduct").validate({
       },
       sizes:{
         required:true,
-        digits:true
+        
       },
       color:{
         required:true

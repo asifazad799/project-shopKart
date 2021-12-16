@@ -6,12 +6,15 @@ var logger = require('morgan');
 
 var db = require("./config/connection");
 
+
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 var hbs=require('express-handlebars');
 var app = express();
 var session = require('express-session');
 var fileUpload = require('express-fileupload');
+
+require('dotenv').config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

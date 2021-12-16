@@ -8,6 +8,7 @@ const { ObjectId } = require("bson");
 const { PRODUCTS } = require("../config/collection");
 const Razorpay = require('razorpay');
 const { get } = require("http");
+const { resolve } = require("path");
 var instance = new Razorpay({
     key_id: 'rzp_test_17oewiAfnFqdfq',
     key_secret: 'SzzvQxAz29SV4KHsHz4M2pOH',
@@ -64,30 +65,38 @@ module.exports = {
 
         let user = await db.get().collection(collection.USER_COLLECTION).findOne({email:userData.email});
         console.log(userData)
-        if(user.blocked){
+        
+        
 
-          resolve({status:false,msg:"User Blocked"});
           
-        }else{
+          
+       
 
           if(user){
+
+            if(user.blocked){
+
+              resolve({status:false,msg:"User Blocked"});
+            }else{
+
+              bcrypt.compare(userData.password,user.password).then((status)=>{
+                if(status){
+                  console.log('logged in');
+                  response.user=user;
+                  response.status=true;
+                  resolve(response)
+                }else{
+                  console.log('Not logged in');
+                  resolve({status:false,msg:"Wrong password"});
+                }
+              })
+            }
   
-            bcrypt.compare(userData.password,user.password).then((status)=>{
-              if(status){
-                console.log('logged in');
-                response.user=user;
-                response.status=true;
-                resolve(response)
-              }else{
-                console.log('Not logged in');
-                resolve({status:false,msg:"Wrong password"});
-              }
-            })
           }else{
             console.log('user not found');
             resolve({status:false,msg:"User not found"});
           }
-        }
+       
       })
     },
     changePasswordUserVerification:(userMobile,userId)=>{
@@ -127,6 +136,22 @@ module.exports = {
 
     },
 
+    editProfile:(data,userId)=>{
+
+      return new Promise(async(resolve,reject)=>{
+        
+        await db.get().collection(collection.USER_COLLECTION)
+        .updateOne({_id:objectId(userId)},{$set:{email:data.email,first_name:data.first_name,lastname:data.lastname}})
+        .then((response)=>{
+
+          resolve()
+
+        })
+
+      })
+
+    },
+
     otpLogin:(phoneNumber)=>{
 
       // console.log(phoneNumber)
@@ -136,10 +161,18 @@ module.exports = {
           let user = await db.get().collection(collection.USER_COLLECTION).findOne({mobile:phoneNumber})
 
 
-            // console.log(user)
-            if(user){
+            //console.log(user)
 
-              resolve({userFound:true,user})
+            if(user){
+                if(user.blocked){
+
+                  reject()
+
+                }else{
+                  
+                  resolve({userFound:true,user})
+
+                }
 
             }else{
 
@@ -655,51 +688,61 @@ module.exports = {
             ]).toArray()
 
             console.log(cartItem[0])
-            console.log('asif address')
+            //console.log('asif address')
 
-
-            let address = await db.get().collection(collection.ADDRESS)
-            .aggregate([
-              {$match: {'address.addressId': objectId(orderData.address)}},
-              {
-                $project: {
-                  _id:0,
-                  address: {$filter: {
-
-                    input: '$address',
-                    as: 'address',
-                    cond: {$eq: ['$$address.addressId', objectId(orderData.address)]}
-
-                  }}
-                }
-              },
-              {
-                $project:{
-                  address:{$arrayElemAt:['$address',0]},_id:0
-                }
-              },
+            if(cartItem[0] != undefined){
               
-          
-            ]).toArray()
+              let address = await db.get().collection(collection.ADDRESS)
+              .aggregate([
+                {$match: {'address.addressId': objectId(orderData.address)}},
+                {
+                  $project: {
+                    _id:0,
+                    address: {$filter: {
+  
+                      input: '$address',
+                      as: 'address',
+                      cond: {$eq: ['$$address.addressId', objectId(orderData.address)]}
+  
+                    }}
+                  }
+                },
+                {
+                  $project:{
+                    address:{$arrayElemAt:['$address',0]},_id:0
+                  }
+                },
+                
             
-            // console.log(address)
-            await db.get().collection(collection.ORDERS).insertOne({userId:objectId(userId),
-                                                                      finalTotal:orderData.finalTotal,
-                                                                      deliveryType:orderData.deliveryType,
-                                                                      paymentMethod:orderData.paymentMethod,
-                                                                      address:address,
-                                                                      paymentId:payId,
-                                                                      orderStatus:'Ordered',
-                                                                      date:new Date(),
-                                                                      cartItems:cartItem[0].cartItems,
-                                                                      }).then(async(result)=>{
+              ]).toArray()
+              
+              // console.log(address)
+              await db.get().collection(collection.ORDERS).insertOne({userId:objectId(userId),
+                                                                        finalTotal:orderData.finalTotal,
+                                                                        deliveryType:orderData.deliveryType,
+                                                                        paymentMethod:orderData.paymentMethod,
+                                                                        address:address,
+                                                                        paymentId:payId,
+                                                                        orderStatus:'Ordered',
+                                                                        date:new Date(),
+                                                                        cartItems:cartItem[0].cartItems,
+                                                                        }).then(async(result)=>{
+  
+                                                                          await db.get().collection(collection.CART).findOneAndDelete({userId:objectId(userId)})
+  
+                                                                          
+  
+                                                                        resolve(result)
+                                                                      })
 
-                                                                        await db.get().collection(collection.CART).findOneAndDelete({userId:objectId(userId)})
+                                                                    }else{
+                                                                      
+                                                                      reject()
+                                                        
+                                                                    }
+                                                                      
 
-                                                                        
 
-                                                                      resolve(result)
-                                                                    })
                                          
           })
 
@@ -746,7 +789,7 @@ module.exports = {
 
             }]
             
-            console.log(cartItem[0])
+            //console.log(cartItem[0])
 
               await db.get().collection(collection.ORDERS).insertOne({userId:objectId(userId),
                   finalTotal:data.finalTotal,
@@ -840,15 +883,7 @@ module.exports = {
               {
                 $project:
                    {
-                      expectedDeliveryDate:
-                         {
-                            $dateAdd:
-                               {
-                                  startDate: "$date",
-                                  unit: "day",
-                                  amount: 3
-                               },
-                         },cartItems:1,
+                     cartItems:1,
                          address:"$address.address",
                          orderStatus:1,
                          date: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
@@ -901,6 +936,10 @@ module.exports = {
             //console.log(myOrders)
 
             resolve(myOrders)
+
+          }).catch((response)=>{
+            
+            console.log(response)
 
           })
 
@@ -1171,8 +1210,18 @@ module.exports = {
               
             // })
             categoryData = categoryData.subcategory
-            //console.log(categoryData)
-            resolve({products,categoryData})
+             //console.log(products)
+            if(products == ""){
+
+              console.log('pro')
+              reject({noData:true})
+
+            }else{
+
+              console.log('no')
+              resolve({products,categoryData})
+
+            }
 
           })
 

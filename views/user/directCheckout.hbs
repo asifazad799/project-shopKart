@@ -1,48 +1,47 @@
 <style>
 .swal2-popup {
 
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     
 }
 </style>
 <body>
-    <div class="page-wrapper">
+    <div class="page-wrapper mt-5 pt-5">
        
 
         <main class="main">
         	<div class="page-header text-center" style="background-color: white;">
         		<div class="container">
         			<h1 class="page-title">Checkout</h1>
+                    {{#if dirchAddressErr}}
+                        <p  class="text-danger text-center mb-1" hidden id="sameAddress">same address already exist</p>
+                    {{else}}
+                    {{#if dirnoAddress}}
+                        <p id="noAddress"></p>
+                    {{/if}}
+                    {{/if}}
+                    {{#if diraddressEdited}}
+                        <p id="addressEdited"></p>
+                    {{/if}}
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
-            {{!-- <nav aria-label="breadcrumb" class="breadcrumb-nav">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav --> --}}
+           
 
             <div class="page-content">
             	<div class="checkout">
 	                <div class="container">
             			<div class="checkout-discount">
-            				{{!-- <form action="#">
-        						<input type="text" class="form-control" required id="checkout-discount-input">
-            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-            				</form> --}}
+            				
             			</div><!-- End .checkout-discount -->
-            			<form action="#">
+           
 		                	<div class="row">
-                                <div class="col-lg-7 p-5" style="background-color: #eeeeee; border-radius: 4px;">
-                                    <div class="row pb-5">
-
+                                <div class="col-lg-7 px-3" >
+                                    <div class="row pb-5" style="background-color: #f7f7f7; height: auto; border-radius: 2px; padding: 18px; box-shadow:  0px 0px 20px 1.4px  rgb(187, 187, 187)">
+                                        {{#if address}}
                                     {{#each address.address}}
                                     <label class="col-lg-6 p-3"  for="{{this.addressId}}">
                                     
-                                        <div style="background-color: #ffffff; border-radius: 4px; height: 100%; padding: 18px;">
+                                                <div class="mb-1" style="background-color: #ffffff; border-radius: 4px; height: 100%; padding: 18px; border: 1px solid black;">
                                             
                                             <div style="">
                                                 <div class=" row d-flex-inline" >
@@ -55,23 +54,24 @@
                                                 </div>
                                                 <div style="height: 100%;">
 
-                                                    <h6 class="text-dark f-w-400">Address </h6>
-                                                    <p class=""><span style="font-weight: 400; color: black;">House Number:</span>{{this.houseNumber}}</p>
-                                                    <p class=""><span style="font-weight: 400; color: black;">locality:</span>{{this.locality}}</p>
-                                                    <p class=""><span style="font-weight: 400; color: black;">district:</span>{{this.district}}</p>
-                                                    <p class=""><span style="font-weight: 400; color: black;">state:</span>{{this.state}}</p>
-                                                    <p class=""><span style="font-weight: 400; color: black;">pincode:</span>{{this.pincode}}</p>
+                                                            <h6 class="text-dark f-w-400">Address </h6>
+                                                            <p class=""><span style="font-weight: 400; color: black;" >House Number:</span><span id="{{this.addressId}}houseNumber">{{this.houseNumber}}</span></p>
+                                                            <p class=""><span style="font-weight: 400; color: black;">locality:</span><span id="{{this.addressId}}locality">{{this.locality}}</span></p>
+                                                            <p class=""><span style="font-weight: 400; color: black;">district:</span><span id="{{this.addressId}}district">{{this.district}}</span></p>
+                                                            <p class=""><span style="font-weight: 400; color: black;">state:</span><span id="{{this.addressId}}state">{{this.state}}</span></p>
+                                                            <p class=""><span style="font-weight: 400; color: black;">pincode:</span><span id="{{this.addressId}}pincode">{{this.pincode}}</span></p>
 
                                                 </div>
                                             </div>
                                             <div class="pt-3 d-flex justify-content-around" >
-                                                <div style="display: flex; position: absolute; bottom: 0; margin-bottom: 19px;">
+
+                                                <div style="display: flex; position: absolute; bottom: 0; margin-bottom: 33px;">
                                                     
 
                                                     <div class="p-1 text-center" style="background-color: blue;border-radius: 2px; width: 40px; padding-left: 7px !important; cursor: pointer;">
 
-                                                        <a href="/editAddress?addressId={{this.addressId}}" class="text-white"><i class="far fa-edit"></i></a>
-                                                        {{!-- onclick="editAddress('{{this.addressId}}') --}}
+                                                        <a onclick="editAddress('{{this.addressId}}')" data-toggle="modal" data-target="#editAddress" class="text-white"><i class="far fa-edit"></i></a>
+                                                        
                                                     </div>
                                                     <div class="p-3">
 
@@ -92,19 +92,145 @@
                                    
                                     </label>
                                     {{/each}}
-                                    </div>
-                                    <div class="row">
+                                    {{else}}
+                                        <div class="" style="background-color: #ffffff; border-radius: 4px; height: 100%; padding: 18px;">
+                                            <div class="d-flex justify-content-center">
+
+                                                <i class="fal fa-exclamation-circle" style="font-size: 180px; color: rgb(233, 208, 126);"></i>
+
+                                            </div>
+                                                <h5 class="text-center mt-4 text-danger">You don't have any saved address <br> Please add new address</h5>
+                                        </div>
+                                    {{/if}}
+                                   <div class="row mt-5">
 
                                     <div class="d-flex justify-content-center">
 
-                                        <a  href="/addNewAddress" class="btn btn-primary loginFormButton btn-order btn-block text-white mb-2" style="width: 100px; position: absolute; bottom: 0; margin-top: 20px !importent;">Add new address</a>
+                                        <a   data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-primary loginFormButton btn-order btn-block text-white mb-2" style="width: 100px; position: absolute; margin-top: 20px !importent;">Add new address</a>
 
                                     </div>
                                     </div>
-
+                                    </div>
                                 </div>
+
+                               
+                                <!-- Add new address modal -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="p-5">
+                                        
+                                             
+                                            <div class=" details-row-size mt- Psizes">
+                                               
+                                               <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+                                                    <div class="container  pt-0 mt-">
+                                                        <div class="row p-4" >
+                                                            <form class="pt-0" id="updateAddress" onsubmit="return addNewAddress(this)"  action="/dirCheckoutAddNewAddress?productId={{productId}}&&delivery={{data.delivery}}&&quantity={{quantity}}" method="post" >
+                                                            <h3 class="text-center loginTitle mt-1 pb-2 pt-1">Add New Address</h3>
+                                                               
+                                                            
+                                                                <div class="mb-2">
+                                                                    <p  class="form-label">House Number/street</p>
+                                                                    <input type="text" class="form-control" value="building no:2" name="houseNumber">
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <p  class="form-label">Locality/city</p>
+                                                                    <input type="text" class="form-control" value="malppuram" name="locality">
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <p  class="form-label">District</p>
+                                                                    <input type="text" class="form-control" value="malappuram" name="district">
+                                                                </div>
+                                                                <div class="row mb-0">
+                                                                <div class=" col-lg-6">
+                                                                    <p class="form-label">State</p>
+                                                                    <input type="text" class="form-control text" value="kerala"  name="state" >
+                                                                    
+                                                                </div>
+                                                                <div class=" col-lg-6">
+                                                                    <p class="form-label">Pincode</p>
+                                                                    <input type="text" class="form-control text" id="pincode" value="679332" name="pincode" >
+                                                                </div>
+                                                            {{!-- <div id="emailHelp" class="form-text ps-3" style="margin-top: -7px; margin-bottom:7px;">We'll never share your personal data with anyone else.</div> --}}
+                                                                </div>
+                                                                
+                                                               
+                                                                <div class="text-center mb-1" >
+                                                                    <button type="button" class="btn  cartButton text-center ms-3" data-dismiss="modal">Close</button>
+                                                                    <button  type="submit" class="btn cartButton text-center ms-3">Add</button>
+                                                                </div>
+                                                                
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                <!--edit addres modal-->
+                                <div class="modal fade" id="editAddress" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                        <div class="p-5">
+                                        
+                                             
+                                            <div class=" details-row-size mt- Psizes">
+                                               
+                                               <section class="mt-0 pt-0 d-flex justify-content-center loginForm" >
+                                                    <div class="container  pt-0 mt-">
+                                                        <div class="row p-4" >
+                                                          
+                                                            <form class="pt-0" id="editAddress1" onsubmit="return editsAddress(this)"  action="/dirCheckoutEditAddress?productId={{productId}}&&delivery={{data.delivery}}&&quantity={{quantity}}" method="post" >
+                                                          
+                                                            <h3 class="text-center loginTitle mt-1 pb-2 pt-1">Edit Address</h3>
+
+                                                               <div class="mb-2">
+                                                                    <p  class="form-label">House Number/street</p>
+                                                                    <input type="text" class="form-control" name="houseNumber" id="houseNumber">
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <p  class="form-label">Locality/city</p>
+                                                                    <input type="text" class="form-control" name="locality" id="chlocality">
+                                                                </div>
+                                                                <div class="mb-2">
+                                                                    <p  class="form-label">District</p>
+                                                                    <input type="text" class="form-control" name="district" id="district">
+                                                                </div>
+                                                                <div class="row mb-0">
+                                                                <div class=" col-lg-6">
+                                                                    <p class="form-label">State</p>
+                                                                    <input type="text" class="form-control text" name="state" id="state" >
+                                                                    
+                                                                </div>
+                                                                <div class=" col-lg-6">
+                                                                    <p class="form-label">Pincode</p>
+                                                                    <input type="text" class="form-control text" id="editPincode" value="" name="pincode" >
+                                                                </div>
+                                                                </div>
+                                                                
+                                                               
+                                                                <div class="text-center mb-1" >
+                                                                    <button type="button" class="btn  cartButton text-center ms-3" data-dismiss="modal">Close</button>
+                                                                    <button  type="submit" class="btn cartButton text-center ms-3">Add</button>
+                                                                </div>
+                                                                
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
 		                	
 		                		<aside class="col-lg-5">
+		                			<div class="summary" style="border: none !important; background-color: #f7f7f7; border-radius: 2px; padding: 18px; box-shadow:  0px 0px 20px 2px  rgb(187, 187, 187)">
                                             <form action="#">
                                                 <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
                                                 <input type="text" class="form-control" id="CouponInput">
@@ -113,7 +239,6 @@
                                                 <a class="btn btn-primary rounded mb-2" onclick="applyCoupon('{{data.grandTotal}}')" style="width: 50px !importent; color: white; background-color: rgb(3, 3, 156); border:none;" >Apply Coupon</a>
 
                                             </form>
-		                			<div class="summary" style="border: none !important; background-color: #eeeeee;">
                                         <div class="checkout-discount">
                                         </div>
 		                				<h4 class="">Your Order</h4><!-- End .summary-title -->
@@ -226,7 +351,7 @@
 		                			</div><!-- End .summary -->
 		                		</aside><!-- End .col-lg-3 -->
 		                	</div><!-- End .row -->
-            			</form>
+            		
 	                </div><!-- End .container -->
                 </div><!-- End .checkout -->
             </div><!-- End .page-content -->
@@ -241,9 +366,149 @@
 
    
 
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="assets/js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js"></script>
 
 <script>
+        let addressId1 = null;
+    async function editAddress(addressId){
+        //alert(addressId)
+        addressId1 = await addressId
+        document.getElementById('houseNumber').value=document.getElementById(addressId+'houseNumber').innerText
+        document.getElementById('chlocality').value=document.getElementById(addressId+'locality').innerHTML
+        document.getElementById('district').value=document.getElementById(addressId+'district').innerText
+        document.getElementById('state').value=document.getElementById(addressId+'state').innerText
+        document.getElementById('editPincode').value=document.getElementById(addressId+'pincode').innerText
+
+
+    }
+        $("#editAddress1").validate({
+  
+        rules:{
+                houseNumber:{
+                required:true,
+                },
+                locality:{
+                required:true,
+                },
+                district:{
+                required:true,
+                },
+                state:{
+                required:true,
+                },
+                pincode:{
+                required:true,
+                }
+        },submitHandler:async function editsAddress(form) {
+            form.action = await '/dirCheckoutEditAddress?productId={{productId}}&&delivery={{data.delivery}}&&quantity={{quantity}}&&addressId='+addressId1
+           
+            form.submit();
+
+            return false;
+                    
+        }
+  
+    })
+
+    if(document.getElementById('addressEdited')){
+    
+        const Toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Address updated'
+    })
+
+}
+    
+    if(document.getElementById('sameAddress')){
+    
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    Toast.fire({
+        icon: 'error',
+        title: 'Same address already exist'
+    })
+
+}else if(document.getElementById('noAddress')){
+    
+        const Toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    Toast.fire({
+        icon: 'success',
+        title: 'New address added successfully'
+    })
+
+
+}
+$("#updateAddress").validate({
+  
+        rules:{
+                houseNumber:{
+                required:true,
+                },
+                locality:{
+                required:true,
+                },
+                district:{
+                required:true,
+                },
+                state:{
+                required:true,
+                },
+                pincode:{
+                required:true,
+                },
+        },submitHandler:function addNewAddress(form) {
+
+          
+                        form.submit();
+                        
+                   
+                return false;
+                    
+               
+            
+        
+        }
+  
+  
+    })
+    
+
     function deleteAddress(addressId){
 
         Swal.fire({

@@ -1349,9 +1349,35 @@ router.post('/updateBanner',(req,res)=>{
     
     
     let bannerImg = req.files.bannerImage;
-    console.log(req.body,bannerImg)
+    // console.log(req.body,bannerImg)
 
-    res.redirect('/admin/viewBanners')
+    if(bannerImg){
+      
+      fs.unlink('./public/images/bannersKart/'+req.query.bannerPosition+'.webp',(err,donr)=>{
+        
+        if(!err){
+          
+          bannerImg.mv('./public/images/bannersKart/'+req.query.bannerPosition+'.webp',(err,done)=>{
+            proUpdated = true
+            console.log('image updated');
+            res.redirect('/admin/viewBanners')
+          })
+
+        }else{
+          
+          console.log('bannerImage Not updated')
+          res.redirect('/admin/editBanner')
+
+        }
+
+      })
+
+    }else{
+      
+      res.redirect('/admin/viewBanners')
+
+    }
+
 
   })
 

@@ -606,11 +606,6 @@ router.get('/viewproducts',adminLoginVerify,(req,res)=>{
 
     
 
-      // console.log(response.varientId)
-      // console.log(response[1].productVarients._id)
-      // console.log(response.productdata)
-      // let varientId =response.varientId
-      // console.log(varientId+""); 
       res.render('admin/viewAllProducts',{admin:true,productData:response,productErr,currentAdmin})
 
       productErr = null;

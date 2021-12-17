@@ -629,9 +629,7 @@ router.post('/deleteproduct',adminLoginVerify,(req,res)=>{
 
       let imgName= req.body.varientId;
       
-      // console.log(imgName)
-
-      // imgName.filter(x=> console.log(x))
+  
   
       
       for(let i=1 ; i<=4 ; i++){

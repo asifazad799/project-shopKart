@@ -5,7 +5,7 @@ const state = {
 }
 
 module.exports.connect = (done)=>{
-    const url = 'mongodb+srv://asifazad:1AasifazadA1@shopkart.vfltt.mongodb.net/shopkart?retryWrites=true&w=majority'
+    const url = `mongodb+srv://asifazad:${process.env.mongoPassword}@shopkart.vfltt.mongodb.net/shopKart?retryWrites=true&w=majority`
     const dbname = 'shopKart'
 
     mongoClient.connect(url,(err,data)=>{

@@ -97,7 +97,7 @@ router.get('/',whishListCount,async function( req, res, next) {
     adminHelper.getAllBanners().then((bannerResponse=>{
       
 
-      res.render('user/home', { title:"shopKart" ,currentUser:req.session.user,user:true,products:response,userCartCount,whishListCount,bannerResponse});
+      res.render('user/home', { title:"shopKart" ,currentUser:req.session.user,user:true,products:response,catArray,userCartCount,whishListCount,bannerResponse});
 
     }))
 
@@ -1570,6 +1570,7 @@ router.post('/removeFromOrder',(req,res)=>{
 })
 
 //category Pages
+let catArray = null;
 
 router.get('/catProducts',whishListCount,async(req,res)=>{
   
@@ -1584,7 +1585,6 @@ router.get('/catProducts',whishListCount,async(req,res)=>{
   let subCategory = req.query.subcategory;
   let noData = false;
   let product = null;
-  let catArray = null;
   let noPro = null;
 if(subCategory&&category){
 

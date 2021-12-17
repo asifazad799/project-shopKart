@@ -13,7 +13,7 @@ var hbs=require('express-handlebars');
 var app = express();
 var session = require('express-session');
 var fileUpload = require('express-fileupload');
-
+const MongoStore = require('connect-mongo') 
 require('dotenv').config();
 
 // view engine setup
@@ -25,13 +25,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret:"key",cookie:{maxAge:3200000}}))
-app.use(fileUpload());
-
 db.connect((err) => {
   if (err) console.log("Connection error " + err);
   else console.log("Database Connected to port 27017");
 });
+app.use(session({
+  secret:"key",
+  resave:false,
+  saveUninitialized:true,
+  store:MongoStore.create({
+    mongoUrl: `mongodb+srv://asifazad:${process.env.mongoPassword}@shopkart.vfltt.mongodb.net/shopKart?retryWrites=true&w=majority`,
+    ttl: 1*24*60*60,
+    autoRemove:'native'
+  })
+
+}))
+app.use(fileUpload());
+
+
 
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
